@@ -1,3 +1,4 @@
+import { parseEther } from "ethers"
 import { ethers, upgrades } from "hardhat"
 
 export async function deployContract(contractName: string, args: any[] = []) {
@@ -19,4 +20,13 @@ export async function upgradeContract(proxyContractAddress: string, newContractN
   const newContract = await upgrades.upgradeProxy(proxyContractAddress, newContractFactory)
   console.log(`\x1b[0m${newContractName}(upgradeable) upgraded to: \x1b[32m${await newContract.getAddress()}`)
   return newContract
+}
+
+export async function deployTokens() {
+  const tokenFactory = await ethers.getContractFactory("MockToken")
+  const mockBTCB = await tokenFactory.deploy("Binance-Peg BTCB Token", "BTCB", 18, parseEther("100"))
+  const mockWBTC = await tokenFactory.deploy("Wrapped BTC", "WBTC", 8, parseEther("100"))
+  const mockUSDC = await tokenFactory.deploy("USD Circle", "USDC", 6, parseEther("500000"))
+  const mockUSDT = await tokenFactory.deploy("Tether USD", "USDT", 6, parseEther("500000"))
+  return { mockBTCB, mockWBTC, mockUSDC, mockUSDT }
 }
