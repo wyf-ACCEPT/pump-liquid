@@ -3,7 +3,7 @@ import { ethers, upgrades } from "hardhat"
 import { loadFixture, time } from "@nomicfoundation/hardhat-toolbox/network-helpers"
 import { LiquidOracle } from "../typechain-types"
 import { deployTokens } from "../scripts/utils"
-import { parseUnits, ZeroAddress } from "ethers"
+import { formatEther, parseUnits, ZeroAddress } from "ethers"
 
 describe("test the functions", function () {
 
@@ -43,7 +43,7 @@ describe("test the functions", function () {
       .to.be.revertedWith("PUMP_LIQUID_ORACLE: asset not found")
     
     tokenAddresses.pop()
-    tokenAddresses.push(await liquidOracle.STANDARD_PRICE_ADDRESS())
+    tokenAddresses.push(await liquidOracle.STANDARD_ASSET())
 
     await liquidOracle.connect(updater).updatePrices(tokenAddresses, [1, 1, 1, 1, 1])
 
@@ -54,11 +54,16 @@ describe("test the functions", function () {
     await time.increase(await liquidOracle.minimumUpdateInterval() + 5n)
 
     await liquidOracle.connect(updater).updatePrices(tokenAddresses, [
-      parseUnits("50000", 18),
-      parseUnits("50000", 8),
-      parseUnits("1.2", 6),
-
+      parseUnits("70000", 36 + 18 - 18),
+      parseUnits("70000", 36 + 18 - 8),
+      parseUnits("1.2", 36 + 18 - 6),
+      parseUnits("1.2", 36 + 18 - 6),
+      parseUnits("1.2", 36 + 18 - 18),
     ])
+
+    console.log(`\tCan swap 1 USDT (1e6 unit USDT) to ${
+      formatEther(await liquidOracle.assetToShare(tokenAddresses[3], 1_000000))
+    } shares`)
 
   })
   
