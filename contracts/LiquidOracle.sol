@@ -179,17 +179,17 @@ contract LiquidOracle is AccessControlUpgradeable {
     // ====================== Write functions - oracle =====================
 
     /**
-     * @param assets the list of supported assets (in any order), and includes the 
-     *      STANDARD_ASSET at the end.
-     * @param _assetsPricesToShare each asset's unit price in unit SHARE 
-     *      (with 36 decimals). We assume that STANDARD_ASSET has 18 decimals.
+     * @param _assetsPricesToShare each asset's unit price in unit SHARE (with 
+     *      36 decimals) order by the `supportedAssetList`, and with an extra
+     *      element for the STANDARD_ASSET's unit price (e.g. USD's price to 
+     *      SHARE). We assume that STANDARD_ASSET has 18 decimals.
      */
     function updatePrices(
-        address[] memory assets, uint256[] memory _assetsPricesToShare
+        uint256[] memory _assetsPricesToShare
     ) public onlyRole(PRICE_UPDATER_ROLE) {
+        uint256 length = supportedAssetList.length;
         require(
-            assets.length == _assetsPricesToShare.length && 
-                assets.length == supportedAssetList.length + 1,
+            _assetsPricesToShare.length == length + 1,
             "PUMP_LIQUID_ORACLE: invalid input length"
         );
         require(
@@ -197,16 +197,17 @@ contract LiquidOracle is AccessControlUpgradeable {
             "PUMP_LIQUID_ORACLE: update too frequently"
         );
 
-        for (uint256 i = 0; i < assets.length; i++) {
-            require(
-                isSupportedAsset[assets[i]] || assets[i] == STANDARD_ASSET, 
-                "PUMP_LIQUID_ORACLE: asset not found"
-            );
-            assetPriceToShare[assets[i]] = _assetsPricesToShare[i];
-            sharePriceToAsset[assets[i]] = PRICE_PRECISION.mulDiv(
+        for (uint256 i = 0; i < length; i++) {
+            assetPriceToShare[supportedAssetList[i]] = _assetsPricesToShare[i];
+            sharePriceToAsset[supportedAssetList[i]] = PRICE_PRECISION.mulDiv(
                 PRICE_PRECISION, _assetsPricesToShare[i]
             );
         }
+        assetPriceToShare[STANDARD_ASSET] = _assetsPricesToShare[length];
+        sharePriceToAsset[STANDARD_ASSET] = PRICE_PRECISION.mulDiv(
+            PRICE_PRECISION, _assetsPricesToShare[length]
+        );
+
         lastUpdateTime = block.timestamp;
     }
 
