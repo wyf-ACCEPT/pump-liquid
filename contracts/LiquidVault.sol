@@ -45,8 +45,10 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable {
 
     function depositToVault(
         address from, address to, address asset, uint256 assetAmount
-    ) public onlyRole(CASHIER_ROLE) {
-        uint256 shareAmount = oracle.assetToShare(asset, assetAmount);
+    ) public onlyRole(CASHIER_ROLE) returns (uint256 shareAmount) {
+        shareAmount = oracle.assetToShare(
+            asset, assetAmount  // Will check asset availability here
+        );
         if (assetAmount > 0) 
             IERC20(asset).safeTransferFrom(from, address(this), assetAmount);
         if (shareAmount > 0) 
@@ -56,8 +58,10 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable {
 
     function withdrawFromVault(
         address from, address to, address asset, uint256 shareAmount
-    ) public onlyRole(CASHIER_ROLE) {
-        uint256 assetAmount = oracle.shareToAsset(asset, shareAmount);
+    ) public onlyRole(CASHIER_ROLE) returns (uint256 assetAmount) {
+        assetAmount = oracle.shareToAsset(
+            asset, shareAmount  // Will check asset availability here
+        );
         if (shareAmount > 0) 
             _burn(from, shareAmount);
         if (assetAmount > 0) 
