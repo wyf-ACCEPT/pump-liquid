@@ -6,25 +6,30 @@ import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
+import { WeightedMath } from "./lib/WeightedMath.sol";
 import { ILiquidOracle, ILiquidVault } from "./interface.sol";
-
-using Math for uint256;
 
 
 contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
     // =============================== Struct ==============================
     /**
-     * @notice The `UserInfo` struct is used to record the user's deposit information.
+     * @notice The `DepositInfo` struct aims to record the user's deposit information.
      *      If the user has deposited for multiple times, the `shares` should be the 
      *      sum of all the shares, and the `equivalentTimestamp` and `equivalentPrice` 
      *      should be the weighted average of all the deposits.
      */
-    struct UserInfo {
+    struct DepositInfo {
         uint256 shares;
         uint256 equivalentTimestamp;
         uint256 equivalentPrice;
     }
+
+    struct PendingInfo {
+        uint256 shares;
+        uint256 timestamp;
+    }
+
 
     // ============================= Constants =============================
 
@@ -37,7 +42,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
     // ============================== Storage ==============================
 
-    mapping(address => UserInfo) public userInfo;
+    mapping(address => DepositInfo) public depositInfo;
+    mapping(address => PendingInfo) public pendingInfo;
 
 
     // =============================== Events ==============================
@@ -66,22 +72,21 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         );
 
         // Retrieve the user's old deposit information
-        UserInfo memory oldInfo = userInfo[_msgSender()];
-        uint256 oldShares = oldInfo.shares;
-        uint256 oldTs = oldInfo.equivalentTimestamp;
-        uint256 oldPrice = oldInfo.equivalentPrice;
+        DepositInfo memory oldInfo = depositInfo[_msgSender()];
 
-        // Calculate the equivalent timestamp (also available when `oldTs` is 0)
-        uint256 newShares = oldShares + currentShares;
-        uint256 newTs = oldTs + (block.timestamp - oldTs).mulDiv(currentShares, newShares);
-
-        // Calculate the equivalent price (cost)
-        uint256 currentPrice = oracle.fetchShareStandardPrice();
-        uint256 newPrice = oldPrice.mulDiv(oldShares, newShares) + 
-            currentPrice.mulDiv(currentShares, newShares);
+        // Calculate the equivalent timestamp and price
+        uint256 newTs = WeightedMath.weightedAverage(
+            oldInfo.equivalentTimestamp, block.timestamp, 
+            oldInfo.shares, currentShares
+        );
+        uint256 newPrice = WeightedMath.weightedAverage(
+            oldInfo.equivalentPrice, oracle.fetchShareStandardPrice(), 
+            oldInfo.shares, currentShares
+        );
+        uint256 newShares = oldInfo.shares + currentShares;
 
         // Update the user's deposit information
-        userInfo[_msgSender()] = UserInfo(newShares, newTs, newPrice);
+        depositInfo[_msgSender()] = DepositInfo(newShares, newTs, newPrice);
     }
 
     // function requestWithdraw
