@@ -10,18 +10,6 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 
 using Math for uint256;
 
-interface ILiquidOracle {
-    function isSupportedAsset(address) external view returns (bool);
-
-    function assetPriceToShare(address) external view returns (uint256);
-
-    function sharePriceToAsset(address) external view returns (uint256);
-
-    function assetToShare(address, uint256) external view returns (uint256);
-
-    function shareToAsset(address, uint256) external view returns (uint256);
-}
-
 
 contract LiquidOracle is AccessControlUpgradeable {
 
@@ -86,6 +74,7 @@ contract LiquidOracle is AccessControlUpgradeable {
      */
     mapping(address => uint256) public sharePriceToAsset;
 
+
     // =============================== Events ==============================
     
 
@@ -94,6 +83,7 @@ contract LiquidOracle is AccessControlUpgradeable {
     function initialize() public initializer {
         __AccessControl_init();
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setRoleAdmin(PRICE_UPDATER_ROLE, DEFAULT_ADMIN_ROLE);
 
         minimumUpdateInterval = 5 minutes;
     }

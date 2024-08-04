@@ -6,9 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
-import "./LiquidOracle.sol";
+import { ILiquidOracle } from "./interface.sol";
 
 using SafeERC20 for IERC20;
+
 
 contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable {
     
@@ -23,21 +24,21 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable {
 
 
     // ============================= Parameters ============================
+
     ILiquidOracle public oracle;
     address public cashier;
 
 
     // ======================= Modifier & Initializer ======================
 
-    function initialize(
-        address _oracle, address _cashier
-    ) public initializer {
+    function initialize() public initializer {
         __AccessControl_init();
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
-
-        oracle = ILiquidOracle(_oracle);
-        cashier = _cashier;
-        _grantRole(CASHIER_ROLE, cashier);
+        _setRoleAdmin(CASHIER_ROLE, DEFAULT_ADMIN_ROLE);
+        
+        // oracle = ILiquidOracle(_oracle);
+        // cashier = _cashier;
+        // _grantRole(CASHIER_ROLE, cashier);
     }
 
 
