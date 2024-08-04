@@ -64,6 +64,12 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
     // ========================== Write functions ==========================
 
+    /**
+     * @notice Deposit the asset to the vault and record the user's deposit information.
+     *      The user's deposit information should be updated with the weighted average
+     *      of the old price(or timestamp) and the new price(or timestamp). This is also
+     *      available for the first time deposit.
+     */
     function deposit(address asset, uint256 assetAmount) public whenNotPaused {
         // Check conditions and deposit to the vault
         require(assetAmount > 0, "LIQUID_CASHIER: invalid amount");
@@ -74,19 +80,16 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         // Retrieve the user's old deposit information
         DepositInfo memory oldInfo = depositInfo[_msgSender()];
 
-        // Calculate the equivalent timestamp and price
-        uint256 newTs = WeightedMath.weightedAverage(
+        // Update the user's deposit information
+        depositInfo[_msgSender()].shares += currentShares;
+        depositInfo[_msgSender()].equivalentTimestamp = WeightedMath.weightedAverage(
             oldInfo.equivalentTimestamp, block.timestamp, 
             oldInfo.shares, currentShares
         );
-        uint256 newPrice = WeightedMath.weightedAverage(
+        depositInfo[_msgSender()].equivalentPrice = WeightedMath.weightedAverage(
             oldInfo.equivalentPrice, oracle.fetchShareStandardPrice(), 
             oldInfo.shares, currentShares
         );
-        uint256 newShares = oldInfo.shares + currentShares;
-
-        // Update the user's deposit information
-        depositInfo[_msgSender()] = DepositInfo(newShares, newTs, newPrice);
     }
 
     // function requestWithdraw
