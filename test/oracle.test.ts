@@ -34,26 +34,26 @@ describe("test the functions", function () {
     tokenAddresses.push(ZeroAddress)
 
     // Revert: Called by unauthorized account
-    await expect(liquidOracle.updatePrices(tokenAddresses, [1, 1, 1, 1, 1]))
+    await expect(liquidOracle.updatePrices([1, 1, 1, 1, 1]))
       .to.be.revertedWithCustomError(liquidOracle, "AccessControlUnauthorizedAccount")
     
     // Revert: No standard price address
     await liquidOracle.setPriceUpdater(updater.address, true)
-    await expect(liquidOracle.connect(updater).updatePrices(tokenAddresses, [1, 1, 1, 1, 1]))
-      .to.be.revertedWith("PUMP_LIQUID_ORACLE: asset not found")
+    await expect(liquidOracle.connect(updater).updatePrices([1, 1, 1, 1]))
+      .to.be.revertedWith("PUMP_LIQUID_ORACLE: invalid input length")
     
     tokenAddresses.pop()
     tokenAddresses.push(await liquidOracle.STANDARD_ASSET())
 
-    await liquidOracle.connect(updater).updatePrices(tokenAddresses, [1, 1, 1, 1, 1])
+    await liquidOracle.connect(updater).updatePrices([1, 1, 1, 1, 1])
 
     // Revert: Update too frequently
-    await (expect(liquidOracle.connect(updater).updatePrices(tokenAddresses, [1, 1, 1, 1, 1])))
+    await (expect(liquidOracle.connect(updater).updatePrices([1, 1, 1, 1, 1])))
       .to.be.revertedWith("PUMP_LIQUID_ORACLE: update too frequently")
     
     await time.increase(await liquidOracle.minimumUpdateInterval() + 5n)
 
-    await liquidOracle.connect(updater).updatePrices(tokenAddresses, [
+    await liquidOracle.connect(updater).updatePrices([
       parseUnits("70000", 36 + 18 - 18),
       parseUnits("70000", 36 + 18 - 8),
       parseUnits("1.2", 36 + 18 - 6),

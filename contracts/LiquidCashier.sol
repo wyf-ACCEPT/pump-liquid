@@ -38,8 +38,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
     // ============================= Parameters ============================
 
-    address public vault;
-    address public oracle;
+    ILiquidVault public vault;
+    ILiquidOracle public oracle;
 
     uint256 public withdrawPeriod;
 
@@ -79,8 +79,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     function deposit(address asset, uint256 assetAmount) public whenNotPaused {
         // Check conditions and deposit to the vault
         require(assetAmount > 0, "LIQUID_CASHIER: invalid amount");
-        uint256 currentShares = LiquidOracle(oracle).assetToShare(asset, assetAmount);
-        LiquidVault(vault).depositToVault(
+        uint256 currentShares = oracle.assetToShare(asset, assetAmount);
+        vault.depositToVault(
             _msgSender(), address(this), asset, assetAmount, currentShares
         );
 
@@ -94,7 +94,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
             oldInfo.shares, currentShares
         );
         depositInfo[_msgSender()].equivalentPrice = WeightedMath.weightedAverage(
-            oldInfo.equivalentPrice, LiquidOracle(oracle).fetchShareStandardPrice(), 
+            oldInfo.equivalentPrice, oracle.fetchShareStandardPrice(), 
             oldInfo.shares, currentShares
         );
     }
@@ -114,7 +114,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         );
 
         // Update the user's pending information
-        uint256 assetAmount = LiquidOracle(oracle).shareToAsset(asset, sharesAmount);
+        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
         pendingInfo[_msgSender()] = PendingInfo({
             shares: sharesAmount,
             timestamp: block.timestamp,
@@ -140,11 +140,12 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         PendingInfo memory info = pendingInfo[_msgSender()];
 
         // Withdraw from the vault
-        if (LiquidOracle(oracle).isSupportedAsset(info.asset)) {
+        if (oracle.isSupportedAssetExternal(info.asset)) {
             // Release the asset to the user
-            LiquidVault(vault).withdrawFromVault(
+            vault.withdrawFromVault(
                 address(this), _msgSender(), info.asset, info.shares, info.assetAmount
             );
+            depositInfo[_msgSender()].shares -= info.shares;
             // emit
         } else {
             // emit

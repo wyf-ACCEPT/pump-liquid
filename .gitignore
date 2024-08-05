@@ -6,6 +6,7 @@ abi
 artifacts
 cache
 contracts/artifacts
+coverage
 
 # for mac & vscode
 .ds_store

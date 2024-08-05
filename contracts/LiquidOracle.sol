@@ -7,11 +7,12 @@ import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 // import "@openzeppelin/contracts/utils/structs/Checkpoints.sol";
 
+import "./interface.sol";
 
 using Math for uint256;
 
 
-contract LiquidOracle is AccessControlUpgradeable {
+contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle {
 
     // ============================= Constants =============================
     /**
@@ -98,6 +99,18 @@ contract LiquidOracle is AccessControlUpgradeable {
 
 
     // ====================== View functions - prices ======================
+
+    function isSupportedAssetExternal(address asset) public view returns (bool) {
+        return isSupportedAsset[asset];
+    }
+
+    function assetPriceToShareExternal(address asset) public view returns (uint256) {
+        return assetPriceToShare[asset];
+    }
+
+    function sharePriceToAssetExternal(address asset) public view returns (uint256) {
+        return sharePriceToAsset[asset];
+    }
 
     function getSupportedAssetsNum() public view returns (uint256) {
         return supportedAssetList.length;
