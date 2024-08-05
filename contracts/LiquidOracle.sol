@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+
+import "@openzeppelin/contracts/interfaces/IERC20.sol";
+import "@openzeppelin/contracts/utils/math/Math.sol";
 // import "@openzeppelin/contracts/utils/structs/Checkpoints.sol";
 
-import "@openzeppelin/contracts/utils/math/Math.sol";
-import "@openzeppelin/contracts/interfaces/IERC20.sol";
-
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
 using Math for uint256;
 

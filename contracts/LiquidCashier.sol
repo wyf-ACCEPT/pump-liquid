@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/utils/math/Math.sol";
-
 import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
 import { WeightedMath } from "./lib/WeightedMath.sol";
-import { ILiquidOracle, ILiquidVault } from "./interface.sol";
+
+import "./LiquidOracle.sol";
+import "./LiquidVault.sol";
 
 
 contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
@@ -28,6 +28,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     struct PendingInfo {
         uint256 shares;
         uint256 timestamp;
+        address asset;
+        uint256 assetAmount;
     }
 
 
@@ -36,8 +38,10 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
     // ============================= Parameters ============================
 
-    ILiquidVault public vault;
-    ILiquidOracle public oracle;
+    address public vault;
+    address public oracle;
+
+    uint256 public withdrawPeriod;
 
 
     // ============================== Storage ==============================
@@ -54,6 +58,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     function initialize() public initializer {
         __AccessControl_init();
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+
+        withdrawPeriod = 7 days;
 
         // _setRoleAdmin(LIQUIDITY_MANAGER_ROLE, DEFAULT_ADMIN_ROLE);
     }
@@ -73,8 +79,9 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     function deposit(address asset, uint256 assetAmount) public whenNotPaused {
         // Check conditions and deposit to the vault
         require(assetAmount > 0, "LIQUID_CASHIER: invalid amount");
-        uint256 currentShares = vault.depositToVault(
-            _msgSender(), address(this), asset, assetAmount
+        uint256 currentShares = LiquidOracle(oracle).assetToShare(asset, assetAmount);
+        LiquidVault(vault).depositToVault(
+            _msgSender(), address(this), asset, assetAmount, currentShares
         );
 
         // Retrieve the user's old deposit information
@@ -87,14 +94,65 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
             oldInfo.shares, currentShares
         );
         depositInfo[_msgSender()].equivalentPrice = WeightedMath.weightedAverage(
-            oldInfo.equivalentPrice, oracle.fetchShareStandardPrice(), 
+            oldInfo.equivalentPrice, LiquidOracle(oracle).fetchShareStandardPrice(), 
             oldInfo.shares, currentShares
         );
     }
 
-    // function requestWithdraw
+    /**
+     * @notice Request to withdraw the asset from the vault and record the user's 
+     *      pending information. When the pending withdraw is matured, the user can
+     *      call `completeWithdraw` to get the asset.
+     */
+    function requestWithdraw(address asset, uint256 sharesAmount) public whenNotPaused {
+        // Check conditions
+        require(sharesAmount > 0, "LIQUID_CASHIER: invalid amount");
+        require(pendingInfo[_msgSender()].shares == 0, "LIQUID_CASHIER: request exists");
+        require(
+            sharesAmount <= depositInfo[_msgSender()].shares, 
+            "LIQUID_CASHIER: insufficient shares"
+        );
 
-    // function completeWithdraw
+        // Update the user's pending information
+        uint256 assetAmount = LiquidOracle(oracle).shareToAsset(asset, sharesAmount);
+        pendingInfo[_msgSender()] = PendingInfo({
+            shares: sharesAmount,
+            timestamp: block.timestamp,
+            asset: asset,
+            assetAmount: assetAmount
+        });
+    }
+
+    /**
+     * @notice Complete the withdraw request and get the asset from the vault.
+     *      If the asset is removed from the vault during the withdraw period,
+     *      the user won't be able to get the asset, and will still hold the shares.
+     */
+    function completeWithdraw() public whenNotPaused {
+        // Check conditions
+        require(pendingInfo[_msgSender()].shares > 0, "LIQUID_CASHIER: request not exists");
+        require(
+            block.timestamp - pendingInfo[_msgSender()].timestamp >= withdrawPeriod, 
+            "LIQUID_CASHIER: still pending"
+        );
+
+        // Retrieve the user's pending information
+        PendingInfo memory info = pendingInfo[_msgSender()];
+
+        // Withdraw from the vault
+        if (LiquidOracle(oracle).isSupportedAsset(info.asset)) {
+            // Release the asset to the user
+            LiquidVault(vault).withdrawFromVault(
+                address(this), _msgSender(), info.asset, info.shares, info.assetAmount
+            );
+            // emit
+        } else {
+            // emit
+        }
+
+        // Clear the user's pending information
+        delete pendingInfo[_msgSender()];
+    }
 
 
     // ====================== Write functions - admin ======================
