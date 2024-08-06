@@ -57,20 +57,31 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
 
     // =============================== Events ==============================
+    event Deposit(
+        address indexed from, address indexed asset, uint256 assetAmount, uint256 shareAmount
+    );
+    event RequestWithdraw(
+        address indexed from, address indexed asset, uint256 shareAmount, uint256 assetAmount,
+        uint256 feeManagement, uint256 feePerformance, uint256 feeExit, uint256 feeAll
+    );
+    event CompleteWithdraw(address indexed to, uint256 requestTimestamp);
+    event CancelWithdraw(address indexed to, uint256 requestTimestamp);
+    event ParameterUpdate(string key, uint256 value);
 
 
     // ======================= Modifier & Initializer ======================
 
-    function initialize() public initializer {
+    function initialize(address _vault, address _oracle) public initializer {
         __AccessControl_init();
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+
+        vault = ILiquidVault(_vault);
+        oracle = ILiquidOracle(_oracle);
 
         withdrawPeriod = 7 days;
         feeRateManagement = 200;
         feeRatePerformance = 2000;
         feeRateExit = 100;
-
-        // _setRoleAdmin(LIQUIDITY_MANAGER_ROLE, DEFAULT_ADMIN_ROLE);
     }
 
 
@@ -88,7 +99,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
      *      All of these fees should be calculated with Math library, to both avoid overflow
      *       and truncation errors.
      */
-    function _calculateFees(uint256 baseAmount, address user) internal view returns (uint256) {
+    function _calculateFees(uint256 baseAmount, address user) 
+        internal view returns (uint256 , uint256, uint256, uint256) {
         // Management fee
         uint256 timeElapsed = block.timestamp - depositInfo[user].equivalentTimestamp;
         uint256 feeManagement = baseAmount
@@ -105,7 +117,9 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         // Exit fee
         uint256 feeExit = baseAmount.mulDiv(feeRateExit, 10000);
 
-        return feeManagement + feePerformance + feeExit;
+        // All fees
+        uint256 feeAll = feeManagement + feePerformance + feeExit;
+        return (feeManagement, feePerformance, feeExit, feeAll);
     }
 
 
@@ -123,9 +137,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
         // Deposit to the vault
         uint256 currentShares = oracle.assetToShare(asset, assetAmount);
-        vault.depositToVault(
-            _msgSender(), address(this), asset, assetAmount, currentShares
-        );
+        vault.depositToVault(_msgSender(), asset, assetAmount, currentShares);
 
         // Retrieve deposit info
         DepositInfo memory oldInfo = depositInfo[_msgSender()];
@@ -142,6 +154,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         );
 
         // Event
+        emit Deposit(_msgSender(), asset, assetAmount, currentShares);
     }
 
     /**
@@ -160,7 +173,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
         // Calculate fees
         uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
-        uint256 feeAll = _calculateFees(assetAmount, _msgSender());
+        (uint256 feeAll, uint256 feeManagement, uint256 feePerformance, uint256 feeExit) 
+            = _calculateFees(assetAmount, _msgSender());
         require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
 
         // Update pending info
@@ -173,6 +187,10 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         });
 
         // Event
+        emit RequestWithdraw(
+            _msgSender(), asset, sharesAmount, assetAmount,
+            feeManagement, feePerformance, feeExit, feeAll
+        );
     }
 
 
@@ -195,13 +213,12 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         // Withdraw from the vault
         if (oracle.isSupportedAssetExternal(info.asset)) {
             vault.withdrawFromVault(
-                address(this), _msgSender(), info.asset, 
-                info.shares, info.assetAmount - info.fee
+                _msgSender(), info.asset, info.shares, info.assetAmount - info.fee
             );
             depositInfo[_msgSender()].shares -= info.shares;
-            // emit
+            emit CompleteWithdraw(_msgSender(), info.timestamp);
         } else {
-            // emit
+            emit CancelWithdraw(_msgSender(), info.timestamp);
         }
 
         // Clear pending info
@@ -232,7 +249,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         } else {
             revert("LIQUID_CASHIER: invalid key");
         }
-        // emit
+        emit ParameterUpdate(key, value);
     }
     
 }

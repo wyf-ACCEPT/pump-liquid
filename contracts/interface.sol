@@ -12,9 +12,9 @@ interface ILiquidOracle {
 
 interface ILiquidVault {
     function depositToVault(
-        address from, address to, address asset, uint256 assetAmount, uint256 shareAmount
+        address from, address asset, uint256 assetAmount, uint256 shareAmount
     ) external;
     function withdrawFromVault(
-        address from, address to, address asset, uint256 shareAmount, uint256 assetAmount
+        address to, address asset, uint256 shareAmount, uint256 assetAmount
     ) external;
 }
