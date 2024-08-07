@@ -19,7 +19,7 @@ describe("test the functions", function () {
   })
 
 
-  it("should finish user journey", async function () {
+  it("should finish test for oracle", async function () {
     const { liquidOracle, tokens } = await loadFixture(deployContracts)
     const [_owner, updater, user1, user2] = await ethers.getSigners()
 
