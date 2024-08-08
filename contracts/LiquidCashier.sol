@@ -36,9 +36,6 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     }
 
 
-    // ============================= Constants =============================
-
-
     // ============================= Parameters ============================
 
     ILiquidVault public vault;
@@ -57,6 +54,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
 
     // =============================== Events ==============================
+
     event Deposit(
         address indexed from, address indexed asset, uint256 assetAmount, uint256 shareAmount
     );
@@ -83,9 +81,6 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         feeRatePerformance = 2000;
         feeRateExit = 100;
     }
-
-
-    // =========================== View functions ==========================
 
 
     // ============================== Internal =============================

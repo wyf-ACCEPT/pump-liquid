@@ -62,13 +62,40 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     }
 
 
+    // ==================== Write functions - liquidity ====================
+
+    function depositLiquidityDirectly(
+        address asset, uint256 amount
+    ) public onlyRole(LIQUIDITY_MANAGER_ROLE) {
+        IERC20(asset).safeTransferFrom(_msgSender(), address(this), amount);
+    }
+
+    function withdrawLiquidityDirectly(
+        address asset, uint256 amount
+    ) public onlyRole(LIQUIDITY_MANAGER_ROLE) {
+        IERC20(asset).safeTransfer(_msgSender(), amount);
+    }
+
+
     // ====================== Write functions - admin ======================
 
     /**
      * @notice We use `reinitializer` to ensure that the `cashier` role is only set once.
      */
-    function setCashier(address _cashier) public onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(2) {
+    function setCashier(
+        address _cashier
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(2) {
         cashier = _cashier;
         _grantRole(CASHIER_ROLE, cashier);
+    }
+
+    function setLiquidityManager(
+        address account, bool status
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        if (status) {
+            _grantRole(LIQUIDITY_MANAGER_ROLE, account);
+        } else {
+            _revokeRole(LIQUIDITY_MANAGER_ROLE, account);
+        }
     }
 }

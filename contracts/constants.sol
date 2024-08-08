@@ -33,6 +33,13 @@ abstract contract Constants {
      */
     bytes32 public constant PRICE_UPDATER_ROLE = 
         0x80a030ace745e3f9b21b30d8f6ac315b0db7a572dca17866ddb1edc31df8099f;
+
+    /**
+     * @notice The `LIQUIDITY_MANAGER_ROLE` is used to manage the liquidity of the supported 
+     *      assets. Value: keccak256("LiquidOracle: LIQUIDITY_MANAGER_ROLE")
+     */
+    bytes32 public constant LIQUIDITY_MANAGER_ROLE = 
+        0xcbb8e99d7d1dedee5e6fbbbc9227e55b29665cbba779af85c8f83b8c3cdf01f0;
         
     /**
      * @notice The `PRICE_UPDATER_ROLE` is used to update the prices of the supported assets.

@@ -58,6 +58,7 @@ describe("test the functions", function () {
       parseUnits("1.25", 36 + 18 - 18),
     ])
 
+
     // ============================ Deposit ============================
     // User 1 deposit 0.2 BTCB -> 12000 bSHARE
     let day = 0
@@ -100,6 +101,7 @@ describe("test the functions", function () {
     console.log(`\t\t Equivalent deposit day: ${passedDays} days ago`)
     console.log(`\t\t Equivalent standard price: ${formatUnits(depositInfo[2], 36)}`)
 
+
     // ========================= Request Withdraw =========================
     // Update prices 40 days later (60 days in total)
     day += 40
@@ -139,8 +141,16 @@ describe("test the functions", function () {
     console.log(`\t\t Charged fees: ${formatUnits(pendingInfo[4], 6)} USDC`)
 
     // Liquid manager deposit some USDC to the vault
-    tokens.mockUSDC.connect(lp).transfer(await liquidVault.getAddress(), parseUnits("30000", 6))
-    
+    await expect(liquidVault.connect(lp).depositLiquidityDirectly(
+      tokenAddresses[2], parseUnits("30000", 6)
+    )).to.be.revertedWithCustomError(liquidOracle, "AccessControlUnauthorizedAccount")
+    await liquidVault.setLiquidityManager(lp.address, true)
+    tokens.mockUSDC.connect(lp).approve(await liquidVault.getAddress(), parseUnits("30000", 6))
+
+    await liquidVault.connect(lp).depositLiquidityDirectly(tokenAddresses[2], parseUnits("30000", 6))
+    await liquidVault.connect(lp).withdrawLiquidityDirectly(tokenAddresses[1], parseUnits("1.2", 8))
+
+
     // ========================= Complete Withdraw =========================
     // Complete withdraw after 7 days
     day += 7
