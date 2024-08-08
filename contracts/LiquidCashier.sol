@@ -99,8 +99,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
      *      All of these fees should be calculated with Math library, to both avoid overflow
      *       and truncation errors.
      */
-    function _calculateFees(uint256 baseAmount, address user) 
-        internal view returns (uint256 , uint256, uint256, uint256) {
+    function calculateFees(uint256 baseAmount, address user) 
+        public view returns (uint256 , uint256, uint256, uint256) {
         // Management fee
         uint256 timeElapsed = block.timestamp - depositInfo[user].equivalentTimestamp;
         uint256 feeManagement = baseAmount
@@ -173,8 +173,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
         // Calculate fees
         uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
-        (uint256 feeAll, uint256 feeManagement, uint256 feePerformance, uint256 feeExit) 
-            = _calculateFees(assetAmount, _msgSender());
+        (uint256 feeManagement, uint256 feePerformance, uint256 feeExit, uint256 feeAll)
+            = calculateFees(assetAmount, _msgSender());
         require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
 
         // Update pending info
@@ -240,14 +240,17 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         bytes32 keyHash = keccak256(abi.encodePacked(key));
         if (keyHash == keccak256("withdrawPeriod")) {
             withdrawPeriod = value;
-        } else if (keyHash == keccak256("feeRateManagement")) {
-            feeRateManagement = value;
-        } else if (keyHash == keccak256("feeRatePerformance")) {
-            feeRatePerformance = value;
-        } else if (keyHash == keccak256("feeRateExit")) {
-            feeRateExit = value;
         } else {
-            revert("LIQUID_CASHIER: invalid key");
+            require(value <= 10000, "LIQUID_CASHIER: invalid fee rate");
+            if (keyHash == keccak256("feeRateManagement")) {
+                feeRateManagement = value;
+            } else if (keyHash == keccak256("feeRatePerformance")) {
+                feeRatePerformance = value;
+            } else if (keyHash == keccak256("feeRateExit")) {
+                feeRateExit = value;
+            } else {
+                revert("LIQUID_CASHIER: invalid key");
+            }
         }
         emit ParameterUpdate(key, value);
     }
