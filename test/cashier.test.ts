@@ -124,7 +124,7 @@ describe("test the functions", function () {
      */
     expect(await liquidOracle.shareToAsset(tokenAddresses[2], parseUnits("20000", 18)))
       .to.equal(parseUnits("25000", 6))
-    const fees = await liquidCashier.calculateFees(parseUnits("25000", 6), user1.address)
+    const fees = await liquidCashier.calculateFees(parseUnits("25000", 6), user1.address, false)
     expect(fees[0]).to.closeTo(parseUnits("61.6438", 6), parseUnits("0.0001", 6))
     expect(fees[1]).to.closeTo(parseUnits("1200.0000", 6), parseUnits("0.0001", 6))
     expect(fees[2]).to.closeTo(parseUnits("250.0000", 6), parseUnits("0.0001", 6))

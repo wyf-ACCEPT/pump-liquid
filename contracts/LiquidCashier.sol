@@ -45,6 +45,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     uint256 public feeRateManagement;   // Default to 2% per year
     uint256 public feeRatePerformance;  // Default to 20%
     uint256 public feeRateExit;         // Default to 1%
+    uint256 public feeRateInstant;      // Default to 5%
 
 
     // ============================== Storage ==============================
@@ -63,6 +64,10 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         uint256 feeManagement, uint256 feePerformance, uint256 feeExit, uint256 feeAll
     );
     event CompleteWithdraw(address indexed to, uint256 requestTimestamp);
+    event InstantWithdraw(
+        address indexed from, address indexed asset, uint256 shareAmount, uint256 assetAmount,
+        uint256 feeManagement, uint256 feePerformance, uint256 feeInstantExit, uint256 feeAll
+    );
     event CancelWithdraw(address indexed to, uint256 requestTimestamp);
     event ParameterUpdate(string key, uint256 value);
 
@@ -80,6 +85,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         feeRateManagement = 200;
         feeRatePerformance = 2000;
         feeRateExit = 100;
+        feeRateInstant = 500;
     }
 
 
@@ -94,7 +100,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
      *      All of these fees should be calculated with Math library, to both avoid overflow
      *       and truncation errors.
      */
-    function calculateFees(uint256 baseAmount, address user) 
+    function calculateFees(uint256 baseAmount, address user, bool isInstant) 
         public view returns (uint256 , uint256, uint256, uint256) {
         // Management fee
         uint256 timeElapsed = block.timestamp - depositInfo[user].equivalentTimestamp;
@@ -110,7 +116,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
             .mulDiv(feeRatePerformance, 10000);
 
         // Exit fee
-        uint256 feeExit = baseAmount.mulDiv(feeRateExit, 10000);
+        uint256 feeExit = baseAmount
+            .mulDiv(isInstant ? feeRateInstant : feeRateExit, 10000);
 
         // All fees
         uint256 feeAll = feeManagement + feePerformance + feeExit;
@@ -169,7 +176,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         // Calculate fees
         uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
         (uint256 feeManagement, uint256 feePerformance, uint256 feeExit, uint256 feeAll)
-            = calculateFees(assetAmount, _msgSender());
+            = calculateFees(assetAmount, _msgSender(), false);
         require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
 
         // Update pending info
@@ -220,6 +227,39 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         delete pendingInfo[_msgSender()];
     }
 
+    /**
+     * @notice Instant withdraw the asset from the vault and get the asset instantly.
+     *      It will charge a higher fee than the normal withdraw request, and it may
+     *      be not success if the asset liquidity is not enough.
+     */
+    function instantWithdraw(address asset, uint256 sharesAmount) public whenNotPaused {
+        // Check conditions
+        require(sharesAmount > 0, "LIQUID_CASHIER: invalid amount");
+        require(pendingInfo[_msgSender()].shares == 0, "LIQUID_CASHIER: request exists");
+        require(
+            sharesAmount <= depositInfo[_msgSender()].shares, 
+            "LIQUID_CASHIER: insufficient shares"
+        );
+
+        // Calculate fees
+        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
+        (uint256 feeManagement, uint256 feePerformance, uint256 feeInstantExit, uint256 feeAll)
+            = calculateFees(assetAmount, _msgSender(), true);
+        require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
+
+        // Withdraw instantly
+        vault.withdrawFromVault(
+            _msgSender(), asset, sharesAmount, assetAmount - feeAll
+        );
+        depositInfo[_msgSender()].shares -= sharesAmount;
+
+        // Event
+        emit InstantWithdraw(
+            _msgSender(), asset, sharesAmount, assetAmount,
+            feeManagement, feePerformance, feeInstantExit, feeAll
+        );
+    }
+
 
     // ====================== Write functions - admin ======================
 
@@ -243,6 +283,9 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
                 feeRatePerformance = value;
             } else if (keyHash == keccak256("feeRateExit")) {
                 feeRateExit = value;
+            } else if (keyHash == keccak256("feeRateInstant")) {
+                require(value >= feeRateExit, "LIQUID_CASHIER: instant fee rate too low");
+                feeRateInstant = value;
             } else {
                 revert("LIQUID_CASHIER: invalid key");
             }
