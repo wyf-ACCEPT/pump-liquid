@@ -1,1 +1,3925 @@
-{"contracts/constants.sol":{"l":{},"path":"/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/constants.sol","s":{},"b":{},"f":{},"fnMap":{},"statementMap":{},"branchMap":{}},"contracts/interface.sol":{"l":{},"path":"/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/interface.sol","s":{},"b":{},"f":{},"fnMap":{},"statementMap":{},"branchMap":{}},"contracts/lib/WeightedMath.sol":{"l":{"22":14},"path":"/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/lib/WeightedMath.sol","s":{"1":14},"b":{},"f":{"1":14},"fnMap":{"1":{"name":"weightedAverage","line":18,"loc":{"start":{"line":18,"column":4},"end":{"line":23,"column":4}}}},"statementMap":{"1":{"start":{"line":22,"column":8},"end":{"line":22,"column":90}}},"branchMap":{}},"contracts/LiquidCashier.sol":{"l":{"78":1,"79":1,"81":1,"82":1,"84":1,"85":1,"86":1,"87":1,"88":1,"106":6,"107":6,"112":6,"113":6,"114":6,"119":6,"123":6,"124":6,"138":7,"141":7,"142":7,"145":7,"148":7,"149":7,"153":7,"159":7,"169":2,"170":2,"171":2,"177":2,"178":2,"180":2,"183":2,"192":2,"206":3,"207":3,"213":2,"216":2,"217":1,"220":1,"221":1,"223":1,"227":2,"237":2,"238":2,"239":2,"245":2,"246":2,"248":2,"251":2,"254":1,"257":1,"267":1,"271":1,"275":10,"276":10,"277":1,"279":9,"280":9,"281":2,"283":2,"285":2,"287":2,"288":2,"290":1,"293":9},"path":"/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidCashier.sol","s":{"1":1,"2":1,"3":6,"4":6,"5":6,"6":6,"7":6,"8":6,"9":6,"10":6,"11":7,"12":7,"13":7,"14":7,"15":7,"16":2,"17":2,"18":2,"19":2,"20":2,"21":2,"22":2,"23":3,"24":3,"25":2,"26":2,"27":1,"28":1,"29":1,"30":2,"31":2,"32":2,"33":2,"34":2,"35":2,"36":2,"37":1,"38":1,"39":1,"40":10,"41":10,"42":9,"43":9,"44":7,"45":5,"46":3,"47":2,"48":1,"49":9},"b":{"1":[1,0],"2":[0,6],"3":[7,1],"4":[7,0],"5":[2,0],"6":[2,0],"7":[2,0],"8":[2,0],"9":[2,0],"10":[3,0],"11":[3,0],"12":[2,1],"13":[1,1],"14":[2,0],"15":[2,0],"16":[2,0],"17":[2,0],"18":[2,0],"19":[1,0],"20":[1,0],"21":[10,0],"22":[1,9],"23":[9,0],"24":[2,7],"25":[2,5],"26":[2,3],"27":[2,1],"28":[2,0]},"f":{"1":1,"2":6,"3":7,"4":2,"5":3,"6":2,"7":1,"8":1,"9":10},"fnMap":{"1":{"name":"initialize","line":77,"loc":{"start":{"line":77,"column":4},"end":{"line":89,"column":4}}},"2":{"name":"calculateFees","line":103,"loc":{"start":{"line":103,"column":4},"end":{"line":125,"column":4}}},"3":{"name":"deposit","line":136,"loc":{"start":{"line":136,"column":4},"end":{"line":160,"column":4}}},"4":{"name":"requestWithdraw","line":167,"loc":{"start":{"line":167,"column":4},"end":{"line":196,"column":4}}},"5":{"name":"completeWithdraw","line":204,"loc":{"start":{"line":204,"column":4},"end":{"line":228,"column":4}}},"6":{"name":"instantWithdraw","line":235,"loc":{"start":{"line":235,"column":4},"end":{"line":261,"column":4}}},"7":{"name":"pause","line":266,"loc":{"start":{"line":266,"column":4},"end":{"line":268,"column":4}}},"8":{"name":"unpause","line":270,"loc":{"start":{"line":270,"column":4},"end":{"line":272,"column":4}}},"9":{"name":"setParameter","line":274,"loc":{"start":{"line":274,"column":4},"end":{"line":294,"column":4}}}},"statementMap":{"1":{"start":{"line":78,"column":8},"end":{"line":78,"column":29}},"2":{"start":{"line":79,"column":8},"end":{"line":79,"column":51}},"3":{"start":{"line":106,"column":8},"end":{"line":106,"column":85}},"4":{"start":{"line":107,"column":8},"end":{"line":107,"column":4068}},"5":{"start":{"line":112,"column":8},"end":{"line":112,"column":63}},"6":{"start":{"line":113,"column":8},"end":{"line":113,"column":56}},"7":{"start":{"line":114,"column":8},"end":{"line":114,"column":4361}},"8":{"start":{"line":119,"column":8},"end":{"line":119,"column":4578}},"9":{"start":{"line":123,"column":8},"end":{"line":123,"column":65}},"10":{"start":{"line":124,"column":8},"end":{"line":124,"column":63}},"11":{"start":{"line":138,"column":8},"end":{"line":138,"column":65}},"12":{"start":{"line":141,"column":8},"end":{"line":141,"column":71}},"13":{"start":{"line":142,"column":8},"end":{"line":142,"column":76}},"14":{"start":{"line":145,"column":8},"end":{"line":145,"column":62}},"15":{"start":{"line":159,"column":8},"end":{"line":159,"column":69}},"16":{"start":{"line":169,"column":8},"end":{"line":169,"column":66}},"17":{"start":{"line":170,"column":8},"end":{"line":170,"column":87}},"18":{"start":{"line":171,"column":8},"end":{"line":171,"column":6759}},"19":{"start":{"line":177,"column":8},"end":{"line":177,"column":70}},"20":{"start":{"line":178,"column":8},"end":{"line":178,"column":7052}},"21":{"start":{"line":180,"column":8},"end":{"line":180,"column":75}},"22":{"start":{"line":192,"column":8},"end":{"line":192,"column":7504}},"23":{"start":{"line":206,"column":8},"end":{"line":206,"column":90}},"24":{"start":{"line":207,"column":8},"end":{"line":207,"column":8106}},"25":{"start":{"line":213,"column":8},"end":{"line":213,"column":59}},"26":{"start":{"line":216,"column":8},"end":{"line":216,"column":8395}},"27":{"start":{"line":217,"column":12},"end":{"line":217,"column":8462}},"28":{"start":{"line":221,"column":12},"end":{"line":221,"column":63}},"29":{"start":{"line":223,"column":12},"end":{"line":223,"column":61}},"30":{"start":{"line":237,"column":8},"end":{"line":237,"column":66}},"31":{"start":{"line":238,"column":8},"end":{"line":238,"column":87}},"32":{"start":{"line":239,"column":8},"end":{"line":239,"column":9413}},"33":{"start":{"line":245,"column":8},"end":{"line":245,"column":70}},"34":{"start":{"line":246,"column":8},"end":{"line":246,"column":9705}},"35":{"start":{"line":248,"column":8},"end":{"line":248,"column":75}},"36":{"start":{"line":251,"column":8},"end":{"line":251,"column":9920}},"37":{"start":{"line":257,"column":8},"end":{"line":257,"column":10109}},"38":{"start":{"line":267,"column":8},"end":{"line":267,"column":15}},"39":{"start":{"line":271,"column":8},"end":{"line":271,"column":17}},"40":{"start":{"line":275,"column":8},"end":{"line":275,"column":58}},"41":{"start":{"line":276,"column":8},"end":{"line":276,"column":10691}},"42":{"start":{"line":279,"column":12},"end":{"line":279,"column":70}},"43":{"start":{"line":280,"column":12},"end":{"line":280,"column":10879}},"44":{"start":{"line":282,"column":19},"end":{"line":282,"column":10990}},"45":{"start":{"line":284,"column":19},"end":{"line":284,"column":11103}},"46":{"start":{"line":286,"column":19},"end":{"line":286,"column":11202}},"47":{"start":{"line":287,"column":16},"end":{"line":287,"column":88}},"48":{"start":{"line":290,"column":16},"end":{"line":290,"column":52}},"49":{"start":{"line":293,"column":8},"end":{"line":293,"column":40}}},"branchMap":{"1":{"line":77,"type":"if","locations":[{"start":{"line":77,"column":64},"end":{"line":77,"column":64}},{"start":{"line":77,"column":64},"end":{"line":77,"column":64}}]},"2":{"line":114,"type":"if","locations":[{"start":{"line":114,"column":56},"end":{"line":114,"column":56}},{"start":{"line":114,"column":60},"end":{"line":116,"column":45}}]},"3":{"line":136,"type":"if","locations":[{"start":{"line":136,"column":64},"end":{"line":136,"column":64}},{"start":{"line":136,"column":64},"end":{"line":136,"column":64}}]},"4":{"line":138,"type":"if","locations":[{"start":{"line":138,"column":8},"end":{"line":138,"column":8}},{"start":{"line":138,"column":8},"end":{"line":138,"column":8}}]},"5":{"line":167,"type":"if","locations":[{"start":{"line":167,"column":73},"end":{"line":167,"column":73}},{"start":{"line":167,"column":73},"end":{"line":167,"column":73}}]},"6":{"line":169,"type":"if","locations":[{"start":{"line":169,"column":8},"end":{"line":169,"column":8}},{"start":{"line":169,"column":8},"end":{"line":169,"column":8}}]},"7":{"line":170,"type":"if","locations":[{"start":{"line":170,"column":8},"end":{"line":170,"column":8}},{"start":{"line":170,"column":8},"end":{"line":170,"column":8}}]},"8":{"line":171,"type":"if","locations":[{"start":{"line":171,"column":8},"end":{"line":171,"column":8}},{"start":{"line":171,"column":8},"end":{"line":171,"column":8}}]},"9":{"line":180,"type":"if","locations":[{"start":{"line":180,"column":8},"end":{"line":180,"column":8}},{"start":{"line":180,"column":8},"end":{"line":180,"column":8}}]},"10":{"line":204,"type":"if","locations":[{"start":{"line":204,"column":39},"end":{"line":204,"column":39}},{"start":{"line":204,"column":39},"end":{"line":204,"column":39}}]},"11":{"line":206,"type":"if","locations":[{"start":{"line":206,"column":8},"end":{"line":206,"column":8}},{"start":{"line":206,"column":8},"end":{"line":206,"column":8}}]},"12":{"line":207,"type":"if","locations":[{"start":{"line":207,"column":8},"end":{"line":207,"column":8}},{"start":{"line":207,"column":8},"end":{"line":207,"column":8}}]},"13":{"line":216,"type":"if","locations":[{"start":{"line":216,"column":8},"end":{"line":216,"column":8}},{"start":{"line":216,"column":8},"end":{"line":216,"column":8}}]},"14":{"line":235,"type":"if","locations":[{"start":{"line":235,"column":73},"end":{"line":235,"column":73}},{"start":{"line":235,"column":73},"end":{"line":235,"column":73}}]},"15":{"line":237,"type":"if","locations":[{"start":{"line":237,"column":8},"end":{"line":237,"column":8}},{"start":{"line":237,"column":8},"end":{"line":237,"column":8}}]},"16":{"line":238,"type":"if","locations":[{"start":{"line":238,"column":8},"end":{"line":238,"column":8}},{"start":{"line":238,"column":8},"end":{"line":238,"column":8}}]},"17":{"line":239,"type":"if","locations":[{"start":{"line":239,"column":8},"end":{"line":239,"column":8}},{"start":{"line":239,"column":8},"end":{"line":239,"column":8}}]},"18":{"line":248,"type":"if","locations":[{"start":{"line":248,"column":8},"end":{"line":248,"column":8}},{"start":{"line":248,"column":8},"end":{"line":248,"column":8}}]},"19":{"line":266,"type":"if","locations":[{"start":{"line":266,"column":28},"end":{"line":266,"column":28}},{"start":{"line":266,"column":28},"end":{"line":266,"column":28}}]},"20":{"line":270,"type":"if","locations":[{"start":{"line":270,"column":30},"end":{"line":270,"column":30}},{"start":{"line":270,"column":30},"end":{"line":270,"column":30}}]},"21":{"line":274,"type":"if","locations":[{"start":{"line":274,"column":67},"end":{"line":274,"column":67}},{"start":{"line":274,"column":67},"end":{"line":274,"column":67}}]},"22":{"line":276,"type":"if","locations":[{"start":{"line":276,"column":8},"end":{"line":276,"column":8}},{"start":{"line":276,"column":8},"end":{"line":276,"column":8}}]},"23":{"line":279,"type":"if","locations":[{"start":{"line":279,"column":12},"end":{"line":279,"column":12}},{"start":{"line":279,"column":12},"end":{"line":279,"column":12}}]},"24":{"line":280,"type":"if","locations":[{"start":{"line":280,"column":12},"end":{"line":280,"column":12}},{"start":{"line":280,"column":12},"end":{"line":280,"column":12}}]},"25":{"line":282,"type":"if","locations":[{"start":{"line":282,"column":19},"end":{"line":282,"column":19}},{"start":{"line":282,"column":19},"end":{"line":282,"column":19}}]},"26":{"line":284,"type":"if","locations":[{"start":{"line":284,"column":19},"end":{"line":284,"column":19}},{"start":{"line":284,"column":19},"end":{"line":284,"column":19}}]},"27":{"line":286,"type":"if","locations":[{"start":{"line":286,"column":19},"end":{"line":286,"column":19}},{"start":{"line":286,"column":19},"end":{"line":286,"column":19}}]},"28":{"line":287,"type":"if","locations":[{"start":{"line":287,"column":16},"end":{"line":287,"column":16}},{"start":{"line":287,"column":16},"end":{"line":287,"column":16}}]}}},"contracts/LiquidOracle.sol":{"l":{"60":2,"61":2,"62":2,"64":2,"68":14,"72":14,"79":2,"83":1,"87":1,"91":1,"95":13,"99":1,"100":1,"101":1,"103":1,"104":1,"108":1,"109":1,"110":1,"112":1,"113":1,"119":8,"120":8,"126":6,"127":6,"134":16,"135":16,"136":16,"140":16,"141":16,"142":16,"146":1,"147":1,"148":1,"149":2,"150":1,"151":1,"152":1,"155":1,"170":11,"171":11,"175":10,"180":9,"181":36,"182":36,"186":9,"187":9,"191":9,"192":9,"199":5,"200":4,"202":1},"path":"/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidOracle.sol","s":{"1":2,"2":2,"3":2,"4":14,"5":2,"6":1,"7":1,"8":1,"9":13,"10":1,"11":1,"12":1,"13":1,"14":1,"15":1,"16":8,"17":8,"18":6,"19":6,"20":16,"21":16,"22":16,"23":16,"24":16,"25":1,"26":1,"27":2,"28":1,"29":1,"30":11,"31":11,"32":10,"33":9,"34":9,"35":5,"36":4,"37":1},"b":{"1":[2,0],"2":[14,0],"3":[14,0],"4":[8,0],"5":[8,0],"6":[6,0],"7":[6,0],"8":[16,0],"9":[16,0],"10":[16,0],"11":[16,0],"12":[1,0],"13":[1,0],"14":[1,1],"15":[11,2],"16":[10,1],"17":[9,1],"18":[5,0],"19":[4,1]},"f":{"1":2,"2":14,"3":2,"4":1,"5":1,"6":1,"7":13,"8":1,"9":1,"10":8,"11":6,"12":16,"13":1,"14":11,"15":5},"fnMap":{"1":{"name":"initialize","line":59,"loc":{"start":{"line":59,"column":4},"end":{"line":65,"column":4}}},"2":{"name":"isSupported","line":67,"loc":{"start":{"line":67,"column":4},"end":{"line":73,"column":4}}},"3":{"name":"isSupportedAssetExternal","line":78,"loc":{"start":{"line":78,"column":4},"end":{"line":80,"column":4}}},"4":{"name":"assetPriceToShareExternal","line":82,"loc":{"start":{"line":82,"column":4},"end":{"line":84,"column":4}}},"5":{"name":"sharePriceToAssetExternal","line":86,"loc":{"start":{"line":86,"column":4},"end":{"line":88,"column":4}}},"6":{"name":"getSupportedAssetsNum","line":90,"loc":{"start":{"line":90,"column":4},"end":{"line":92,"column":4}}},"7":{"name":"fetchShareStandardPrice","line":94,"loc":{"start":{"line":94,"column":4},"end":{"line":96,"column":4}}},"8":{"name":"fetchAssetsPricesAll","line":98,"loc":{"start":{"line":98,"column":4},"end":{"line":105,"column":4}}},"9":{"name":"fetchSharePricesAll","line":107,"loc":{"start":{"line":107,"column":4},"end":{"line":114,"column":4}}},"10":{"name":"assetToShare","line":118,"loc":{"start":{"line":116,"column":4},"end":{"line":121,"column":4}}},"11":{"name":"shareToAsset","line":125,"loc":{"start":{"line":123,"column":4},"end":{"line":128,"column":4}}},"12":{"name":"addSupportedAsset","line":133,"loc":{"start":{"line":133,"column":4},"end":{"line":143,"column":4}}},"13":{"name":"removeSupportedAsset","line":145,"loc":{"start":{"line":145,"column":4},"end":{"line":156,"column":4}}},"14":{"name":"updatePrices","line":169,"loc":{"start":{"line":167,"column":4},"end":{"line":193,"column":4}}},"15":{"name":"setPriceUpdater","line":198,"loc":{"start":{"line":198,"column":4},"end":{"line":204,"column":4}}}},"statementMap":{"1":{"start":{"line":60,"column":8},"end":{"line":60,"column":29}},"2":{"start":{"line":61,"column":8},"end":{"line":61,"column":51}},"3":{"start":{"line":62,"column":8},"end":{"line":62,"column":60}},"4":{"start":{"line":68,"column":8},"end":{"line":68,"column":2202}},"5":{"start":{"line":79,"column":8},"end":{"line":79,"column":38}},"6":{"start":{"line":83,"column":8},"end":{"line":83,"column":39}},"7":{"start":{"line":87,"column":8},"end":{"line":87,"column":39}},"8":{"start":{"line":91,"column":8},"end":{"line":91,"column":40}},"9":{"start":{"line":95,"column":8},"end":{"line":95,"column":48}},"10":{"start":{"line":99,"column":8},"end":{"line":99,"column":78}},"11":{"start":{"line":100,"column":8},"end":{"line":100,"column":3242}},"12":{"start":{"line":104,"column":8},"end":{"line":104,"column":21}},"13":{"start":{"line":108,"column":8},"end":{"line":108,"column":78}},"14":{"start":{"line":109,"column":8},"end":{"line":109,"column":3649}},"15":{"start":{"line":113,"column":8},"end":{"line":113,"column":21}},"16":{"start":{"line":119,"column":8},"end":{"line":119,"column":78}},"17":{"start":{"line":120,"column":8},"end":{"line":120,"column":76}},"18":{"start":{"line":126,"column":8},"end":{"line":126,"column":78}},"19":{"start":{"line":127,"column":8},"end":{"line":127,"column":76}},"20":{"start":{"line":134,"column":8},"end":{"line":134,"column":84}},"21":{"start":{"line":135,"column":8},"end":{"line":135,"column":89}},"22":{"start":{"line":136,"column":8},"end":{"line":136,"column":4828}},"23":{"start":{"line":141,"column":8},"end":{"line":141,"column":37}},"24":{"start":{"line":142,"column":8},"end":{"line":142,"column":30}},"25":{"start":{"line":146,"column":8},"end":{"line":146,"column":78}},"26":{"start":{"line":148,"column":8},"end":{"line":148,"column":5322}},"27":{"start":{"line":149,"column":12},"end":{"line":149,"column":5396}},"28":{"start":{"line":151,"column":16},"end":{"line":151,"column":39}},"29":{"start":{"line":155,"column":8},"end":{"line":155,"column":32}},"30":{"start":{"line":170,"column":8},"end":{"line":170,"column":50}},"31":{"start":{"line":171,"column":8},"end":{"line":171,"column":6226}},"32":{"start":{"line":175,"column":8},"end":{"line":175,"column":6364}},"33":{"start":{"line":180,"column":8},"end":{"line":180,"column":6521}},"34":{"start":{"line":192,"column":8},"end":{"line":192,"column":48}},"35":{"start":{"line":199,"column":8},"end":{"line":199,"column":7296}},"36":{"start":{"line":200,"column":12},"end":{"line":200,"column":50}},"37":{"start":{"line":202,"column":12},"end":{"line":202,"column":51}}},"branchMap":{"1":{"line":59,"type":"if","locations":[{"start":{"line":59,"column":33},"end":{"line":59,"column":33}},{"start":{"line":59,"column":33},"end":{"line":59,"column":33}}]},"2":{"line":68,"type":"if","locations":[{"start":{"line":68,"column":8},"end":{"line":68,"column":8}},{"start":{"line":68,"column":8},"end":{"line":68,"column":8}}]},"3":{"line":69,"type":"cond-expr","locations":[{"start":{"line":69,"column":12},"end":{"line":69,"column":34}},{"start":{"line":69,"column":39},"end":{"line":69,"column":61}}]},"4":{"line":118,"type":"if","locations":[{"start":{"line":118,"column":18},"end":{"line":118,"column":18}},{"start":{"line":118,"column":18},"end":{"line":118,"column":18}}]},"5":{"line":119,"type":"if","locations":[{"start":{"line":119,"column":8},"end":{"line":119,"column":8}},{"start":{"line":119,"column":8},"end":{"line":119,"column":8}}]},"6":{"line":125,"type":"if","locations":[{"start":{"line":125,"column":18},"end":{"line":125,"column":18}},{"start":{"line":125,"column":18},"end":{"line":125,"column":18}}]},"7":{"line":126,"type":"if","locations":[{"start":{"line":126,"column":8},"end":{"line":126,"column":8}},{"start":{"line":126,"column":8},"end":{"line":126,"column":8}}]},"8":{"line":133,"type":"if","locations":[{"start":{"line":133,"column":53},"end":{"line":133,"column":53}},{"start":{"line":133,"column":53},"end":{"line":133,"column":53}}]},"9":{"line":134,"type":"if","locations":[{"start":{"line":134,"column":8},"end":{"line":134,"column":8}},{"start":{"line":134,"column":8},"end":{"line":134,"column":8}}]},"10":{"line":135,"type":"if","locations":[{"start":{"line":135,"column":8},"end":{"line":135,"column":8}},{"start":{"line":135,"column":8},"end":{"line":135,"column":8}}]},"11":{"line":136,"type":"if","locations":[{"start":{"line":136,"column":8},"end":{"line":136,"column":8}},{"start":{"line":136,"column":8},"end":{"line":136,"column":8}}]},"12":{"line":145,"type":"if","locations":[{"start":{"line":145,"column":56},"end":{"line":145,"column":56}},{"start":{"line":145,"column":56},"end":{"line":145,"column":56}}]},"13":{"line":146,"type":"if","locations":[{"start":{"line":146,"column":8},"end":{"line":146,"column":8}},{"start":{"line":146,"column":8},"end":{"line":146,"column":8}}]},"14":{"line":149,"type":"if","locations":[{"start":{"line":149,"column":12},"end":{"line":149,"column":12}},{"start":{"line":149,"column":12},"end":{"line":149,"column":12}}]},"15":{"line":169,"type":"if","locations":[{"start":{"line":169,"column":13},"end":{"line":169,"column":13}},{"start":{"line":169,"column":13},"end":{"line":169,"column":13}}]},"16":{"line":171,"type":"if","locations":[{"start":{"line":171,"column":8},"end":{"line":171,"column":8}},{"start":{"line":171,"column":8},"end":{"line":171,"column":8}}]},"17":{"line":175,"type":"if","locations":[{"start":{"line":175,"column":8},"end":{"line":175,"column":8}},{"start":{"line":175,"column":8},"end":{"line":175,"column":8}}]},"18":{"line":198,"type":"if","locations":[{"start":{"line":198,"column":66},"end":{"line":198,"column":66}},{"start":{"line":198,"column":66},"end":{"line":198,"column":66}}]},"19":{"line":199,"type":"if","locations":[{"start":{"line":199,"column":8},"end":{"line":199,"column":8}},{"start":{"line":199,"column":8},"end":{"line":199,"column":8}}]}}},"contracts/LiquidVault.sol":{"l":{"25":1,"26":1,"28":1,"29":1,"36":10,"40":10,"49":7,"50":7,"51":7,"52":7,"58":3,"59":3,"60":3,"61":3,"70":2,"76":1,"88":1,"89":1,"95":3,"96":2,"98":1},"path":"/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidVault.sol","s":{"1":1,"2":1,"3":1,"4":1,"5":10,"6":10,"7":7,"8":7,"9":7,"10":7,"11":3,"12":3,"13":3,"14":3,"15":2,"16":1,"17":1,"18":3,"19":2,"20":1},"b":{"1":[1,0],"2":[10,0],"3":[7,3],"4":[7,0],"5":[7,0],"6":[7,0],"7":[3,0],"8":[3,0],"9":[3,0],"10":[2,1],"11":[1,1],"12":[2,0],"13":[1,1],"14":[3,0],"15":[2,1]},"f":{"1":1,"2":10,"3":7,"4":3,"5":2,"6":1,"7":1,"8":3},"fnMap":{"1":{"name":"initialize","line":24,"loc":{"start":{"line":24,"column":4},"end":{"line":30,"column":4}}},"2":{"name":"_update","line":35,"loc":{"start":{"line":35,"column":4},"end":{"line":41,"column":4}}},"3":{"name":"depositToVault","line":48,"loc":{"start":{"line":46,"column":4},"end":{"line":53,"column":4}}},"4":{"name":"withdrawFromVault","line":57,"loc":{"start":{"line":55,"column":4},"end":{"line":62,"column":4}}},"5":{"name":"depositLiquidityDirectly","line":69,"loc":{"start":{"line":67,"column":4},"end":{"line":71,"column":4}}},"6":{"name":"withdrawLiquidityDirectly","line":75,"loc":{"start":{"line":73,"column":4},"end":{"line":77,"column":4}}},"7":{"name":"setCashier","line":87,"loc":{"start":{"line":85,"column":4},"end":{"line":90,"column":4}}},"8":{"name":"setLiquidityManager","line":94,"loc":{"start":{"line":92,"column":4},"end":{"line":100,"column":4}}}},"statementMap":{"1":{"start":{"line":25,"column":8},"end":{"line":25,"column":29}},"2":{"start":{"line":26,"column":8},"end":{"line":26,"column":33}},"3":{"start":{"line":28,"column":8},"end":{"line":28,"column":51}},"4":{"start":{"line":29,"column":8},"end":{"line":29,"column":54}},"5":{"start":{"line":36,"column":8},"end":{"line":36,"column":1107}},"6":{"start":{"line":40,"column":8},"end":{"line":40,"column":37}},"7":{"start":{"line":49,"column":8},"end":{"line":49,"column":1576}},"8":{"start":{"line":50,"column":12},"end":{"line":50,"column":75}},"9":{"start":{"line":51,"column":8},"end":{"line":51,"column":1644}},"10":{"start":{"line":52,"column":12},"end":{"line":52,"column":35}},"11":{"start":{"line":58,"column":8},"end":{"line":58,"column":1863}},"12":{"start":{"line":59,"column":12},"end":{"line":59,"column":33}},"13":{"start":{"line":60,"column":8},"end":{"line":60,"column":1950}},"14":{"start":{"line":61,"column":12},"end":{"line":61,"column":54}},"15":{"start":{"line":70,"column":8},"end":{"line":70,"column":74}},"16":{"start":{"line":76,"column":8},"end":{"line":76,"column":55}},"17":{"start":{"line":89,"column":8},"end":{"line":89,"column":40}},"18":{"start":{"line":95,"column":8},"end":{"line":95,"column":2965}},"19":{"start":{"line":96,"column":12},"end":{"line":96,"column":54}},"20":{"start":{"line":98,"column":12},"end":{"line":98,"column":55}}},"branchMap":{"1":{"line":24,"type":"if","locations":[{"start":{"line":24,"column":73},"end":{"line":24,"column":73}},{"start":{"line":24,"column":73},"end":{"line":24,"column":73}}]},"2":{"line":36,"type":"if","locations":[{"start":{"line":36,"column":8},"end":{"line":36,"column":8}},{"start":{"line":36,"column":8},"end":{"line":36,"column":8}}]},"3":{"line":37,"type":"cond-expr","locations":[{"start":{"line":37,"column":12},"end":{"line":37,"column":29}},{"start":{"line":37,"column":34},"end":{"line":37,"column":49}}]},"4":{"line":48,"type":"if","locations":[{"start":{"line":48,"column":13},"end":{"line":48,"column":13}},{"start":{"line":48,"column":13},"end":{"line":48,"column":13}}]},"5":{"line":49,"type":"if","locations":[{"start":{"line":49,"column":8},"end":{"line":49,"column":8}},{"start":{"line":49,"column":8},"end":{"line":49,"column":8}}]},"6":{"line":51,"type":"if","locations":[{"start":{"line":51,"column":8},"end":{"line":51,"column":8}},{"start":{"line":51,"column":8},"end":{"line":51,"column":8}}]},"7":{"line":57,"type":"if","locations":[{"start":{"line":57,"column":13},"end":{"line":57,"column":13}},{"start":{"line":57,"column":13},"end":{"line":57,"column":13}}]},"8":{"line":58,"type":"if","locations":[{"start":{"line":58,"column":8},"end":{"line":58,"column":8}},{"start":{"line":58,"column":8},"end":{"line":58,"column":8}}]},"9":{"line":60,"type":"if","locations":[{"start":{"line":60,"column":8},"end":{"line":60,"column":8}},{"start":{"line":60,"column":8},"end":{"line":60,"column":8}}]},"10":{"line":69,"type":"if","locations":[{"start":{"line":69,"column":13},"end":{"line":69,"column":13}},{"start":{"line":69,"column":13},"end":{"line":69,"column":13}}]},"11":{"line":75,"type":"if","locations":[{"start":{"line":75,"column":13},"end":{"line":75,"column":13}},{"start":{"line":75,"column":13},"end":{"line":75,"column":13}}]},"12":{"line":87,"type":"if","locations":[{"start":{"line":87,"column":13},"end":{"line":87,"column":13}},{"start":{"line":87,"column":13},"end":{"line":87,"column":13}}]},"13":{"line":87,"type":"if","locations":[{"start":{"line":87,"column":42},"end":{"line":87,"column":42}},{"start":{"line":87,"column":42},"end":{"line":87,"column":42}}]},"14":{"line":94,"type":"if","locations":[{"start":{"line":94,"column":13},"end":{"line":94,"column":13}},{"start":{"line":94,"column":13},"end":{"line":94,"column":13}}]},"15":{"line":95,"type":"if","locations":[{"start":{"line":95,"column":8},"end":{"line":95,"column":8}},{"start":{"line":95,"column":8},"end":{"line":95,"column":8}}]}}},"contracts/mock/MockToken.sol":{"l":{"12":8,"13":8,"17":4},"path":"/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/mock/MockToken.sol","s":{"1":8,"2":4},"b":{},"f":{"1":8,"2":4},"fnMap":{"1":{"name":"constructor","line":11,"loc":{"start":{"line":9,"column":4},"end":{"line":14,"column":4}}},"2":{"name":"decimals","line":16,"loc":{"start":{"line":16,"column":4},"end":{"line":18,"column":4}}}},"statementMap":{"1":{"start":{"line":12,"column":8},"end":{"line":12,"column":39}},"2":{"start":{"line":17,"column":8},"end":{"line":17,"column":24}}},"branchMap":{}},"contracts/mock/MockWETH.sol":{"l":{"10":1,"14":1,"15":1},"path":"/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/mock/MockWETH.sol","s":{"1":1,"2":1,"3":1},"b":{},"f":{"1":1,"2":1,"3":1},"fnMap":{"1":{"name":"constructor","line":7,"loc":{"start":{"line":7,"column":4},"end":{"line":7,"column":48}}},"2":{"name":"deposit","line":9,"loc":{"start":{"line":9,"column":4},"end":{"line":11,"column":4}}},"3":{"name":"withdraw","line":13,"loc":{"start":{"line":13,"column":4},"end":{"line":16,"column":4}}}},"statementMap":{"1":{"start":{"line":10,"column":8},"end":{"line":10,"column":35}},"2":{"start":{"line":14,"column":8},"end":{"line":14,"column":32}},"3":{"start":{"line":15,"column":8},"end":{"line":15,"column":43}}},"branchMap":{}}}
+{
+    "contracts/constants.sol": {
+        "l": {},
+        "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/constants.sol",
+        "s": {},
+        "b": {},
+        "f": {},
+        "fnMap": {},
+        "statementMap": {},
+        "branchMap": {}
+    },
+    "contracts/interface.sol": {
+        "l": {},
+        "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/interface.sol",
+        "s": {},
+        "b": {},
+        "f": {},
+        "fnMap": {},
+        "statementMap": {},
+        "branchMap": {}
+    },
+    "contracts/lib/WeightedMath.sol": {
+        "l": {
+            "22": 14
+        },
+        "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/lib/WeightedMath.sol",
+        "s": {
+            "1": 14
+        },
+        "b": {},
+        "f": {
+            "1": 14
+        },
+        "fnMap": {
+            "1": {
+                "name": "weightedAverage",
+                "line": 18,
+                "loc": {
+                    "start": {
+                        "line": 18,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 23,
+                        "column": 4
+                    }
+                }
+            }
+        },
+        "statementMap": {
+            "1": {
+                "start": {
+                    "line": 22,
+                    "column": 8
+                },
+                "end": {
+                    "line": 22,
+                    "column": 90
+                }
+            }
+        },
+        "branchMap": {}
+    },
+    "contracts/LiquidCashier.sol": {
+        "l": {
+            "78": 1,
+            "79": 1,
+            "81": 1,
+            "82": 1,
+            "84": 1,
+            "85": 1,
+            "86": 1,
+            "87": 1,
+            "88": 1,
+            "106": 6,
+            "107": 6,
+            "112": 6,
+            "113": 6,
+            "114": 6,
+            "119": 6,
+            "123": 6,
+            "124": 6,
+            "138": 7,
+            "141": 7,
+            "142": 7,
+            "145": 7,
+            "148": 7,
+            "149": 7,
+            "153": 7,
+            "159": 7,
+            "169": 2,
+            "170": 2,
+            "171": 2,
+            "177": 2,
+            "178": 2,
+            "180": 2,
+            "183": 2,
+            "192": 2,
+            "206": 3,
+            "207": 3,
+            "213": 2,
+            "216": 2,
+            "217": 1,
+            "220": 1,
+            "221": 1,
+            "223": 1,
+            "227": 2,
+            "237": 2,
+            "238": 2,
+            "239": 2,
+            "245": 2,
+            "246": 2,
+            "248": 2,
+            "251": 2,
+            "254": 1,
+            "257": 1,
+            "267": 1,
+            "271": 1,
+            "275": 10,
+            "276": 10,
+            "277": 1,
+            "279": 9,
+            "280": 9,
+            "281": 2,
+            "283": 2,
+            "285": 2,
+            "287": 2,
+            "288": 2,
+            "290": 1,
+            "293": 9
+        },
+        "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidCashier.sol",
+        "s": {
+            "1": 1,
+            "2": 1,
+            "3": 6,
+            "4": 6,
+            "5": 6,
+            "6": 6,
+            "7": 6,
+            "8": 6,
+            "9": 6,
+            "10": 6,
+            "11": 7,
+            "12": 7,
+            "13": 7,
+            "14": 7,
+            "15": 7,
+            "16": 2,
+            "17": 2,
+            "18": 2,
+            "19": 2,
+            "20": 2,
+            "21": 2,
+            "22": 2,
+            "23": 3,
+            "24": 3,
+            "25": 2,
+            "26": 2,
+            "27": 1,
+            "28": 1,
+            "29": 1,
+            "30": 2,
+            "31": 2,
+            "32": 2,
+            "33": 2,
+            "34": 2,
+            "35": 2,
+            "36": 2,
+            "37": 1,
+            "38": 1,
+            "39": 1,
+            "40": 10,
+            "41": 10,
+            "42": 9,
+            "43": 9,
+            "44": 7,
+            "45": 5,
+            "46": 3,
+            "47": 2,
+            "48": 1,
+            "49": 9
+        },
+        "b": {
+            "1": [
+                1,
+                0
+            ],
+            "2": [
+                0,
+                6
+            ],
+            "3": [
+                7,
+                1
+            ],
+            "4": [
+                7,
+                0
+            ],
+            "5": [
+                2,
+                0
+            ],
+            "6": [
+                2,
+                0
+            ],
+            "7": [
+                2,
+                0
+            ],
+            "8": [
+                2,
+                0
+            ],
+            "9": [
+                2,
+                0
+            ],
+            "10": [
+                3,
+                0
+            ],
+            "11": [
+                3,
+                0
+            ],
+            "12": [
+                2,
+                1
+            ],
+            "13": [
+                1,
+                1
+            ],
+            "14": [
+                2,
+                0
+            ],
+            "15": [
+                2,
+                0
+            ],
+            "16": [
+                2,
+                0
+            ],
+            "17": [
+                2,
+                0
+            ],
+            "18": [
+                2,
+                0
+            ],
+            "19": [
+                1,
+                0
+            ],
+            "20": [
+                1,
+                0
+            ],
+            "21": [
+                10,
+                0
+            ],
+            "22": [
+                1,
+                9
+            ],
+            "23": [
+                9,
+                0
+            ],
+            "24": [
+                2,
+                7
+            ],
+            "25": [
+                2,
+                5
+            ],
+            "26": [
+                2,
+                3
+            ],
+            "27": [
+                2,
+                1
+            ],
+            "28": [
+                2,
+                0
+            ]
+        },
+        "f": {
+            "1": 1,
+            "2": 6,
+            "3": 7,
+            "4": 2,
+            "5": 3,
+            "6": 2,
+            "7": 1,
+            "8": 1,
+            "9": 10
+        },
+        "fnMap": {
+            "1": {
+                "name": "initialize",
+                "line": 77,
+                "loc": {
+                    "start": {
+                        "line": 77,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 89,
+                        "column": 4
+                    }
+                }
+            },
+            "2": {
+                "name": "calculateFees",
+                "line": 103,
+                "loc": {
+                    "start": {
+                        "line": 103,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 125,
+                        "column": 4
+                    }
+                }
+            },
+            "3": {
+                "name": "deposit",
+                "line": 136,
+                "loc": {
+                    "start": {
+                        "line": 136,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 160,
+                        "column": 4
+                    }
+                }
+            },
+            "4": {
+                "name": "requestWithdraw",
+                "line": 167,
+                "loc": {
+                    "start": {
+                        "line": 167,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 196,
+                        "column": 4
+                    }
+                }
+            },
+            "5": {
+                "name": "completeWithdraw",
+                "line": 204,
+                "loc": {
+                    "start": {
+                        "line": 204,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 228,
+                        "column": 4
+                    }
+                }
+            },
+            "6": {
+                "name": "instantWithdraw",
+                "line": 235,
+                "loc": {
+                    "start": {
+                        "line": 235,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 261,
+                        "column": 4
+                    }
+                }
+            },
+            "7": {
+                "name": "pause",
+                "line": 266,
+                "loc": {
+                    "start": {
+                        "line": 266,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 268,
+                        "column": 4
+                    }
+                }
+            },
+            "8": {
+                "name": "unpause",
+                "line": 270,
+                "loc": {
+                    "start": {
+                        "line": 270,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 272,
+                        "column": 4
+                    }
+                }
+            },
+            "9": {
+                "name": "setParameter",
+                "line": 274,
+                "loc": {
+                    "start": {
+                        "line": 274,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 294,
+                        "column": 4
+                    }
+                }
+            }
+        },
+        "statementMap": {
+            "1": {
+                "start": {
+                    "line": 78,
+                    "column": 8
+                },
+                "end": {
+                    "line": 78,
+                    "column": 29
+                }
+            },
+            "2": {
+                "start": {
+                    "line": 79,
+                    "column": 8
+                },
+                "end": {
+                    "line": 79,
+                    "column": 51
+                }
+            },
+            "3": {
+                "start": {
+                    "line": 106,
+                    "column": 8
+                },
+                "end": {
+                    "line": 106,
+                    "column": 85
+                }
+            },
+            "4": {
+                "start": {
+                    "line": 107,
+                    "column": 8
+                },
+                "end": {
+                    "line": 107,
+                    "column": 4068
+                }
+            },
+            "5": {
+                "start": {
+                    "line": 112,
+                    "column": 8
+                },
+                "end": {
+                    "line": 112,
+                    "column": 63
+                }
+            },
+            "6": {
+                "start": {
+                    "line": 113,
+                    "column": 8
+                },
+                "end": {
+                    "line": 113,
+                    "column": 56
+                }
+            },
+            "7": {
+                "start": {
+                    "line": 114,
+                    "column": 8
+                },
+                "end": {
+                    "line": 114,
+                    "column": 4361
+                }
+            },
+            "8": {
+                "start": {
+                    "line": 119,
+                    "column": 8
+                },
+                "end": {
+                    "line": 119,
+                    "column": 4578
+                }
+            },
+            "9": {
+                "start": {
+                    "line": 123,
+                    "column": 8
+                },
+                "end": {
+                    "line": 123,
+                    "column": 65
+                }
+            },
+            "10": {
+                "start": {
+                    "line": 124,
+                    "column": 8
+                },
+                "end": {
+                    "line": 124,
+                    "column": 63
+                }
+            },
+            "11": {
+                "start": {
+                    "line": 138,
+                    "column": 8
+                },
+                "end": {
+                    "line": 138,
+                    "column": 65
+                }
+            },
+            "12": {
+                "start": {
+                    "line": 141,
+                    "column": 8
+                },
+                "end": {
+                    "line": 141,
+                    "column": 71
+                }
+            },
+            "13": {
+                "start": {
+                    "line": 142,
+                    "column": 8
+                },
+                "end": {
+                    "line": 142,
+                    "column": 76
+                }
+            },
+            "14": {
+                "start": {
+                    "line": 145,
+                    "column": 8
+                },
+                "end": {
+                    "line": 145,
+                    "column": 62
+                }
+            },
+            "15": {
+                "start": {
+                    "line": 159,
+                    "column": 8
+                },
+                "end": {
+                    "line": 159,
+                    "column": 69
+                }
+            },
+            "16": {
+                "start": {
+                    "line": 169,
+                    "column": 8
+                },
+                "end": {
+                    "line": 169,
+                    "column": 66
+                }
+            },
+            "17": {
+                "start": {
+                    "line": 170,
+                    "column": 8
+                },
+                "end": {
+                    "line": 170,
+                    "column": 87
+                }
+            },
+            "18": {
+                "start": {
+                    "line": 171,
+                    "column": 8
+                },
+                "end": {
+                    "line": 171,
+                    "column": 6759
+                }
+            },
+            "19": {
+                "start": {
+                    "line": 177,
+                    "column": 8
+                },
+                "end": {
+                    "line": 177,
+                    "column": 70
+                }
+            },
+            "20": {
+                "start": {
+                    "line": 178,
+                    "column": 8
+                },
+                "end": {
+                    "line": 178,
+                    "column": 7052
+                }
+            },
+            "21": {
+                "start": {
+                    "line": 180,
+                    "column": 8
+                },
+                "end": {
+                    "line": 180,
+                    "column": 75
+                }
+            },
+            "22": {
+                "start": {
+                    "line": 192,
+                    "column": 8
+                },
+                "end": {
+                    "line": 192,
+                    "column": 7504
+                }
+            },
+            "23": {
+                "start": {
+                    "line": 206,
+                    "column": 8
+                },
+                "end": {
+                    "line": 206,
+                    "column": 90
+                }
+            },
+            "24": {
+                "start": {
+                    "line": 207,
+                    "column": 8
+                },
+                "end": {
+                    "line": 207,
+                    "column": 8106
+                }
+            },
+            "25": {
+                "start": {
+                    "line": 213,
+                    "column": 8
+                },
+                "end": {
+                    "line": 213,
+                    "column": 59
+                }
+            },
+            "26": {
+                "start": {
+                    "line": 216,
+                    "column": 8
+                },
+                "end": {
+                    "line": 216,
+                    "column": 8395
+                }
+            },
+            "27": {
+                "start": {
+                    "line": 217,
+                    "column": 12
+                },
+                "end": {
+                    "line": 217,
+                    "column": 8462
+                }
+            },
+            "28": {
+                "start": {
+                    "line": 221,
+                    "column": 12
+                },
+                "end": {
+                    "line": 221,
+                    "column": 63
+                }
+            },
+            "29": {
+                "start": {
+                    "line": 223,
+                    "column": 12
+                },
+                "end": {
+                    "line": 223,
+                    "column": 61
+                }
+            },
+            "30": {
+                "start": {
+                    "line": 237,
+                    "column": 8
+                },
+                "end": {
+                    "line": 237,
+                    "column": 66
+                }
+            },
+            "31": {
+                "start": {
+                    "line": 238,
+                    "column": 8
+                },
+                "end": {
+                    "line": 238,
+                    "column": 87
+                }
+            },
+            "32": {
+                "start": {
+                    "line": 239,
+                    "column": 8
+                },
+                "end": {
+                    "line": 239,
+                    "column": 9413
+                }
+            },
+            "33": {
+                "start": {
+                    "line": 245,
+                    "column": 8
+                },
+                "end": {
+                    "line": 245,
+                    "column": 70
+                }
+            },
+            "34": {
+                "start": {
+                    "line": 246,
+                    "column": 8
+                },
+                "end": {
+                    "line": 246,
+                    "column": 9705
+                }
+            },
+            "35": {
+                "start": {
+                    "line": 248,
+                    "column": 8
+                },
+                "end": {
+                    "line": 248,
+                    "column": 75
+                }
+            },
+            "36": {
+                "start": {
+                    "line": 251,
+                    "column": 8
+                },
+                "end": {
+                    "line": 251,
+                    "column": 9920
+                }
+            },
+            "37": {
+                "start": {
+                    "line": 257,
+                    "column": 8
+                },
+                "end": {
+                    "line": 257,
+                    "column": 10109
+                }
+            },
+            "38": {
+                "start": {
+                    "line": 267,
+                    "column": 8
+                },
+                "end": {
+                    "line": 267,
+                    "column": 15
+                }
+            },
+            "39": {
+                "start": {
+                    "line": 271,
+                    "column": 8
+                },
+                "end": {
+                    "line": 271,
+                    "column": 17
+                }
+            },
+            "40": {
+                "start": {
+                    "line": 275,
+                    "column": 8
+                },
+                "end": {
+                    "line": 275,
+                    "column": 58
+                }
+            },
+            "41": {
+                "start": {
+                    "line": 276,
+                    "column": 8
+                },
+                "end": {
+                    "line": 276,
+                    "column": 10691
+                }
+            },
+            "42": {
+                "start": {
+                    "line": 279,
+                    "column": 12
+                },
+                "end": {
+                    "line": 279,
+                    "column": 70
+                }
+            },
+            "43": {
+                "start": {
+                    "line": 280,
+                    "column": 12
+                },
+                "end": {
+                    "line": 280,
+                    "column": 10879
+                }
+            },
+            "44": {
+                "start": {
+                    "line": 282,
+                    "column": 19
+                },
+                "end": {
+                    "line": 282,
+                    "column": 10990
+                }
+            },
+            "45": {
+                "start": {
+                    "line": 284,
+                    "column": 19
+                },
+                "end": {
+                    "line": 284,
+                    "column": 11103
+                }
+            },
+            "46": {
+                "start": {
+                    "line": 286,
+                    "column": 19
+                },
+                "end": {
+                    "line": 286,
+                    "column": 11202
+                }
+            },
+            "47": {
+                "start": {
+                    "line": 287,
+                    "column": 16
+                },
+                "end": {
+                    "line": 287,
+                    "column": 88
+                }
+            },
+            "48": {
+                "start": {
+                    "line": 290,
+                    "column": 16
+                },
+                "end": {
+                    "line": 290,
+                    "column": 52
+                }
+            },
+            "49": {
+                "start": {
+                    "line": 293,
+                    "column": 8
+                },
+                "end": {
+                    "line": 293,
+                    "column": 40
+                }
+            }
+        },
+        "branchMap": {
+            "1": {
+                "line": 77,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 77,
+                            "column": 64
+                        },
+                        "end": {
+                            "line": 77,
+                            "column": 64
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 77,
+                            "column": 64
+                        },
+                        "end": {
+                            "line": 77,
+                            "column": 64
+                        }
+                    }
+                ]
+            },
+            "2": {
+                "line": 114,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 114,
+                            "column": 56
+                        },
+                        "end": {
+                            "line": 114,
+                            "column": 56
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 114,
+                            "column": 60
+                        },
+                        "end": {
+                            "line": 116,
+                            "column": 45
+                        }
+                    }
+                ]
+            },
+            "3": {
+                "line": 136,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 136,
+                            "column": 64
+                        },
+                        "end": {
+                            "line": 136,
+                            "column": 64
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 136,
+                            "column": 64
+                        },
+                        "end": {
+                            "line": 136,
+                            "column": 64
+                        }
+                    }
+                ]
+            },
+            "4": {
+                "line": 138,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 138,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 138,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 138,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 138,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "5": {
+                "line": 167,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 167,
+                            "column": 73
+                        },
+                        "end": {
+                            "line": 167,
+                            "column": 73
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 167,
+                            "column": 73
+                        },
+                        "end": {
+                            "line": 167,
+                            "column": 73
+                        }
+                    }
+                ]
+            },
+            "6": {
+                "line": 169,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 169,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 169,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 169,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 169,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "7": {
+                "line": 170,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 170,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 170,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 170,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 170,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "8": {
+                "line": 171,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 171,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 171,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 171,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 171,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "9": {
+                "line": 180,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 180,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 180,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 180,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 180,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "10": {
+                "line": 204,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 204,
+                            "column": 39
+                        },
+                        "end": {
+                            "line": 204,
+                            "column": 39
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 204,
+                            "column": 39
+                        },
+                        "end": {
+                            "line": 204,
+                            "column": 39
+                        }
+                    }
+                ]
+            },
+            "11": {
+                "line": 206,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 206,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 206,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 206,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 206,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "12": {
+                "line": 207,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 207,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 207,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 207,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 207,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "13": {
+                "line": 216,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 216,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 216,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 216,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 216,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "14": {
+                "line": 235,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 235,
+                            "column": 73
+                        },
+                        "end": {
+                            "line": 235,
+                            "column": 73
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 235,
+                            "column": 73
+                        },
+                        "end": {
+                            "line": 235,
+                            "column": 73
+                        }
+                    }
+                ]
+            },
+            "15": {
+                "line": 237,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 237,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 237,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 237,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 237,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "16": {
+                "line": 238,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 238,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 238,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 238,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 238,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "17": {
+                "line": 239,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 239,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 239,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 239,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 239,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "18": {
+                "line": 248,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 248,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 248,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 248,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 248,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "19": {
+                "line": 266,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 266,
+                            "column": 28
+                        },
+                        "end": {
+                            "line": 266,
+                            "column": 28
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 266,
+                            "column": 28
+                        },
+                        "end": {
+                            "line": 266,
+                            "column": 28
+                        }
+                    }
+                ]
+            },
+            "20": {
+                "line": 270,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 270,
+                            "column": 30
+                        },
+                        "end": {
+                            "line": 270,
+                            "column": 30
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 270,
+                            "column": 30
+                        },
+                        "end": {
+                            "line": 270,
+                            "column": 30
+                        }
+                    }
+                ]
+            },
+            "21": {
+                "line": 274,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 274,
+                            "column": 67
+                        },
+                        "end": {
+                            "line": 274,
+                            "column": 67
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 274,
+                            "column": 67
+                        },
+                        "end": {
+                            "line": 274,
+                            "column": 67
+                        }
+                    }
+                ]
+            },
+            "22": {
+                "line": 276,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 276,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 276,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 276,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 276,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "23": {
+                "line": 279,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 279,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 279,
+                            "column": 12
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 279,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 279,
+                            "column": 12
+                        }
+                    }
+                ]
+            },
+            "24": {
+                "line": 280,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 280,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 280,
+                            "column": 12
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 280,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 280,
+                            "column": 12
+                        }
+                    }
+                ]
+            },
+            "25": {
+                "line": 282,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 282,
+                            "column": 19
+                        },
+                        "end": {
+                            "line": 282,
+                            "column": 19
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 282,
+                            "column": 19
+                        },
+                        "end": {
+                            "line": 282,
+                            "column": 19
+                        }
+                    }
+                ]
+            },
+            "26": {
+                "line": 284,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 284,
+                            "column": 19
+                        },
+                        "end": {
+                            "line": 284,
+                            "column": 19
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 284,
+                            "column": 19
+                        },
+                        "end": {
+                            "line": 284,
+                            "column": 19
+                        }
+                    }
+                ]
+            },
+            "27": {
+                "line": 286,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 286,
+                            "column": 19
+                        },
+                        "end": {
+                            "line": 286,
+                            "column": 19
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 286,
+                            "column": 19
+                        },
+                        "end": {
+                            "line": 286,
+                            "column": 19
+                        }
+                    }
+                ]
+            },
+            "28": {
+                "line": 287,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 287,
+                            "column": 16
+                        },
+                        "end": {
+                            "line": 287,
+                            "column": 16
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 287,
+                            "column": 16
+                        },
+                        "end": {
+                            "line": 287,
+                            "column": 16
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "contracts/LiquidOracle.sol": {
+        "l": {
+            "60": 2,
+            "61": 2,
+            "62": 2,
+            "64": 2,
+            "68": 14,
+            "72": 14,
+            "79": 2,
+            "83": 1,
+            "87": 1,
+            "91": 1,
+            "95": 13,
+            "99": 1,
+            "100": 1,
+            "101": 1,
+            "103": 1,
+            "104": 1,
+            "108": 1,
+            "109": 1,
+            "110": 1,
+            "112": 1,
+            "113": 1,
+            "119": 8,
+            "120": 8,
+            "126": 6,
+            "127": 6,
+            "134": 16,
+            "135": 16,
+            "136": 16,
+            "140": 16,
+            "141": 16,
+            "142": 16,
+            "146": 1,
+            "147": 1,
+            "148": 1,
+            "149": 2,
+            "150": 1,
+            "151": 1,
+            "152": 1,
+            "155": 1,
+            "170": 11,
+            "171": 11,
+            "175": 10,
+            "180": 9,
+            "181": 36,
+            "182": 36,
+            "186": 9,
+            "187": 9,
+            "191": 9,
+            "192": 9,
+            "199": 5,
+            "200": 4,
+            "202": 1
+        },
+        "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidOracle.sol",
+        "s": {
+            "1": 2,
+            "2": 2,
+            "3": 2,
+            "4": 14,
+            "5": 2,
+            "6": 1,
+            "7": 1,
+            "8": 1,
+            "9": 13,
+            "10": 1,
+            "11": 1,
+            "12": 1,
+            "13": 1,
+            "14": 1,
+            "15": 1,
+            "16": 8,
+            "17": 8,
+            "18": 6,
+            "19": 6,
+            "20": 16,
+            "21": 16,
+            "22": 16,
+            "23": 16,
+            "24": 16,
+            "25": 1,
+            "26": 1,
+            "27": 2,
+            "28": 1,
+            "29": 1,
+            "30": 11,
+            "31": 11,
+            "32": 10,
+            "33": 9,
+            "34": 9,
+            "35": 5,
+            "36": 4,
+            "37": 1
+        },
+        "b": {
+            "1": [
+                2,
+                0
+            ],
+            "2": [
+                14,
+                0
+            ],
+            "3": [
+                14,
+                0
+            ],
+            "4": [
+                8,
+                0
+            ],
+            "5": [
+                8,
+                0
+            ],
+            "6": [
+                6,
+                0
+            ],
+            "7": [
+                6,
+                0
+            ],
+            "8": [
+                16,
+                0
+            ],
+            "9": [
+                16,
+                0
+            ],
+            "10": [
+                16,
+                0
+            ],
+            "11": [
+                16,
+                0
+            ],
+            "12": [
+                1,
+                0
+            ],
+            "13": [
+                1,
+                0
+            ],
+            "14": [
+                1,
+                1
+            ],
+            "15": [
+                11,
+                2
+            ],
+            "16": [
+                10,
+                1
+            ],
+            "17": [
+                9,
+                1
+            ],
+            "18": [
+                5,
+                0
+            ],
+            "19": [
+                4,
+                1
+            ]
+        },
+        "f": {
+            "1": 2,
+            "2": 14,
+            "3": 2,
+            "4": 1,
+            "5": 1,
+            "6": 1,
+            "7": 13,
+            "8": 1,
+            "9": 1,
+            "10": 8,
+            "11": 6,
+            "12": 16,
+            "13": 1,
+            "14": 11,
+            "15": 5
+        },
+        "fnMap": {
+            "1": {
+                "name": "initialize",
+                "line": 59,
+                "loc": {
+                    "start": {
+                        "line": 59,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 65,
+                        "column": 4
+                    }
+                }
+            },
+            "2": {
+                "name": "isSupported",
+                "line": 67,
+                "loc": {
+                    "start": {
+                        "line": 67,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 73,
+                        "column": 4
+                    }
+                }
+            },
+            "3": {
+                "name": "isSupportedAssetExternal",
+                "line": 78,
+                "loc": {
+                    "start": {
+                        "line": 78,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 80,
+                        "column": 4
+                    }
+                }
+            },
+            "4": {
+                "name": "assetPriceToShareExternal",
+                "line": 82,
+                "loc": {
+                    "start": {
+                        "line": 82,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 84,
+                        "column": 4
+                    }
+                }
+            },
+            "5": {
+                "name": "sharePriceToAssetExternal",
+                "line": 86,
+                "loc": {
+                    "start": {
+                        "line": 86,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 88,
+                        "column": 4
+                    }
+                }
+            },
+            "6": {
+                "name": "getSupportedAssetsNum",
+                "line": 90,
+                "loc": {
+                    "start": {
+                        "line": 90,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 92,
+                        "column": 4
+                    }
+                }
+            },
+            "7": {
+                "name": "fetchShareStandardPrice",
+                "line": 94,
+                "loc": {
+                    "start": {
+                        "line": 94,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 96,
+                        "column": 4
+                    }
+                }
+            },
+            "8": {
+                "name": "fetchAssetsPricesAll",
+                "line": 98,
+                "loc": {
+                    "start": {
+                        "line": 98,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 105,
+                        "column": 4
+                    }
+                }
+            },
+            "9": {
+                "name": "fetchSharePricesAll",
+                "line": 107,
+                "loc": {
+                    "start": {
+                        "line": 107,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 114,
+                        "column": 4
+                    }
+                }
+            },
+            "10": {
+                "name": "assetToShare",
+                "line": 118,
+                "loc": {
+                    "start": {
+                        "line": 116,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 121,
+                        "column": 4
+                    }
+                }
+            },
+            "11": {
+                "name": "shareToAsset",
+                "line": 125,
+                "loc": {
+                    "start": {
+                        "line": 123,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 128,
+                        "column": 4
+                    }
+                }
+            },
+            "12": {
+                "name": "addSupportedAsset",
+                "line": 133,
+                "loc": {
+                    "start": {
+                        "line": 133,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 143,
+                        "column": 4
+                    }
+                }
+            },
+            "13": {
+                "name": "removeSupportedAsset",
+                "line": 145,
+                "loc": {
+                    "start": {
+                        "line": 145,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 156,
+                        "column": 4
+                    }
+                }
+            },
+            "14": {
+                "name": "updatePrices",
+                "line": 169,
+                "loc": {
+                    "start": {
+                        "line": 167,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 193,
+                        "column": 4
+                    }
+                }
+            },
+            "15": {
+                "name": "setPriceUpdater",
+                "line": 198,
+                "loc": {
+                    "start": {
+                        "line": 198,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 204,
+                        "column": 4
+                    }
+                }
+            }
+        },
+        "statementMap": {
+            "1": {
+                "start": {
+                    "line": 60,
+                    "column": 8
+                },
+                "end": {
+                    "line": 60,
+                    "column": 29
+                }
+            },
+            "2": {
+                "start": {
+                    "line": 61,
+                    "column": 8
+                },
+                "end": {
+                    "line": 61,
+                    "column": 51
+                }
+            },
+            "3": {
+                "start": {
+                    "line": 62,
+                    "column": 8
+                },
+                "end": {
+                    "line": 62,
+                    "column": 60
+                }
+            },
+            "4": {
+                "start": {
+                    "line": 68,
+                    "column": 8
+                },
+                "end": {
+                    "line": 68,
+                    "column": 2202
+                }
+            },
+            "5": {
+                "start": {
+                    "line": 79,
+                    "column": 8
+                },
+                "end": {
+                    "line": 79,
+                    "column": 38
+                }
+            },
+            "6": {
+                "start": {
+                    "line": 83,
+                    "column": 8
+                },
+                "end": {
+                    "line": 83,
+                    "column": 39
+                }
+            },
+            "7": {
+                "start": {
+                    "line": 87,
+                    "column": 8
+                },
+                "end": {
+                    "line": 87,
+                    "column": 39
+                }
+            },
+            "8": {
+                "start": {
+                    "line": 91,
+                    "column": 8
+                },
+                "end": {
+                    "line": 91,
+                    "column": 40
+                }
+            },
+            "9": {
+                "start": {
+                    "line": 95,
+                    "column": 8
+                },
+                "end": {
+                    "line": 95,
+                    "column": 48
+                }
+            },
+            "10": {
+                "start": {
+                    "line": 99,
+                    "column": 8
+                },
+                "end": {
+                    "line": 99,
+                    "column": 78
+                }
+            },
+            "11": {
+                "start": {
+                    "line": 100,
+                    "column": 8
+                },
+                "end": {
+                    "line": 100,
+                    "column": 3242
+                }
+            },
+            "12": {
+                "start": {
+                    "line": 104,
+                    "column": 8
+                },
+                "end": {
+                    "line": 104,
+                    "column": 21
+                }
+            },
+            "13": {
+                "start": {
+                    "line": 108,
+                    "column": 8
+                },
+                "end": {
+                    "line": 108,
+                    "column": 78
+                }
+            },
+            "14": {
+                "start": {
+                    "line": 109,
+                    "column": 8
+                },
+                "end": {
+                    "line": 109,
+                    "column": 3649
+                }
+            },
+            "15": {
+                "start": {
+                    "line": 113,
+                    "column": 8
+                },
+                "end": {
+                    "line": 113,
+                    "column": 21
+                }
+            },
+            "16": {
+                "start": {
+                    "line": 119,
+                    "column": 8
+                },
+                "end": {
+                    "line": 119,
+                    "column": 78
+                }
+            },
+            "17": {
+                "start": {
+                    "line": 120,
+                    "column": 8
+                },
+                "end": {
+                    "line": 120,
+                    "column": 76
+                }
+            },
+            "18": {
+                "start": {
+                    "line": 126,
+                    "column": 8
+                },
+                "end": {
+                    "line": 126,
+                    "column": 78
+                }
+            },
+            "19": {
+                "start": {
+                    "line": 127,
+                    "column": 8
+                },
+                "end": {
+                    "line": 127,
+                    "column": 76
+                }
+            },
+            "20": {
+                "start": {
+                    "line": 134,
+                    "column": 8
+                },
+                "end": {
+                    "line": 134,
+                    "column": 84
+                }
+            },
+            "21": {
+                "start": {
+                    "line": 135,
+                    "column": 8
+                },
+                "end": {
+                    "line": 135,
+                    "column": 89
+                }
+            },
+            "22": {
+                "start": {
+                    "line": 136,
+                    "column": 8
+                },
+                "end": {
+                    "line": 136,
+                    "column": 4828
+                }
+            },
+            "23": {
+                "start": {
+                    "line": 141,
+                    "column": 8
+                },
+                "end": {
+                    "line": 141,
+                    "column": 37
+                }
+            },
+            "24": {
+                "start": {
+                    "line": 142,
+                    "column": 8
+                },
+                "end": {
+                    "line": 142,
+                    "column": 30
+                }
+            },
+            "25": {
+                "start": {
+                    "line": 146,
+                    "column": 8
+                },
+                "end": {
+                    "line": 146,
+                    "column": 78
+                }
+            },
+            "26": {
+                "start": {
+                    "line": 148,
+                    "column": 8
+                },
+                "end": {
+                    "line": 148,
+                    "column": 5322
+                }
+            },
+            "27": {
+                "start": {
+                    "line": 149,
+                    "column": 12
+                },
+                "end": {
+                    "line": 149,
+                    "column": 5396
+                }
+            },
+            "28": {
+                "start": {
+                    "line": 151,
+                    "column": 16
+                },
+                "end": {
+                    "line": 151,
+                    "column": 39
+                }
+            },
+            "29": {
+                "start": {
+                    "line": 155,
+                    "column": 8
+                },
+                "end": {
+                    "line": 155,
+                    "column": 32
+                }
+            },
+            "30": {
+                "start": {
+                    "line": 170,
+                    "column": 8
+                },
+                "end": {
+                    "line": 170,
+                    "column": 50
+                }
+            },
+            "31": {
+                "start": {
+                    "line": 171,
+                    "column": 8
+                },
+                "end": {
+                    "line": 171,
+                    "column": 6226
+                }
+            },
+            "32": {
+                "start": {
+                    "line": 175,
+                    "column": 8
+                },
+                "end": {
+                    "line": 175,
+                    "column": 6364
+                }
+            },
+            "33": {
+                "start": {
+                    "line": 180,
+                    "column": 8
+                },
+                "end": {
+                    "line": 180,
+                    "column": 6521
+                }
+            },
+            "34": {
+                "start": {
+                    "line": 192,
+                    "column": 8
+                },
+                "end": {
+                    "line": 192,
+                    "column": 48
+                }
+            },
+            "35": {
+                "start": {
+                    "line": 199,
+                    "column": 8
+                },
+                "end": {
+                    "line": 199,
+                    "column": 7296
+                }
+            },
+            "36": {
+                "start": {
+                    "line": 200,
+                    "column": 12
+                },
+                "end": {
+                    "line": 200,
+                    "column": 50
+                }
+            },
+            "37": {
+                "start": {
+                    "line": 202,
+                    "column": 12
+                },
+                "end": {
+                    "line": 202,
+                    "column": 51
+                }
+            }
+        },
+        "branchMap": {
+            "1": {
+                "line": 59,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 59,
+                            "column": 33
+                        },
+                        "end": {
+                            "line": 59,
+                            "column": 33
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 59,
+                            "column": 33
+                        },
+                        "end": {
+                            "line": 59,
+                            "column": 33
+                        }
+                    }
+                ]
+            },
+            "2": {
+                "line": 68,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 68,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 68,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 68,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 68,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "3": {
+                "line": 69,
+                "type": "cond-expr",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 69,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 69,
+                            "column": 34
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 69,
+                            "column": 39
+                        },
+                        "end": {
+                            "line": 69,
+                            "column": 61
+                        }
+                    }
+                ]
+            },
+            "4": {
+                "line": 118,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 118,
+                            "column": 18
+                        },
+                        "end": {
+                            "line": 118,
+                            "column": 18
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 118,
+                            "column": 18
+                        },
+                        "end": {
+                            "line": 118,
+                            "column": 18
+                        }
+                    }
+                ]
+            },
+            "5": {
+                "line": 119,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 119,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 119,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 119,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 119,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "6": {
+                "line": 125,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 125,
+                            "column": 18
+                        },
+                        "end": {
+                            "line": 125,
+                            "column": 18
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 125,
+                            "column": 18
+                        },
+                        "end": {
+                            "line": 125,
+                            "column": 18
+                        }
+                    }
+                ]
+            },
+            "7": {
+                "line": 126,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 126,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 126,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 126,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 126,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "8": {
+                "line": 133,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 133,
+                            "column": 53
+                        },
+                        "end": {
+                            "line": 133,
+                            "column": 53
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 133,
+                            "column": 53
+                        },
+                        "end": {
+                            "line": 133,
+                            "column": 53
+                        }
+                    }
+                ]
+            },
+            "9": {
+                "line": 134,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 134,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 134,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 134,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 134,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "10": {
+                "line": 135,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 135,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 135,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 135,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 135,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "11": {
+                "line": 136,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 136,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 136,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 136,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 136,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "12": {
+                "line": 145,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 145,
+                            "column": 56
+                        },
+                        "end": {
+                            "line": 145,
+                            "column": 56
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 145,
+                            "column": 56
+                        },
+                        "end": {
+                            "line": 145,
+                            "column": 56
+                        }
+                    }
+                ]
+            },
+            "13": {
+                "line": 146,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 146,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 146,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 146,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 146,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "14": {
+                "line": 149,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 149,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 149,
+                            "column": 12
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 149,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 149,
+                            "column": 12
+                        }
+                    }
+                ]
+            },
+            "15": {
+                "line": 169,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 169,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 169,
+                            "column": 13
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 169,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 169,
+                            "column": 13
+                        }
+                    }
+                ]
+            },
+            "16": {
+                "line": 171,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 171,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 171,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 171,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 171,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "17": {
+                "line": 175,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 175,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 175,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 175,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 175,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "18": {
+                "line": 198,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 198,
+                            "column": 66
+                        },
+                        "end": {
+                            "line": 198,
+                            "column": 66
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 198,
+                            "column": 66
+                        },
+                        "end": {
+                            "line": 198,
+                            "column": 66
+                        }
+                    }
+                ]
+            },
+            "19": {
+                "line": 199,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 199,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 199,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 199,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 199,
+                            "column": 8
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "contracts/LiquidVault.sol": {
+        "l": {
+            "25": 1,
+            "26": 1,
+            "28": 1,
+            "29": 1,
+            "36": 10,
+            "40": 10,
+            "49": 7,
+            "50": 7,
+            "51": 7,
+            "52": 7,
+            "58": 3,
+            "59": 3,
+            "60": 3,
+            "61": 3,
+            "70": 2,
+            "76": 1,
+            "88": 1,
+            "89": 1,
+            "95": 3,
+            "96": 2,
+            "98": 1
+        },
+        "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidVault.sol",
+        "s": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 10,
+            "6": 10,
+            "7": 7,
+            "8": 7,
+            "9": 7,
+            "10": 7,
+            "11": 3,
+            "12": 3,
+            "13": 3,
+            "14": 3,
+            "15": 2,
+            "16": 1,
+            "17": 1,
+            "18": 3,
+            "19": 2,
+            "20": 1
+        },
+        "b": {
+            "1": [
+                1,
+                0
+            ],
+            "2": [
+                10,
+                0
+            ],
+            "3": [
+                7,
+                3
+            ],
+            "4": [
+                7,
+                0
+            ],
+            "5": [
+                7,
+                0
+            ],
+            "6": [
+                7,
+                0
+            ],
+            "7": [
+                3,
+                0
+            ],
+            "8": [
+                3,
+                0
+            ],
+            "9": [
+                3,
+                0
+            ],
+            "10": [
+                2,
+                1
+            ],
+            "11": [
+                1,
+                1
+            ],
+            "12": [
+                2,
+                0
+            ],
+            "13": [
+                1,
+                1
+            ],
+            "14": [
+                3,
+                0
+            ],
+            "15": [
+                2,
+                1
+            ]
+        },
+        "f": {
+            "1": 1,
+            "2": 10,
+            "3": 7,
+            "4": 3,
+            "5": 2,
+            "6": 1,
+            "7": 1,
+            "8": 3
+        },
+        "fnMap": {
+            "1": {
+                "name": "initialize",
+                "line": 24,
+                "loc": {
+                    "start": {
+                        "line": 24,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 30,
+                        "column": 4
+                    }
+                }
+            },
+            "2": {
+                "name": "_update",
+                "line": 35,
+                "loc": {
+                    "start": {
+                        "line": 35,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 41,
+                        "column": 4
+                    }
+                }
+            },
+            "3": {
+                "name": "depositToVault",
+                "line": 48,
+                "loc": {
+                    "start": {
+                        "line": 46,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 53,
+                        "column": 4
+                    }
+                }
+            },
+            "4": {
+                "name": "withdrawFromVault",
+                "line": 57,
+                "loc": {
+                    "start": {
+                        "line": 55,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 62,
+                        "column": 4
+                    }
+                }
+            },
+            "5": {
+                "name": "depositLiquidityDirectly",
+                "line": 69,
+                "loc": {
+                    "start": {
+                        "line": 67,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 71,
+                        "column": 4
+                    }
+                }
+            },
+            "6": {
+                "name": "withdrawLiquidityDirectly",
+                "line": 75,
+                "loc": {
+                    "start": {
+                        "line": 73,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 77,
+                        "column": 4
+                    }
+                }
+            },
+            "7": {
+                "name": "setCashier",
+                "line": 87,
+                "loc": {
+                    "start": {
+                        "line": 85,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 90,
+                        "column": 4
+                    }
+                }
+            },
+            "8": {
+                "name": "setLiquidityManager",
+                "line": 94,
+                "loc": {
+                    "start": {
+                        "line": 92,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 100,
+                        "column": 4
+                    }
+                }
+            }
+        },
+        "statementMap": {
+            "1": {
+                "start": {
+                    "line": 25,
+                    "column": 8
+                },
+                "end": {
+                    "line": 25,
+                    "column": 29
+                }
+            },
+            "2": {
+                "start": {
+                    "line": 26,
+                    "column": 8
+                },
+                "end": {
+                    "line": 26,
+                    "column": 33
+                }
+            },
+            "3": {
+                "start": {
+                    "line": 28,
+                    "column": 8
+                },
+                "end": {
+                    "line": 28,
+                    "column": 51
+                }
+            },
+            "4": {
+                "start": {
+                    "line": 29,
+                    "column": 8
+                },
+                "end": {
+                    "line": 29,
+                    "column": 54
+                }
+            },
+            "5": {
+                "start": {
+                    "line": 36,
+                    "column": 8
+                },
+                "end": {
+                    "line": 36,
+                    "column": 1107
+                }
+            },
+            "6": {
+                "start": {
+                    "line": 40,
+                    "column": 8
+                },
+                "end": {
+                    "line": 40,
+                    "column": 37
+                }
+            },
+            "7": {
+                "start": {
+                    "line": 49,
+                    "column": 8
+                },
+                "end": {
+                    "line": 49,
+                    "column": 1576
+                }
+            },
+            "8": {
+                "start": {
+                    "line": 50,
+                    "column": 12
+                },
+                "end": {
+                    "line": 50,
+                    "column": 75
+                }
+            },
+            "9": {
+                "start": {
+                    "line": 51,
+                    "column": 8
+                },
+                "end": {
+                    "line": 51,
+                    "column": 1644
+                }
+            },
+            "10": {
+                "start": {
+                    "line": 52,
+                    "column": 12
+                },
+                "end": {
+                    "line": 52,
+                    "column": 35
+                }
+            },
+            "11": {
+                "start": {
+                    "line": 58,
+                    "column": 8
+                },
+                "end": {
+                    "line": 58,
+                    "column": 1863
+                }
+            },
+            "12": {
+                "start": {
+                    "line": 59,
+                    "column": 12
+                },
+                "end": {
+                    "line": 59,
+                    "column": 33
+                }
+            },
+            "13": {
+                "start": {
+                    "line": 60,
+                    "column": 8
+                },
+                "end": {
+                    "line": 60,
+                    "column": 1950
+                }
+            },
+            "14": {
+                "start": {
+                    "line": 61,
+                    "column": 12
+                },
+                "end": {
+                    "line": 61,
+                    "column": 54
+                }
+            },
+            "15": {
+                "start": {
+                    "line": 70,
+                    "column": 8
+                },
+                "end": {
+                    "line": 70,
+                    "column": 74
+                }
+            },
+            "16": {
+                "start": {
+                    "line": 76,
+                    "column": 8
+                },
+                "end": {
+                    "line": 76,
+                    "column": 55
+                }
+            },
+            "17": {
+                "start": {
+                    "line": 89,
+                    "column": 8
+                },
+                "end": {
+                    "line": 89,
+                    "column": 40
+                }
+            },
+            "18": {
+                "start": {
+                    "line": 95,
+                    "column": 8
+                },
+                "end": {
+                    "line": 95,
+                    "column": 2965
+                }
+            },
+            "19": {
+                "start": {
+                    "line": 96,
+                    "column": 12
+                },
+                "end": {
+                    "line": 96,
+                    "column": 54
+                }
+            },
+            "20": {
+                "start": {
+                    "line": 98,
+                    "column": 12
+                },
+                "end": {
+                    "line": 98,
+                    "column": 55
+                }
+            }
+        },
+        "branchMap": {
+            "1": {
+                "line": 24,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 24,
+                            "column": 73
+                        },
+                        "end": {
+                            "line": 24,
+                            "column": 73
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 24,
+                            "column": 73
+                        },
+                        "end": {
+                            "line": 24,
+                            "column": 73
+                        }
+                    }
+                ]
+            },
+            "2": {
+                "line": 36,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 36,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 36,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 36,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 36,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "3": {
+                "line": 37,
+                "type": "cond-expr",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 37,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 37,
+                            "column": 29
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 37,
+                            "column": 34
+                        },
+                        "end": {
+                            "line": 37,
+                            "column": 49
+                        }
+                    }
+                ]
+            },
+            "4": {
+                "line": 48,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 48,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 48,
+                            "column": 13
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 48,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 48,
+                            "column": 13
+                        }
+                    }
+                ]
+            },
+            "5": {
+                "line": 49,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 49,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 49,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 49,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 49,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "6": {
+                "line": 51,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 51,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 51,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 51,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 51,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "7": {
+                "line": 57,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 57,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 57,
+                            "column": 13
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 57,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 57,
+                            "column": 13
+                        }
+                    }
+                ]
+            },
+            "8": {
+                "line": 58,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 58,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 58,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 58,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 58,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "9": {
+                "line": 60,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 60,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 60,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 60,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 60,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "10": {
+                "line": 69,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 69,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 69,
+                            "column": 13
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 69,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 69,
+                            "column": 13
+                        }
+                    }
+                ]
+            },
+            "11": {
+                "line": 75,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 75,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 75,
+                            "column": 13
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 75,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 75,
+                            "column": 13
+                        }
+                    }
+                ]
+            },
+            "12": {
+                "line": 87,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 87,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 87,
+                            "column": 13
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 87,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 87,
+                            "column": 13
+                        }
+                    }
+                ]
+            },
+            "13": {
+                "line": 87,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 87,
+                            "column": 42
+                        },
+                        "end": {
+                            "line": 87,
+                            "column": 42
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 87,
+                            "column": 42
+                        },
+                        "end": {
+                            "line": 87,
+                            "column": 42
+                        }
+                    }
+                ]
+            },
+            "14": {
+                "line": 94,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 94,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 94,
+                            "column": 13
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 94,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 94,
+                            "column": 13
+                        }
+                    }
+                ]
+            },
+            "15": {
+                "line": 95,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 95,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 95,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 95,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 95,
+                            "column": 8
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "contracts/mock/MockToken.sol": {
+        "l": {
+            "12": 8,
+            "13": 8,
+            "17": 4
+        },
+        "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/mock/MockToken.sol",
+        "s": {
+            "1": 8,
+            "2": 4
+        },
+        "b": {},
+        "f": {
+            "1": 8,
+            "2": 4
+        },
+        "fnMap": {
+            "1": {
+                "name": "constructor",
+                "line": 11,
+                "loc": {
+                    "start": {
+                        "line": 9,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 14,
+                        "column": 4
+                    }
+                }
+            },
+            "2": {
+                "name": "decimals",
+                "line": 16,
+                "loc": {
+                    "start": {
+                        "line": 16,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 18,
+                        "column": 4
+                    }
+                }
+            }
+        },
+        "statementMap": {
+            "1": {
+                "start": {
+                    "line": 12,
+                    "column": 8
+                },
+                "end": {
+                    "line": 12,
+                    "column": 39
+                }
+            },
+            "2": {
+                "start": {
+                    "line": 17,
+                    "column": 8
+                },
+                "end": {
+                    "line": 17,
+                    "column": 24
+                }
+            }
+        },
+        "branchMap": {}
+    },
+    "contracts/mock/MockWETH.sol": {
+        "l": {
+            "10": 1,
+            "14": 1,
+            "15": 1
+        },
+        "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/mock/MockWETH.sol",
+        "s": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "b": {},
+        "f": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "fnMap": {
+            "1": {
+                "name": "constructor",
+                "line": 7,
+                "loc": {
+                    "start": {
+                        "line": 7,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 7,
+                        "column": 48
+                    }
+                }
+            },
+            "2": {
+                "name": "deposit",
+                "line": 9,
+                "loc": {
+                    "start": {
+                        "line": 9,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 11,
+                        "column": 4
+                    }
+                }
+            },
+            "3": {
+                "name": "withdraw",
+                "line": 13,
+                "loc": {
+                    "start": {
+                        "line": 13,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 16,
+                        "column": 4
+                    }
+                }
+            }
+        },
+        "statementMap": {
+            "1": {
+                "start": {
+                    "line": 10,
+                    "column": 8
+                },
+                "end": {
+                    "line": 10,
+                    "column": 35
+                }
+            },
+            "2": {
+                "start": {
+                    "line": 14,
+                    "column": 8
+                },
+                "end": {
+                    "line": 14,
+                    "column": 32
+                }
+            },
+            "3": {
+                "start": {
+                    "line": 15,
+                    "column": 8
+                },
+                "end": {
+                    "line": 15,
+                    "column": 43
+                }
+            }
+        },
+        "branchMap": {}
+    }
+}
