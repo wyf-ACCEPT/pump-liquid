@@ -21,15 +21,15 @@
     },
     "contracts/lib/WeightedMath.sol": {
         "l": {
-            "22": 14
+            "22": 16
         },
         "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/lib/WeightedMath.sol",
         "s": {
-            "1": 14
+            "1": 16
         },
         "b": {},
         "f": {
-            "1": 14
+            "1": 16
         },
         "fnMap": {
             "1": {
@@ -63,15 +63,15 @@
     },
     "contracts/LiquidCashier.sol": {
         "l": {
-            "78": 1,
-            "79": 1,
-            "81": 1,
-            "82": 1,
-            "84": 1,
-            "85": 1,
-            "86": 1,
-            "87": 1,
-            "88": 1,
+            "78": 3,
+            "79": 3,
+            "81": 3,
+            "82": 3,
+            "84": 3,
+            "85": 3,
+            "86": 3,
+            "87": 3,
+            "88": 3,
             "106": 6,
             "107": 6,
             "112": 6,
@@ -80,14 +80,14 @@
             "119": 6,
             "123": 6,
             "124": 6,
-            "138": 7,
-            "141": 7,
-            "142": 7,
-            "145": 7,
-            "148": 7,
-            "149": 7,
-            "153": 7,
-            "159": 7,
+            "138": 9,
+            "141": 9,
+            "142": 8,
+            "145": 8,
+            "148": 8,
+            "149": 8,
+            "153": 8,
+            "159": 8,
             "169": 2,
             "170": 2,
             "171": 2,
@@ -96,43 +96,43 @@
             "180": 2,
             "183": 2,
             "192": 2,
+            "205": 3,
             "206": 3,
-            "207": 3,
-            "213": 2,
-            "216": 2,
-            "217": 1,
+            "212": 2,
+            "215": 2,
+            "216": 1,
+            "219": 1,
             "220": 1,
-            "221": 1,
-            "223": 1,
-            "227": 2,
+            "222": 1,
+            "226": 2,
+            "236": 2,
             "237": 2,
             "238": 2,
-            "239": 2,
+            "244": 2,
             "245": 2,
-            "246": 2,
-            "248": 2,
-            "251": 2,
-            "254": 1,
-            "257": 1,
-            "267": 1,
-            "271": 1,
+            "247": 2,
+            "250": 2,
+            "253": 1,
+            "256": 1,
+            "266": 1,
+            "270": 1,
+            "274": 10,
             "275": 10,
-            "276": 10,
-            "277": 1,
+            "276": 1,
+            "278": 9,
             "279": 9,
-            "280": 9,
-            "281": 2,
-            "283": 2,
-            "285": 2,
+            "280": 2,
+            "282": 2,
+            "284": 2,
+            "286": 2,
             "287": 2,
-            "288": 2,
-            "290": 1,
-            "293": 9
+            "289": 1,
+            "292": 9
         },
         "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidCashier.sol",
         "s": {
-            "1": 1,
-            "2": 1,
+            "1": 3,
+            "2": 3,
             "3": 6,
             "4": 6,
             "5": 6,
@@ -141,11 +141,11 @@
             "8": 6,
             "9": 6,
             "10": 6,
-            "11": 7,
-            "12": 7,
-            "13": 7,
-            "14": 7,
-            "15": 7,
+            "11": 9,
+            "12": 9,
+            "13": 8,
+            "14": 8,
+            "15": 8,
             "16": 2,
             "17": 2,
             "18": 2,
@@ -183,7 +183,7 @@
         },
         "b": {
             "1": [
-                1,
+                3,
                 0
             ],
             "2": [
@@ -191,11 +191,11 @@
                 6
             ],
             "3": [
-                7,
+                9,
                 1
             ],
             "4": [
-                7,
+                9,
                 0
             ],
             "5": [
@@ -296,9 +296,9 @@
             ]
         },
         "f": {
-            "1": 1,
+            "1": 3,
             "2": 6,
-            "3": 7,
+            "3": 9,
             "4": 2,
             "5": 3,
             "6": 2,
@@ -365,70 +365,70 @@
             },
             "5": {
                 "name": "completeWithdraw",
-                "line": 204,
+                "line": 203,
                 "loc": {
                     "start": {
-                        "line": 204,
+                        "line": 203,
                         "column": 4
                     },
                     "end": {
-                        "line": 228,
+                        "line": 227,
                         "column": 4
                     }
                 }
             },
             "6": {
                 "name": "instantWithdraw",
-                "line": 235,
+                "line": 234,
                 "loc": {
                     "start": {
-                        "line": 235,
+                        "line": 234,
                         "column": 4
                     },
                     "end": {
-                        "line": 261,
+                        "line": 260,
                         "column": 4
                     }
                 }
             },
             "7": {
                 "name": "pause",
-                "line": 266,
+                "line": 265,
                 "loc": {
                     "start": {
-                        "line": 266,
+                        "line": 265,
                         "column": 4
                     },
                     "end": {
-                        "line": 268,
+                        "line": 267,
                         "column": 4
                     }
                 }
             },
             "8": {
                 "name": "unpause",
-                "line": 270,
+                "line": 269,
                 "loc": {
                     "start": {
-                        "line": 270,
+                        "line": 269,
                         "column": 4
                     },
                     "end": {
-                        "line": 272,
+                        "line": 271,
                         "column": 4
                     }
                 }
             },
             "9": {
                 "name": "setParameter",
-                "line": 274,
+                "line": 273,
                 "loc": {
                     "start": {
-                        "line": 274,
+                        "line": 273,
                         "column": 4
                     },
                     "end": {
-                        "line": 294,
+                        "line": 293,
                         "column": 4
                     }
                 }
@@ -657,271 +657,271 @@
             },
             "23": {
                 "start": {
-                    "line": 206,
+                    "line": 205,
                     "column": 8
                 },
                 "end": {
-                    "line": 206,
+                    "line": 205,
                     "column": 90
                 }
             },
             "24": {
                 "start": {
-                    "line": 207,
+                    "line": 206,
                     "column": 8
                 },
                 "end": {
-                    "line": 207,
-                    "column": 8106
+                    "line": 206,
+                    "column": 8105
                 }
             },
             "25": {
                 "start": {
-                    "line": 213,
+                    "line": 212,
                     "column": 8
                 },
                 "end": {
-                    "line": 213,
+                    "line": 212,
                     "column": 59
                 }
             },
             "26": {
                 "start": {
-                    "line": 216,
+                    "line": 215,
                     "column": 8
                 },
                 "end": {
-                    "line": 216,
-                    "column": 8395
+                    "line": 215,
+                    "column": 8394
                 }
             },
             "27": {
                 "start": {
-                    "line": 217,
+                    "line": 216,
                     "column": 12
                 },
                 "end": {
-                    "line": 217,
-                    "column": 8462
+                    "line": 216,
+                    "column": 8461
                 }
             },
             "28": {
                 "start": {
-                    "line": 221,
+                    "line": 220,
                     "column": 12
                 },
                 "end": {
-                    "line": 221,
+                    "line": 220,
                     "column": 63
                 }
             },
             "29": {
                 "start": {
-                    "line": 223,
+                    "line": 222,
                     "column": 12
                 },
                 "end": {
-                    "line": 223,
+                    "line": 222,
                     "column": 61
                 }
             },
             "30": {
                 "start": {
-                    "line": 237,
+                    "line": 236,
                     "column": 8
                 },
                 "end": {
-                    "line": 237,
+                    "line": 236,
                     "column": 66
                 }
             },
             "31": {
                 "start": {
-                    "line": 238,
+                    "line": 237,
                     "column": 8
                 },
                 "end": {
-                    "line": 238,
+                    "line": 237,
                     "column": 87
                 }
             },
             "32": {
                 "start": {
-                    "line": 239,
+                    "line": 238,
                     "column": 8
                 },
                 "end": {
-                    "line": 239,
-                    "column": 9413
+                    "line": 238,
+                    "column": 9412
                 }
             },
             "33": {
                 "start": {
-                    "line": 245,
+                    "line": 244,
                     "column": 8
                 },
                 "end": {
-                    "line": 245,
+                    "line": 244,
                     "column": 70
                 }
             },
             "34": {
                 "start": {
-                    "line": 246,
+                    "line": 245,
                     "column": 8
                 },
                 "end": {
-                    "line": 246,
-                    "column": 9705
+                    "line": 245,
+                    "column": 9704
                 }
             },
             "35": {
                 "start": {
-                    "line": 248,
+                    "line": 247,
                     "column": 8
                 },
                 "end": {
-                    "line": 248,
+                    "line": 247,
                     "column": 75
                 }
             },
             "36": {
                 "start": {
-                    "line": 251,
+                    "line": 250,
                     "column": 8
                 },
                 "end": {
-                    "line": 251,
-                    "column": 9920
+                    "line": 250,
+                    "column": 9919
                 }
             },
             "37": {
                 "start": {
-                    "line": 257,
+                    "line": 256,
                     "column": 8
                 },
                 "end": {
-                    "line": 257,
-                    "column": 10109
+                    "line": 256,
+                    "column": 10108
                 }
             },
             "38": {
                 "start": {
-                    "line": 267,
+                    "line": 266,
                     "column": 8
                 },
                 "end": {
-                    "line": 267,
+                    "line": 266,
                     "column": 15
                 }
             },
             "39": {
                 "start": {
-                    "line": 271,
+                    "line": 270,
                     "column": 8
                 },
                 "end": {
-                    "line": 271,
+                    "line": 270,
                     "column": 17
                 }
             },
             "40": {
                 "start": {
-                    "line": 275,
+                    "line": 274,
                     "column": 8
                 },
                 "end": {
-                    "line": 275,
+                    "line": 274,
                     "column": 58
                 }
             },
             "41": {
                 "start": {
-                    "line": 276,
+                    "line": 275,
                     "column": 8
                 },
                 "end": {
-                    "line": 276,
-                    "column": 10691
+                    "line": 275,
+                    "column": 10690
                 }
             },
             "42": {
                 "start": {
-                    "line": 279,
+                    "line": 278,
                     "column": 12
                 },
                 "end": {
-                    "line": 279,
+                    "line": 278,
                     "column": 70
                 }
             },
             "43": {
                 "start": {
-                    "line": 280,
+                    "line": 279,
                     "column": 12
                 },
                 "end": {
-                    "line": 280,
-                    "column": 10879
+                    "line": 279,
+                    "column": 10878
                 }
             },
             "44": {
                 "start": {
-                    "line": 282,
+                    "line": 281,
                     "column": 19
                 },
                 "end": {
-                    "line": 282,
-                    "column": 10990
+                    "line": 281,
+                    "column": 10989
                 }
             },
             "45": {
                 "start": {
-                    "line": 284,
+                    "line": 283,
                     "column": 19
                 },
                 "end": {
-                    "line": 284,
-                    "column": 11103
+                    "line": 283,
+                    "column": 11102
                 }
             },
             "46": {
                 "start": {
-                    "line": 286,
+                    "line": 285,
                     "column": 19
                 },
                 "end": {
-                    "line": 286,
-                    "column": 11202
+                    "line": 285,
+                    "column": 11201
                 }
             },
             "47": {
                 "start": {
-                    "line": 287,
+                    "line": 286,
                     "column": 16
                 },
                 "end": {
-                    "line": 287,
+                    "line": 286,
                     "column": 88
                 }
             },
             "48": {
                 "start": {
-                    "line": 290,
+                    "line": 289,
                     "column": 16
                 },
                 "end": {
-                    "line": 290,
+                    "line": 289,
                     "column": 52
                 }
             },
             "49": {
                 "start": {
-                    "line": 293,
+                    "line": 292,
                     "column": 8
                 },
                 "end": {
-                    "line": 293,
+                    "line": 292,
                     "column": 40
                 }
             }
@@ -1162,32 +1162,58 @@
                 ]
             },
             "10": {
-                "line": 204,
+                "line": 203,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 204,
+                            "line": 203,
                             "column": 39
                         },
                         "end": {
-                            "line": 204,
+                            "line": 203,
                             "column": 39
                         }
                     },
                     {
                         "start": {
-                            "line": 204,
+                            "line": 203,
                             "column": 39
                         },
                         "end": {
-                            "line": 204,
+                            "line": 203,
                             "column": 39
                         }
                     }
                 ]
             },
             "11": {
+                "line": 205,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 205,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 205,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 205,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 205,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "12": {
                 "line": 206,
                 "type": "if",
                 "locations": [
@@ -1213,85 +1239,85 @@
                     }
                 ]
             },
-            "12": {
-                "line": 207,
-                "type": "if",
-                "locations": [
-                    {
-                        "start": {
-                            "line": 207,
-                            "column": 8
-                        },
-                        "end": {
-                            "line": 207,
-                            "column": 8
-                        }
-                    },
-                    {
-                        "start": {
-                            "line": 207,
-                            "column": 8
-                        },
-                        "end": {
-                            "line": 207,
-                            "column": 8
-                        }
-                    }
-                ]
-            },
             "13": {
-                "line": 216,
+                "line": 215,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 216,
+                            "line": 215,
                             "column": 8
                         },
                         "end": {
-                            "line": 216,
+                            "line": 215,
                             "column": 8
                         }
                     },
                     {
                         "start": {
-                            "line": 216,
+                            "line": 215,
                             "column": 8
                         },
                         "end": {
-                            "line": 216,
+                            "line": 215,
                             "column": 8
                         }
                     }
                 ]
             },
             "14": {
-                "line": 235,
+                "line": 234,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 235,
+                            "line": 234,
                             "column": 73
                         },
                         "end": {
-                            "line": 235,
+                            "line": 234,
                             "column": 73
                         }
                     },
                     {
                         "start": {
-                            "line": 235,
+                            "line": 234,
                             "column": 73
                         },
                         "end": {
-                            "line": 235,
+                            "line": 234,
                             "column": 73
                         }
                     }
                 ]
             },
             "15": {
+                "line": 236,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 236,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 236,
+                            "column": 8
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 236,
+                            "column": 8
+                        },
+                        "end": {
+                            "line": 236,
+                            "column": 8
+                        }
+                    }
+                ]
+            },
+            "16": {
                 "line": 237,
                 "type": "if",
                 "locations": [
@@ -1317,7 +1343,7 @@
                     }
                 ]
             },
-            "16": {
+            "17": {
                 "line": 238,
                 "type": "if",
                 "locations": [
@@ -1343,163 +1369,163 @@
                     }
                 ]
             },
-            "17": {
-                "line": 239,
-                "type": "if",
-                "locations": [
-                    {
-                        "start": {
-                            "line": 239,
-                            "column": 8
-                        },
-                        "end": {
-                            "line": 239,
-                            "column": 8
-                        }
-                    },
-                    {
-                        "start": {
-                            "line": 239,
-                            "column": 8
-                        },
-                        "end": {
-                            "line": 239,
-                            "column": 8
-                        }
-                    }
-                ]
-            },
             "18": {
-                "line": 248,
+                "line": 247,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 248,
+                            "line": 247,
                             "column": 8
                         },
                         "end": {
-                            "line": 248,
+                            "line": 247,
                             "column": 8
                         }
                     },
                     {
                         "start": {
-                            "line": 248,
+                            "line": 247,
                             "column": 8
                         },
                         "end": {
-                            "line": 248,
+                            "line": 247,
                             "column": 8
                         }
                     }
                 ]
             },
             "19": {
-                "line": 266,
+                "line": 265,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 266,
+                            "line": 265,
                             "column": 28
                         },
                         "end": {
-                            "line": 266,
+                            "line": 265,
                             "column": 28
                         }
                     },
                     {
                         "start": {
-                            "line": 266,
+                            "line": 265,
                             "column": 28
                         },
                         "end": {
-                            "line": 266,
+                            "line": 265,
                             "column": 28
                         }
                     }
                 ]
             },
             "20": {
-                "line": 270,
+                "line": 269,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 270,
+                            "line": 269,
                             "column": 30
                         },
                         "end": {
-                            "line": 270,
+                            "line": 269,
                             "column": 30
                         }
                     },
                     {
                         "start": {
-                            "line": 270,
+                            "line": 269,
                             "column": 30
                         },
                         "end": {
-                            "line": 270,
+                            "line": 269,
                             "column": 30
                         }
                     }
                 ]
             },
             "21": {
-                "line": 274,
+                "line": 273,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 274,
+                            "line": 273,
                             "column": 67
                         },
                         "end": {
-                            "line": 274,
+                            "line": 273,
                             "column": 67
                         }
                     },
                     {
                         "start": {
-                            "line": 274,
+                            "line": 273,
                             "column": 67
                         },
                         "end": {
-                            "line": 274,
+                            "line": 273,
                             "column": 67
                         }
                     }
                 ]
             },
             "22": {
-                "line": 276,
+                "line": 275,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 276,
+                            "line": 275,
                             "column": 8
                         },
                         "end": {
-                            "line": 276,
+                            "line": 275,
                             "column": 8
                         }
                     },
                     {
                         "start": {
-                            "line": 276,
+                            "line": 275,
                             "column": 8
                         },
                         "end": {
-                            "line": 276,
+                            "line": 275,
                             "column": 8
                         }
                     }
                 ]
             },
             "23": {
+                "line": 278,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 278,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 278,
+                            "column": 12
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 278,
+                            "column": 12
+                        },
+                        "end": {
+                            "line": 278,
+                            "column": 12
+                        }
+                    }
+                ]
+            },
+            "24": {
                 "line": 279,
                 "type": "if",
                 "locations": [
@@ -1525,132 +1551,771 @@
                     }
                 ]
             },
-            "24": {
-                "line": 280,
-                "type": "if",
-                "locations": [
-                    {
-                        "start": {
-                            "line": 280,
-                            "column": 12
-                        },
-                        "end": {
-                            "line": 280,
-                            "column": 12
-                        }
-                    },
-                    {
-                        "start": {
-                            "line": 280,
-                            "column": 12
-                        },
-                        "end": {
-                            "line": 280,
-                            "column": 12
-                        }
-                    }
-                ]
-            },
             "25": {
-                "line": 282,
+                "line": 281,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 282,
+                            "line": 281,
                             "column": 19
                         },
                         "end": {
-                            "line": 282,
+                            "line": 281,
                             "column": 19
                         }
                     },
                     {
                         "start": {
-                            "line": 282,
+                            "line": 281,
                             "column": 19
                         },
                         "end": {
-                            "line": 282,
+                            "line": 281,
                             "column": 19
                         }
                     }
                 ]
             },
             "26": {
-                "line": 284,
+                "line": 283,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 284,
+                            "line": 283,
                             "column": 19
                         },
                         "end": {
-                            "line": 284,
+                            "line": 283,
                             "column": 19
                         }
                     },
                     {
                         "start": {
-                            "line": 284,
+                            "line": 283,
                             "column": 19
                         },
                         "end": {
-                            "line": 284,
+                            "line": 283,
                             "column": 19
                         }
                     }
                 ]
             },
             "27": {
-                "line": 286,
+                "line": 285,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 286,
+                            "line": 285,
                             "column": 19
                         },
                         "end": {
-                            "line": 286,
+                            "line": 285,
                             "column": 19
                         }
                     },
                     {
                         "start": {
-                            "line": 286,
+                            "line": 285,
                             "column": 19
                         },
                         "end": {
-                            "line": 286,
+                            "line": 285,
                             "column": 19
                         }
                     }
                 ]
             },
             "28": {
-                "line": 287,
+                "line": 286,
                 "type": "if",
                 "locations": [
                     {
                         "start": {
-                            "line": 287,
+                            "line": 286,
                             "column": 16
                         },
                         "end": {
-                            "line": 287,
+                            "line": 286,
                             "column": 16
                         }
                     },
                     {
                         "start": {
-                            "line": 287,
+                            "line": 286,
                             "column": 16
                         },
                         "end": {
-                            "line": 287,
+                            "line": 286,
                             "column": 16
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "contracts/LiquidFactory.sol": {
+        "l": {
+            "60": 1,
+            "61": 1,
+            "64": 1,
+            "65": 1,
+            "66": 1,
+            "69": 1,
+            "70": 1,
+            "71": 1,
+            "78": 1,
+            "82": 1,
+            "86": 1,
+            "90": 1,
+            "100": 2,
+            "101": 2,
+            "102": 2,
+            "105": 2,
+            "106": 2,
+            "107": 2,
+            "108": 2,
+            "111": 2,
+            "112": 2,
+            "113": 2,
+            "116": 2,
+            "125": 2,
+            "129": 1,
+            "130": 1,
+            "131": 1,
+            "135": 1,
+            "136": 1,
+            "137": 1,
+            "141": 1,
+            "142": 1,
+            "143": 1
+        },
+        "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidFactory.sol",
+        "s": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1,
+            "6": 1,
+            "7": 1,
+            "8": 1,
+            "9": 1,
+            "10": 2,
+            "11": 2,
+            "12": 2,
+            "13": 2,
+            "14": 2,
+            "15": 2,
+            "16": 2,
+            "17": 2,
+            "18": 2,
+            "19": 2,
+            "20": 2,
+            "21": 2,
+            "22": 1,
+            "23": 1,
+            "24": 1,
+            "25": 1,
+            "26": 1,
+            "27": 1,
+            "28": 1,
+            "29": 1,
+            "30": 1
+        },
+        "b": {
+            "1": [
+                1,
+                0
+            ],
+            "2": [
+                2,
+                0
+            ],
+            "3": [
+                1,
+                0
+            ],
+            "4": [
+                1,
+                0
+            ],
+            "5": [
+                1,
+                0
+            ]
+        },
+        "f": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1,
+            "6": 2,
+            "7": 1,
+            "8": 1,
+            "9": 1
+        },
+        "fnMap": {
+            "1": {
+                "name": "initialize",
+                "line": 58,
+                "loc": {
+                    "start": {
+                        "line": 56,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 72,
+                        "column": 4
+                    }
+                }
+            },
+            "2": {
+                "name": "getLiquidsNum",
+                "line": 77,
+                "loc": {
+                    "start": {
+                        "line": 77,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 79,
+                        "column": 4
+                    }
+                }
+            },
+            "3": {
+                "name": "getImplementationVault",
+                "line": 81,
+                "loc": {
+                    "start": {
+                        "line": 81,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 83,
+                        "column": 4
+                    }
+                }
+            },
+            "4": {
+                "name": "getImplementationOracle",
+                "line": 85,
+                "loc": {
+                    "start": {
+                        "line": 85,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 87,
+                        "column": 4
+                    }
+                }
+            },
+            "5": {
+                "name": "getImplementationCashier",
+                "line": 89,
+                "loc": {
+                    "start": {
+                        "line": 89,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 91,
+                        "column": 4
+                    }
+                }
+            },
+            "6": {
+                "name": "deployLiquid",
+                "line": 98,
+                "loc": {
+                    "start": {
+                        "line": 96,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 126,
+                        "column": 4
+                    }
+                }
+            },
+            "7": {
+                "name": "upgradeCashier",
+                "line": 128,
+                "loc": {
+                    "start": {
+                        "line": 128,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 132,
+                        "column": 4
+                    }
+                }
+            },
+            "8": {
+                "name": "upgradeVault",
+                "line": 134,
+                "loc": {
+                    "start": {
+                        "line": 134,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 138,
+                        "column": 4
+                    }
+                }
+            },
+            "9": {
+                "name": "upgradeOracle",
+                "line": 140,
+                "loc": {
+                    "start": {
+                        "line": 140,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 144,
+                        "column": 4
+                    }
+                }
+            }
+        },
+        "statementMap": {
+            "1": {
+                "start": {
+                    "line": 60,
+                    "column": 8
+                },
+                "end": {
+                    "line": 60,
+                    "column": 35
+                }
+            },
+            "2": {
+                "start": {
+                    "line": 61,
+                    "column": 8
+                },
+                "end": {
+                    "line": 61,
+                    "column": 28
+                }
+            },
+            "3": {
+                "start": {
+                    "line": 64,
+                    "column": 8
+                },
+                "end": {
+                    "line": 64,
+                    "column": 34
+                }
+            },
+            "4": {
+                "start": {
+                    "line": 65,
+                    "column": 8
+                },
+                "end": {
+                    "line": 65,
+                    "column": 36
+                }
+            },
+            "5": {
+                "start": {
+                    "line": 66,
+                    "column": 8
+                },
+                "end": {
+                    "line": 66,
+                    "column": 38
+                }
+            },
+            "6": {
+                "start": {
+                    "line": 78,
+                    "column": 8
+                },
+                "end": {
+                    "line": 78,
+                    "column": 29
+                }
+            },
+            "7": {
+                "start": {
+                    "line": 82,
+                    "column": 8
+                },
+                "end": {
+                    "line": 82,
+                    "column": 43
+                }
+            },
+            "8": {
+                "start": {
+                    "line": 86,
+                    "column": 8
+                },
+                "end": {
+                    "line": 86,
+                    "column": 44
+                }
+            },
+            "9": {
+                "start": {
+                    "line": 90,
+                    "column": 8
+                },
+                "end": {
+                    "line": 90,
+                    "column": 45
+                }
+            },
+            "10": {
+                "start": {
+                    "line": 100,
+                    "column": 8
+                },
+                "end": {
+                    "line": 100,
+                    "column": 79
+                }
+            },
+            "11": {
+                "start": {
+                    "line": 101,
+                    "column": 8
+                },
+                "end": {
+                    "line": 101,
+                    "column": 81
+                }
+            },
+            "12": {
+                "start": {
+                    "line": 102,
+                    "column": 8
+                },
+                "end": {
+                    "line": 102,
+                    "column": 83
+                }
+            },
+            "13": {
+                "start": {
+                    "line": 105,
+                    "column": 8
+                },
+                "end": {
+                    "line": 105,
+                    "column": 55
+                }
+            },
+            "14": {
+                "start": {
+                    "line": 106,
+                    "column": 8
+                },
+                "end": {
+                    "line": 106,
+                    "column": 45
+                }
+            },
+            "15": {
+                "start": {
+                    "line": 107,
+                    "column": 8
+                },
+                "end": {
+                    "line": 107,
+                    "column": 70
+                }
+            },
+            "16": {
+                "start": {
+                    "line": 108,
+                    "column": 8
+                },
+                "end": {
+                    "line": 108,
+                    "column": 55
+                }
+            },
+            "17": {
+                "start": {
+                    "line": 111,
+                    "column": 8
+                },
+                "end": {
+                    "line": 111,
+                    "column": 76
+                }
+            },
+            "18": {
+                "start": {
+                    "line": 112,
+                    "column": 8
+                },
+                "end": {
+                    "line": 112,
+                    "column": 77
+                }
+            },
+            "19": {
+                "start": {
+                    "line": 113,
+                    "column": 8
+                },
+                "end": {
+                    "line": 113,
+                    "column": 78
+                }
+            },
+            "20": {
+                "start": {
+                    "line": 116,
+                    "column": 8
+                },
+                "end": {
+                    "line": 116,
+                    "column": 4008
+                }
+            },
+            "21": {
+                "start": {
+                    "line": 125,
+                    "column": 8
+                },
+                "end": {
+                    "line": 125,
+                    "column": 93
+                }
+            },
+            "22": {
+                "start": {
+                    "line": 129,
+                    "column": 8
+                },
+                "end": {
+                    "line": 129,
+                    "column": 56
+                }
+            },
+            "23": {
+                "start": {
+                    "line": 130,
+                    "column": 8
+                },
+                "end": {
+                    "line": 130,
+                    "column": 39
+                }
+            },
+            "24": {
+                "start": {
+                    "line": 131,
+                    "column": 8
+                },
+                "end": {
+                    "line": 131,
+                    "column": 63
+                }
+            },
+            "25": {
+                "start": {
+                    "line": 135,
+                    "column": 8
+                },
+                "end": {
+                    "line": 135,
+                    "column": 56
+                }
+            },
+            "26": {
+                "start": {
+                    "line": 136,
+                    "column": 8
+                },
+                "end": {
+                    "line": 136,
+                    "column": 37
+                }
+            },
+            "27": {
+                "start": {
+                    "line": 137,
+                    "column": 8
+                },
+                "end": {
+                    "line": 137,
+                    "column": 61
+                }
+            },
+            "28": {
+                "start": {
+                    "line": 141,
+                    "column": 8
+                },
+                "end": {
+                    "line": 141,
+                    "column": 56
+                }
+            },
+            "29": {
+                "start": {
+                    "line": 142,
+                    "column": 8
+                },
+                "end": {
+                    "line": 142,
+                    "column": 38
+                }
+            },
+            "30": {
+                "start": {
+                    "line": 143,
+                    "column": 8
+                },
+                "end": {
+                    "line": 143,
+                    "column": 62
+                }
+            }
+        },
+        "branchMap": {
+            "1": {
+                "line": 58,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 58,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 58,
+                            "column": 13
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 58,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 58,
+                            "column": 13
+                        }
+                    }
+                ]
+            },
+            "2": {
+                "line": 98,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 98,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 98,
+                            "column": 13
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 98,
+                            "column": 13
+                        },
+                        "end": {
+                            "line": 98,
+                            "column": 13
+                        }
+                    }
+                ]
+            },
+            "3": {
+                "line": 128,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 128,
+                            "column": 52
+                        },
+                        "end": {
+                            "line": 128,
+                            "column": 52
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 128,
+                            "column": 52
+                        },
+                        "end": {
+                            "line": 128,
+                            "column": 52
+                        }
+                    }
+                ]
+            },
+            "4": {
+                "line": 134,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 134,
+                            "column": 50
+                        },
+                        "end": {
+                            "line": 134,
+                            "column": 50
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 134,
+                            "column": 50
+                        },
+                        "end": {
+                            "line": 134,
+                            "column": 50
+                        }
+                    }
+                ]
+            },
+            "5": {
+                "line": 140,
+                "type": "if",
+                "locations": [
+                    {
+                        "start": {
+                            "line": 140,
+                            "column": 51
+                        },
+                        "end": {
+                            "line": 140,
+                            "column": 51
+                        }
+                    },
+                    {
+                        "start": {
+                            "line": 140,
+                            "column": 51
+                        },
+                        "end": {
+                            "line": 140,
+                            "column": 51
                         }
                     }
                 ]
@@ -1659,17 +2324,17 @@
     },
     "contracts/LiquidOracle.sol": {
         "l": {
-            "60": 2,
-            "61": 2,
-            "62": 2,
-            "64": 2,
-            "68": 14,
-            "72": 14,
+            "60": 4,
+            "61": 4,
+            "62": 4,
+            "64": 4,
+            "68": 16,
+            "72": 15,
             "79": 2,
             "83": 1,
             "87": 1,
             "91": 1,
-            "95": 13,
+            "95": 16,
             "99": 1,
             "100": 1,
             "101": 1,
@@ -1680,16 +2345,16 @@
             "110": 1,
             "112": 1,
             "113": 1,
-            "119": 8,
-            "120": 8,
+            "119": 9,
+            "120": 9,
             "126": 6,
             "127": 6,
-            "134": 16,
-            "135": 16,
-            "136": 16,
-            "140": 16,
-            "141": 16,
-            "142": 16,
+            "134": 19,
+            "135": 19,
+            "136": 19,
+            "140": 19,
+            "141": 19,
+            "142": 19,
             "146": 1,
             "147": 1,
             "148": 1,
@@ -1698,79 +2363,79 @@
             "151": 1,
             "152": 1,
             "155": 1,
-            "170": 11,
-            "171": 11,
-            "175": 10,
-            "180": 9,
-            "181": 36,
-            "182": 36,
-            "186": 9,
-            "187": 9,
-            "191": 9,
-            "192": 9,
-            "199": 5,
-            "200": 4,
+            "170": 13,
+            "171": 13,
+            "175": 12,
+            "180": 11,
+            "181": 39,
+            "182": 39,
+            "186": 11,
+            "187": 11,
+            "191": 11,
+            "192": 11,
+            "199": 7,
+            "200": 6,
             "202": 1
         },
         "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidOracle.sol",
         "s": {
-            "1": 2,
-            "2": 2,
-            "3": 2,
-            "4": 14,
+            "1": 4,
+            "2": 4,
+            "3": 4,
+            "4": 16,
             "5": 2,
             "6": 1,
             "7": 1,
             "8": 1,
-            "9": 13,
+            "9": 16,
             "10": 1,
             "11": 1,
             "12": 1,
             "13": 1,
             "14": 1,
             "15": 1,
-            "16": 8,
-            "17": 8,
+            "16": 9,
+            "17": 9,
             "18": 6,
             "19": 6,
-            "20": 16,
-            "21": 16,
-            "22": 16,
-            "23": 16,
-            "24": 16,
+            "20": 19,
+            "21": 19,
+            "22": 19,
+            "23": 19,
+            "24": 19,
             "25": 1,
             "26": 1,
             "27": 2,
             "28": 1,
             "29": 1,
-            "30": 11,
-            "31": 11,
-            "32": 10,
-            "33": 9,
-            "34": 9,
-            "35": 5,
-            "36": 4,
+            "30": 13,
+            "31": 13,
+            "32": 12,
+            "33": 11,
+            "34": 11,
+            "35": 7,
+            "36": 6,
             "37": 1
         },
         "b": {
             "1": [
-                2,
+                4,
                 0
             ],
             "2": [
-                14,
-                0
+                15,
+                1
             ],
             "3": [
-                14,
+                15,
                 0
             ],
             "4": [
-                8,
-                0
+                9,
+                1
             ],
             "5": [
-                8,
+                9,
                 0
             ],
             "6": [
@@ -1782,19 +2447,19 @@
                 0
             ],
             "8": [
-                16,
-                0
+                19,
+                1
             ],
             "9": [
-                16,
+                19,
                 0
             ],
             "10": [
-                16,
+                19,
                 0
             ],
             "11": [
-                16,
+                19,
                 0
             ],
             "12": [
@@ -1810,42 +2475,42 @@
                 1
             ],
             "15": [
-                11,
-                2
+                13,
+                3
             ],
             "16": [
-                10,
+                12,
                 1
             ],
             "17": [
-                9,
+                11,
                 1
             ],
             "18": [
-                5,
+                7,
                 0
             ],
             "19": [
-                4,
+                6,
                 1
             ]
         },
         "f": {
-            "1": 2,
-            "2": 14,
+            "1": 4,
+            "2": 16,
             "3": 2,
             "4": 1,
             "5": 1,
             "6": 1,
-            "7": 13,
+            "7": 16,
             "8": 1,
             "9": 1,
-            "10": 8,
+            "10": 9,
             "11": 6,
-            "12": 16,
+            "12": 19,
             "13": 1,
-            "14": 11,
-            "15": 5
+            "14": 13,
+            "15": 7
         },
         "fnMap": {
             "1": {
@@ -2930,74 +3595,74 @@
     },
     "contracts/LiquidVault.sol": {
         "l": {
-            "25": 1,
-            "26": 1,
-            "28": 1,
-            "29": 1,
-            "36": 10,
-            "40": 10,
-            "49": 7,
-            "50": 7,
-            "51": 7,
-            "52": 7,
+            "25": 3,
+            "26": 3,
+            "28": 3,
+            "29": 3,
+            "36": 11,
+            "40": 11,
+            "49": 8,
+            "50": 8,
+            "51": 8,
+            "52": 8,
             "58": 3,
             "59": 3,
             "60": 3,
             "61": 3,
             "70": 2,
             "76": 1,
-            "88": 1,
-            "89": 1,
+            "88": 3,
+            "89": 3,
             "95": 3,
             "96": 2,
             "98": 1
         },
         "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/LiquidVault.sol",
         "s": {
-            "1": 1,
-            "2": 1,
-            "3": 1,
-            "4": 1,
-            "5": 10,
-            "6": 10,
-            "7": 7,
-            "8": 7,
-            "9": 7,
-            "10": 7,
+            "1": 3,
+            "2": 3,
+            "3": 3,
+            "4": 3,
+            "5": 11,
+            "6": 11,
+            "7": 8,
+            "8": 8,
+            "9": 8,
+            "10": 8,
             "11": 3,
             "12": 3,
             "13": 3,
             "14": 3,
             "15": 2,
             "16": 1,
-            "17": 1,
+            "17": 3,
             "18": 3,
             "19": 2,
             "20": 1
         },
         "b": {
             "1": [
-                1,
+                3,
                 0
             ],
             "2": [
-                10,
+                11,
                 0
             ],
             "3": [
-                7,
+                8,
                 3
             ],
             "4": [
-                7,
+                8,
                 0
             ],
             "5": [
-                7,
+                8,
                 0
             ],
             "6": [
-                7,
+                8,
                 0
             ],
             "7": [
@@ -3021,11 +3686,11 @@
                 1
             ],
             "12": [
-                2,
+                4,
                 0
             ],
             "13": [
-                1,
+                3,
                 1
             ],
             "14": [
@@ -3038,13 +3703,13 @@
             ]
         },
         "f": {
-            "1": 1,
-            "2": 10,
-            "3": 7,
+            "1": 3,
+            "2": 11,
+            "3": 8,
             "4": 3,
             "5": 2,
             "6": 1,
-            "7": 1,
+            "7": 3,
             "8": 3
         },
         "fnMap": {
@@ -3758,18 +4423,18 @@
     },
     "contracts/mock/MockToken.sol": {
         "l": {
-            "12": 8,
-            "13": 8,
+            "12": 12,
+            "13": 12,
             "17": 4
         },
         "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/mock/MockToken.sol",
         "s": {
-            "1": 8,
+            "1": 12,
             "2": 4
         },
         "b": {},
         "f": {
-            "1": 8,
+            "1": 12,
             "2": 4
         },
         "fnMap": {
@@ -3828,20 +4493,20 @@
     },
     "contracts/mock/MockWETH.sol": {
         "l": {
-            "10": 1,
+            "10": 3,
             "14": 1,
             "15": 1
         },
         "path": "/Users/wangyifan/Desktop/Blockchain/ANZ/PumpLiquid/contracts/mock/MockWETH.sol",
         "s": {
-            "1": 1,
+            "1": 3,
             "2": 1,
             "3": 1
         },
         "b": {},
         "f": {
-            "1": 1,
-            "2": 1,
+            "1": 2,
+            "2": 3,
             "3": 1
         },
         "fnMap": {
