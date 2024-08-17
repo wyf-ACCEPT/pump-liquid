@@ -195,7 +195,6 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         );
     }
 
-
     /**
      * @notice Complete the withdraw request and get the asset from the vault.
      *      If the asset is removed from the vault during the withdraw period,
