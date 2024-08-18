@@ -93,6 +93,28 @@ contract LiquidFactory is Ownable2StepUpgradeable {
     
     // ========================== Write functions ==========================
 
+    /**
+     * @param name Name for the ERC20 token of `LiquidVault` (the share token)
+     * @param symbol Symbol for the ERC20 token of `LiquidVault` (the share token)
+     * @param liquidOwner The owner of the whole liquid group contracts, including
+     *      `LiquidVault`, `LiquidOracle`, and `LiquidCashier`. This owner can call
+     *      the functions below:
+     * 
+     *      - In `LiquidCashier`:
+     *          - `pause` & `unpause`
+     *          - `setParameter`, including setting the fee rate for management, exit, 
+     *              instant withdrawal and performance, and the withdrawal period.
+     * 
+     *      - In `LiquidVault`:
+     *          - `setLiquidityManager`
+     * 
+     *      - In `LiquidOracle`:
+     *          - `addSupportedAsset` & `removeSupportedAsset`
+     *          - `setPriceUpdater`
+     * 
+     *      So the `liquidOwner` has the power to control the whole liquid group, 
+     *          expect for the `LiquidFactory` itself.
+     */
     function deployLiquid(
         string memory name, string memory symbol, address liquidOwner
     ) public onlyOwner {
