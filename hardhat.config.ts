@@ -19,7 +19,8 @@ const config: HardhatUserConfig = {
     sepolia: {
       url: process.env.RPC_SEPOLIA,
       accounts: [
-        process.env.PRIVATE_KEY_ADMIN!,
+        process.env.PRIVATE_KEY_PUMPBTC!,
+        process.env.PRIVATE_KEY_TESTONLY2!,
       ]
     }
   },

@@ -1,24 +1,27 @@
 import { parseEther } from "ethers"
 import { ethers, upgrades } from "hardhat"
 
+const GREEN = "\x1b[32m"
+const RESET = "\x1b[0m"
+
 export async function deployContract(contractName: string, args: any[] = []) {
   const contractFactory = await ethers.getContractFactory(contractName)
   const contract = await contractFactory.deploy(...args)
-  console.log(`\x1b[0m${contractName} deployed to: \x1b[32m${await contract.getAddress()}`)
+  console.log(`${contractName} deployed to: ${GREEN}${await contract.getAddress()}${RESET}`)
   return contract
 }
 
 export async function deployUpgradeableContract(contractName: string, args: any[] = []) {
   const contractFactory = await ethers.getContractFactory(contractName)
   const contract = await upgrades.deployProxy(contractFactory, args)
-  console.log(`\x1b[0m${contractName}(upgradeable) deployed to: \x1b[32m${await contract.getAddress()}`)
+  console.log(`${contractName}(upgradeable) deployed to: ${GREEN}${await contract.getAddress()}${RESET}`)
   return contract
 }
 
 export async function upgradeContract(proxyContractAddress: string, newContractName: string) {
   const newContractFactory = await ethers.getContractFactory(newContractName)
   const newContract = await upgrades.upgradeProxy(proxyContractAddress, newContractFactory)
-  console.log(`\x1b[0m${newContractName}(upgradeable) upgraded to: \x1b[32m${await newContract.getAddress()}`)
+  console.log(`${newContractName}(upgradeable) upgraded to: ${GREEN}${await newContract.getAddress()}${RESET}`)
   return newContract
 }
 
