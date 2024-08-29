@@ -10,7 +10,7 @@ library BytesBitwise {
      * @return The result of `a & b`.
      */
     function and(bytes memory a, bytes memory b) internal pure returns (bytes memory) {
-        require(a.length == b.length, "BytesBitwise: length mismatch");
+        require(a.length == b.length, "BYTES_BITWISE: length mismatch");
         bytes memory result = new bytes(a.length);
         for (uint256 i = 0; i < a.length; i++) {
             result[i] = a[i] & b[i];
