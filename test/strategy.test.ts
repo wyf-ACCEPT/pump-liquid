@@ -174,6 +174,10 @@ describe("test the user journey of the DEX", function () {
     await expect(liquidVault.connect(manager).executeStrategy(
       0, tokens.mockBTCB.interface.encodeFunctionData("approve", [user1.address, parseEther("1")])
     )).to.be.revertedWith("LIQUID_VAULT: strategy not matched")
+    // Failed case 4: invalid length
+    await expect(liquidVault.connect(manager).executeStrategy(
+      0, tokens.mockBTCB.interface.encodeFunctionData("approve", [dexRouterAddress, parseEther("1")]) + "00"
+    )).to.be.revertedWith("BYTES_BITWISE: length mismatch")
 
     /**
      * @notice Strategy 3. Swap $BTCB for $USDC on uniswap router, at any amount.
@@ -231,6 +235,9 @@ describe("test the user journey of the DEX", function () {
     const btcbVaultDelta = formatEther(btcbVaultBefore - btcbVaultAfter)
     const usdcVaultDelta = formatUnits(usdcVaultAfter - usdcVaultBefore, 6)
     console.log(`\tLiquid Manager buy ${usdcVaultDelta} $USDC with ${btcbVaultDelta} $BTCB on LiquidVault!`)
+
+    // Test removing strategy
+    await liquidVault.removeStrategy(1)
 
   })
 
