@@ -187,6 +187,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
             assetAmount: assetAmount,
             fee: feeAll
         });
+        depositInfo[_msgSender()].shares -= sharesAmount;
 
         // Event
         emit RequestWithdraw(
@@ -216,9 +217,9 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
             vault.withdrawFromVault(
                 _msgSender(), info.asset, info.shares, info.assetAmount - info.fee
             );
-            depositInfo[_msgSender()].shares -= info.shares;
             emit CompleteWithdraw(_msgSender(), info.timestamp);
         } else {
+            depositInfo[_msgSender()].shares += info.shares;
             emit CancelWithdraw(_msgSender(), info.timestamp);
         }
 
@@ -234,7 +235,6 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     function instantWithdraw(address asset, uint256 sharesAmount) public whenNotPaused {
         // Check conditions
         require(sharesAmount > 0, "LIQUID_CASHIER: invalid amount");
-        require(pendingInfo[_msgSender()].shares == 0, "LIQUID_CASHIER: request exists");
         require(
             sharesAmount <= depositInfo[_msgSender()].shares, 
             "LIQUID_CASHIER: insufficient shares"
