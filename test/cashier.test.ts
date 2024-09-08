@@ -315,7 +315,8 @@ describe("test cashier core", function () {
 
     const depositInfo2 = await liquidCashier.depositInfo(user1.address)
     await liquidCashier.connect(user1).completeWithdraw()
-    expect(await liquidCashier.depositInfo(user1.address)).to.be.deep.equal(depositInfo2)
+    expect((await liquidCashier.depositInfo(user1.address))[0] - depositInfo2[0])
+      .to.be.equal(pendingInfo[0])
 
 
     // ========================= Pause & Unpause =========================
