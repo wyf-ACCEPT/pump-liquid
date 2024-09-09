@@ -50,9 +50,9 @@ abstract contract Constants {
     
     /**
      * @notice The `FEE_SPLIT_MANAGER` is used to manage the fee split strategies.
-     *      Value: keccak256("LiquidFeeSplit: FEE_SPLIT_MANAGER")
+     *      Value: keccak256("LiquidFeeSplitter: FEE_SPLIT_MANAGER")
      */
     bytes32 public constant FEE_SPLIT_MANAGER = 
-        0x121e7c5926d7133b20a6efe982e519d061e3587c5dabcc2429595382e21932d7;
+        0xc37f34dc22fb979b943ce945802f428c62393835746f14ed0ca8eb4f34389344;
 
 }

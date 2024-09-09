@@ -17,6 +17,7 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     // ============================= Parameters ============================
 
     address public cashier;
+    address public feeSplitter;
 
 
     // ======================= Modifier & Initializer ======================
@@ -61,6 +62,19 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
             IERC20(asset).safeTransfer(to, assetAmount);
     }
 
+    function distributeFee(
+        address asset, uint256 feeManagement, uint256 feePerformance, 
+        uint256 feeExit, uint256 feeAll
+    ) public onlyRole(CASHIER_ROLE) {
+        IERC20(asset).approve(feeSplitter, feeAll);
+        if (feeManagement > 0)
+            ILiquidFeeSplitter(feeSplitter).vanillaFeeDistribute(asset, feeManagement);
+        if (feePerformance > 0)
+            ILiquidFeeSplitter(feeSplitter).fixRatioFeeDistribute(asset, feePerformance);
+        if (feeExit > 0)
+            ILiquidFeeSplitter(feeSplitter).vanillaFeeDistribute(asset, feeExit);
+    }
+
 
     // ==================== Write functions - liquidity ====================
 
@@ -87,6 +101,15 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     ) public onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(2) {
         cashier = _cashier;
         _grantRole(CASHIER_ROLE, cashier);
+    }
+
+    /**
+     * @notice We use `reinitializer` to ensure that the `feeSplitter` role is only set once.
+     */
+    function setFeeSplitter(
+        address _feeSplitter
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(3) {
+        feeSplitter = _feeSplitter;
     }
 
     function setLiquidityManager(

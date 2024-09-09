@@ -8,7 +8,7 @@ import "./constants.sol";
 
 using SafeERC20 for IERC20;
 
-contract LiquidFeeSplit is AccessControlUpgradeable, Constants {
+contract LiquidFeeSplitter is AccessControlUpgradeable, Constants {
 
     // ============================= Parameters ============================
 
@@ -34,19 +34,22 @@ contract LiquidFeeSplit is AccessControlUpgradeable, Constants {
         address indexed asset, address vanillaTo, address thirdPartyTo,
         uint256 feeAmount, uint256 vanillaFee, uint256 thirdPartyFee
     );
+    event VanillaToSet(address vanillaTo);
+    event ThirdPartyToSet(address thirdPartyTo);
+    event ThirdPartyRatioSet(uint256 thirdPartyRatio);
 
 
     // ========================== Write functions ==========================
 
     function vanillaFeeDistribute(IERC20 asset, uint256 feeAmount) public {
-        require(vanillaTo != address(0), "LIQUID_FEESPLIT: vanillaTo not set");
+        require(vanillaTo != address(0), "LIQUID_FEESPLITTER: vanillaTo not set");
         asset.safeTransferFrom(_msgSender(), vanillaTo, feeAmount);
         emit FeeDistributedVanilla(address(asset), vanillaTo, feeAmount);
     }
 
     function fixRatioFeeDistribute(IERC20 asset, uint256 feeAmount) public {
-        require(vanillaTo != address(0), "LIQUID_FEESPLIT: vanillaTo not set");
-        require(thirdPartyTo != address(0), "LIQUID_FEESPLIT: thirdPartyTo not set");
+        require(vanillaTo != address(0), "LIQUID_FEESPLITTER: vanillaTo not set");
+        require(thirdPartyTo != address(0), "LIQUID_FEESPLITTER: thirdPartyTo not set");
 
         uint256 thirdPartyFee = feeAmount * thirdPartyRatio / 10000;
         uint256 vanillaFee = feeAmount - thirdPartyFee;
@@ -65,14 +68,17 @@ contract LiquidFeeSplit is AccessControlUpgradeable, Constants {
 
     function setVanillaTo(address _vanillaTo) public onlyRole(FEE_SPLIT_MANAGER) {
         vanillaTo = _vanillaTo;
+        emit VanillaToSet(_vanillaTo);
     }
     
     function setThirdPartyTo(address _thirdPartyTo) public onlyRole(FEE_SPLIT_MANAGER) {
         thirdPartyTo = _thirdPartyTo;
+        emit ThirdPartyToSet(_thirdPartyTo);
     }
 
     function setThirdPartyRatio(uint256 _thirdPartyRatio) public onlyRole(FEE_SPLIT_MANAGER) {
         thirdPartyRatio = _thirdPartyRatio;
+        emit ThirdPartyRatioSet(_thirdPartyRatio);
     }
 
     

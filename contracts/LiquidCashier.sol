@@ -32,7 +32,10 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         uint256 timestamp;
         address asset;
         uint256 assetAmount;
-        uint256 fee;
+        uint256 feeManagement;
+        uint256 feePerformance;
+        uint256 feeExit;
+        uint256 feeAll;
     }
 
 
@@ -185,7 +188,10 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
             timestamp: block.timestamp,
             asset: asset,
             assetAmount: assetAmount,
-            fee: feeAll
+            feeManagement: feeManagement,
+            feePerformance: feePerformance,
+            feeExit: feeExit,
+            feeAll: feeAll
         });
         depositInfo[_msgSender()].shares -= sharesAmount;
 
@@ -215,7 +221,10 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         // Withdraw from the vault
         if (oracle.isSupportedAssetExternal(info.asset)) {
             vault.withdrawFromVault(
-                _msgSender(), info.asset, info.shares, info.assetAmount - info.fee
+                _msgSender(), info.asset, info.shares, info.assetAmount - info.feeAll
+            );
+            vault.distributeFee(
+                info.asset, info.feeManagement, info.feePerformance, info.feeExit, info.feeAll
             );
             emit CompleteWithdraw(_msgSender(), info.timestamp);
         } else {
