@@ -5,7 +5,6 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
-// import "@openzeppelin/contracts/utils/structs/Checkpoints.sol";
 
 import "./interface.sol";
 import "./constants.sol";
@@ -67,7 +66,7 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
     modifier isSupported(address asset) {
         require(
             isSupportedAsset[asset] || asset == STANDARD_ASSET, 
-            "PUMP_LIQUID_ORACLE: asset not found"
+            "LIQUID_ORACLE: asset not found"
         );
         _;
     }
@@ -116,14 +115,14 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
     function assetToShare(
         address asset, uint256 assetAmount
     ) public view isSupported(asset) returns (uint256) {
-        require(isSupportedAsset[asset], "PUMP_LIQUID_ORACLE: asset not found");
+        require(isSupportedAsset[asset], "LIQUID_ORACLE: asset not found");
         return assetAmount.mulDiv(assetPriceToShare[asset], PRICE_PRECISION);
     }
 
     function shareToAsset(
         address asset, uint256 shareAmount
     ) public view isSupported(asset) returns (uint256) {
-        require(isSupportedAsset[asset], "PUMP_LIQUID_ORACLE: asset not found");
+        require(isSupportedAsset[asset], "LIQUID_ORACLE: asset not found");
         return shareAmount.mulDiv(sharePriceToAsset[asset], PRICE_PRECISION);
     }
 
@@ -131,11 +130,11 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
     // ====================== Write functions - assets =====================
 
     function addSupportedAsset(address asset) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(!isSupportedAsset[asset], "PUMP_LIQUID_ORACLE: asset already exists");
-        require(asset != STANDARD_ASSET, "PUMP_LIQUID_ORACLE: cannot add virtual address");
+        require(!isSupportedAsset[asset], "LIQUID_ORACLE: asset already exists");
+        require(asset != STANDARD_ASSET, "LIQUID_ORACLE: cannot add virtual address");
         require(
             IERC20(asset).totalSupply() != 0, 
-            "PUMP_LIQUID_ORACLE: invalid asset" // Ensure the asset is a valid ERC20 token
+            "LIQUID_ORACLE: invalid asset" // Ensure the asset is a valid ERC20 token
         );
         isSupportedAsset[asset] = true;
         supportedAssetList.push(asset);
@@ -143,7 +142,7 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
     }
 
     function removeSupportedAsset(address asset) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(isSupportedAsset[asset], "PUMP_LIQUID_ORACLE: asset not found");
+        require(isSupportedAsset[asset], "LIQUID_ORACLE: asset not found");
         isSupportedAsset[asset] = false;
         for (uint256 i = 0; i < supportedAssetList.length; i++) {
             if (supportedAssetList[i] == asset) {
@@ -170,11 +169,11 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
         uint256 length = supportedAssetList.length;
         require(
             _assetsPricesToShare.length == length + 1,
-            "PUMP_LIQUID_ORACLE: invalid input length"
+            "LIQUID_ORACLE: invalid input length"
         );
         require(
             block.timestamp - lastUpdateTime >= minimumUpdateInterval, 
-            "PUMP_LIQUID_ORACLE: update too frequently"
+            "LIQUID_ORACLE: update too frequently"
         );
 
         for (uint256 i = 0; i < length; i++) {

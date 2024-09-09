@@ -47,5 +47,12 @@ abstract contract Constants {
      */
     bytes32 public constant CASHIER_ROLE = 
         0x221521cde999556f90cf8fca8f8f7fed9d3f3b1780d7cbeb187478038f4213ac;
+    
+    /**
+     * @notice The `FEE_SPLIT_MANAGER` is used to manage the fee split strategies.
+     *      Value: keccak256("LiquidFeeSplit: FEE_SPLIT_MANAGER")
+     */
+    bytes32 public constant FEE_SPLIT_MANAGER = 
+        0x121e7c5926d7133b20a6efe982e519d061e3587c5dabcc2429595382e21932d7;
 
 }
