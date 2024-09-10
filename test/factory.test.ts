@@ -121,7 +121,7 @@ describe("test factory", function () {
     await tokens.weth.connect(user1).approve(ethVaultAddr, parseEther("1"))
     await expect(ethCashier.connect(user1).deposit(
       await tokens.mockBTCB.getAddress(), parseEther("1"))
-    ).to.be.revertedWith("PUMP_LIQUID_ORACLE: asset not found")
+    ).to.be.revertedWith("LIQUID_ORACLE: asset not found")
     await ethCashier.connect(user1).deposit(await tokens.weth.getAddress(), parseEther("1"))
     expect(await tokens.weth.balanceOf(ethVaultAddr)).to.equal(parseEther("1"))
     expect(await ethVault.balanceOf(user1.address)).to.equal(parseEther("2500"))

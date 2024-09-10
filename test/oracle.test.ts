@@ -40,7 +40,7 @@ describe("test oracle core", function () {
     // Revert: No standard price address
     await liquidOracle.setPriceUpdater(updater.address, true)
     await expect(liquidOracle.connect(updater).updatePrices([1, 1, 1, 1]))
-      .to.be.revertedWith("PUMP_LIQUID_ORACLE: invalid input length")
+      .to.be.revertedWith("LIQUID_ORACLE: invalid input length")
     
     tokenAddresses.pop()
     tokenAddresses.push(await liquidOracle.STANDARD_ASSET())
@@ -49,7 +49,7 @@ describe("test oracle core", function () {
 
     // Revert: Update too frequently
     await (expect(liquidOracle.connect(updater).updatePrices([1, 1, 1, 1, 1])))
-      .to.be.revertedWith("PUMP_LIQUID_ORACLE: update too frequently")
+      .to.be.revertedWith("LIQUID_ORACLE: update too frequently")
     
     await time.increase(await liquidOracle.minimumUpdateInterval() + 5n)
 

@@ -23,11 +23,17 @@ describe("test cashier core", function () {
       liquidCashierFactory, [await liquidVault.getAddress(), await liquidOracle.getAddress()]
     )) as unknown as LiquidCashier
 
+    const liquidFeeSplitterFactory = await ethers.getContractFactory("LiquidFeeSplitter")
+    const liquidFeeSplitter = (await upgrades.deployProxy(
+      liquidFeeSplitterFactory,
+    )) as unknown as LiquidFeeSplitter
+
     await liquidVault.setCashier(await liquidCashier.getAddress())
+    await liquidVault.setFeeSplitter(await liquidFeeSplitter.getAddress())
     await expect(liquidVault.setCashier(await liquidCashier.getAddress()))
       .to.be.revertedWithCustomError(liquidVault, "InvalidInitialization")
 
-    return { tokens, liquidOracle, liquidVault, liquidCashier }
+    return { tokens, liquidOracle, liquidVault, liquidCashier, liquidFeeSplitter }
   }
 
   it("should deploy the contract correctly", async function () {
@@ -37,8 +43,10 @@ describe("test cashier core", function () {
 
   it("should finish test for cashier", async function () {
     // ============================ Initialize ============================
-    const { tokens, liquidOracle, liquidVault, liquidCashier } = await loadFixture(deployContracts)
-    const [_owner, updater, user1, lp] = await ethers.getSigners()
+    const { 
+      tokens, liquidOracle, liquidVault, liquidCashier, liquidFeeSplitter 
+    } = await loadFixture(deployContracts)
+    const [owner, updater, user1, lp, feeCollector1, feeCollector2] = await ethers.getSigners()
 
     // Update tokens and prices
     const tokenAddresses = []
@@ -57,6 +65,11 @@ describe("test cashier core", function () {
       parseUnits("1.2", 36 + 18 - 6),
       parseUnits("1.25", 36 + 18 - 18),
     ])
+
+    // Update fee collectors
+    await liquidFeeSplitter.setFeeSplitManager(owner.address, true)
+    await liquidFeeSplitter.setVanillaTo(feeCollector1.address)
+    await liquidFeeSplitter.setThirdPartyTo(feeCollector2.address)
 
 
     // ============================ Deposit ============================
