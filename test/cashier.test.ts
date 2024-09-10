@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { ethers, upgrades } from "hardhat"
 import { loadFixture, time } from "@nomicfoundation/hardhat-toolbox/network-helpers"
-import { LiquidCashier, LiquidOracle, LiquidVault } from "../typechain-types"
+import { LiquidCashier, LiquidFeeSplitter, LiquidOracle, LiquidVault } from "../typechain-types"
 import { deployTokens } from "../scripts/utils"
 import { formatEther, formatUnits, parseUnits } from "ethers"
 
@@ -43,8 +43,8 @@ describe("test cashier core", function () {
 
   it("should finish test for cashier", async function () {
     // ============================ Initialize ============================
-    const { 
-      tokens, liquidOracle, liquidVault, liquidCashier, liquidFeeSplitter 
+    const {
+      tokens, liquidOracle, liquidVault, liquidCashier, liquidFeeSplitter
     } = await loadFixture(deployContracts)
     const [owner, updater, user1, lp, feeCollector1, feeCollector2] = await ethers.getSigners()
 
@@ -70,6 +70,7 @@ describe("test cashier core", function () {
     await liquidFeeSplitter.setFeeSplitManager(owner.address, true)
     await liquidFeeSplitter.setVanillaTo(feeCollector1.address)
     await liquidFeeSplitter.setThirdPartyTo(feeCollector2.address)
+    await liquidFeeSplitter.setThirdPartyRatio(6000)    // 60%
 
 
     // ============================ Deposit ============================
@@ -98,7 +99,7 @@ describe("test cashier core", function () {
       parseUnits("1.0", 36 + 18 - 6),
       parseUnits("1.0", 36 + 18 - 18),
     ])
-    
+
     // User 1 deposit 1.8 WBTC -> 72000 bSHARE
     await tokens.mockWBTC.connect(user1)
       .approve(await liquidVault.getAddress(), parseUnits("1.8", 8))
@@ -126,7 +127,7 @@ describe("test cashier core", function () {
       parseUnits("0.8", 36 + 18 - 6),
       parseUnits("0.8", 36 + 18 - 18),
     ])
-    
+
     // User 1 withdraw 20000 bSHARE to USDC
     /**
      * 20000 bSHARE / [0.8 bSHARE/USDC] = 25000 USDC
@@ -175,14 +176,20 @@ describe("test cashier core", function () {
     const balanceBefore = await tokens.mockUSDC.balanceOf(user1.address)
     await liquidCashier.connect(user1).completeWithdraw()
     const balanceAfter = await tokens.mockUSDC.balanceOf(user1.address)
-    console.log(`\t[Day ${day}] User completed withdraw, received: ${
-      formatUnits(balanceAfter -balanceBefore, 6)
-    } USDC`)
+    console.log(`\t[Day ${day}] User completed withdraw, received: ${formatUnits(balanceAfter - balanceBefore, 6)
+      } USDC`)
 
     await liquidVault.setLiquidityManager(lp.address, false)
     await expect(liquidVault.connect(lp).withdrawLiquidityDirectly(tokenAddresses[1], parseUnits("1.2", 8)))
       .to.be.revertedWithCustomError(liquidVault, "AccessControlUnauthorizedAccount")
-    
+
+    expect(await tokens.mockUSDC.balanceOf(feeCollector1.address))
+      .to.closeTo(parseUnits("791.6438", 6), parseUnits("0.0001", 6)) // 61.6438 + 1200 * 40% + 250
+    expect(await tokens.mockUSDC.balanceOf(feeCollector2.address))
+      .to.closeTo(parseUnits("720.0000", 6), parseUnits("0.0001", 6)) // 1200 * 60%
+
+    await liquidFeeSplitter.setFeeSplitManager(owner.address, false)
+
   })
 
 
@@ -231,7 +238,7 @@ describe("test cashier core", function () {
       parseUnits("1.0", 36 + 18 - 6),
       parseUnits("1.0", 36 + 18 - 18),
     ])
-    
+
     // User 1 deposit 1.8 WBTC -> 72000 bSHARE
     await tokens.mockWBTC.connect(user1)
       .approve(await liquidVault.getAddress(), parseUnits("1.8", 8))
@@ -293,9 +300,8 @@ describe("test cashier core", function () {
     const balanceBefore = await tokens.mockUSDC.balanceOf(user1.address)
     await liquidCashier.connect(user1).instantWithdraw(tokenAddresses[2], parseUnits("20000", 18))
     const balanceAfter = await tokens.mockUSDC.balanceOf(user1.address)
-    console.log(`\t[Day ${day}] User instant withdraw, received: ${
-      formatUnits(balanceAfter -balanceBefore, 6)
-    } USDC`)
+    console.log(`\t[Day ${day}] User instant withdraw, received: ${formatUnits(balanceAfter - balanceBefore, 6)
+      } USDC`)
 
     await liquidCashier.setParameter("feeRateManagement", 200)
     await liquidCashier.setParameter("feeRatePerformance", 2000)
@@ -303,7 +309,7 @@ describe("test cashier core", function () {
     await liquidCashier.setParameter("feeRateInstant", 500)
     await liquidCashier.setParameter("withdrawPeriod", 7 * 86400)
 
-    
+
     // ========================= Request Withdraw =========================
     await liquidCashier.connect(user1).requestWithdraw(tokenAddresses[1], parseUnits("2000", 18))
 
@@ -341,7 +347,7 @@ describe("test cashier core", function () {
 
     await liquidCashier.unpause()
     await liquidCashier.connect(user1).deposit(tokenAddresses[0], parseUnits("0.1", 18))
-    
+
   })
 
 })
