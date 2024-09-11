@@ -259,6 +259,9 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         vault.withdrawFromVault(
             _msgSender(), asset, sharesAmount, assetAmount - feeAll
         );
+        vault.distributeFee(
+            asset, feeManagement, feePerformance, feeInstantExit, feeAll
+        );
         depositInfo[_msgSender()].shares -= sharesAmount;
 
         // Event

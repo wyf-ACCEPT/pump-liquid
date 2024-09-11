@@ -8,6 +8,7 @@ import { formatEther, formatUnits, parseUnits } from "ethers"
 describe("test cashier core", function () {
 
   async function deployContracts() {
+    const [owner, updater, user1, lp, feeCollector1, feeCollector2] = await ethers.getSigners()
     const tokens = await deployTokens()
 
     const liquidOracleFactory = await ethers.getContractFactory("LiquidOracle")
@@ -32,6 +33,11 @@ describe("test cashier core", function () {
     await liquidVault.setFeeSplitter(await liquidFeeSplitter.getAddress())
     await expect(liquidVault.setCashier(await liquidCashier.getAddress()))
       .to.be.revertedWithCustomError(liquidVault, "InvalidInitialization")
+
+    await liquidFeeSplitter.setFeeSplitManager(owner.address, true)
+    await liquidFeeSplitter.setVanillaTo(feeCollector1.address)
+    await liquidFeeSplitter.setThirdPartyTo(feeCollector2.address)
+    await liquidFeeSplitter.setThirdPartyRatio(6000)    // 60%
 
     return { tokens, liquidOracle, liquidVault, liquidCashier, liquidFeeSplitter }
   }
@@ -65,12 +71,6 @@ describe("test cashier core", function () {
       parseUnits("1.2", 36 + 18 - 6),
       parseUnits("1.25", 36 + 18 - 18),
     ])
-
-    // Update fee collectors
-    await liquidFeeSplitter.setFeeSplitManager(owner.address, true)
-    await liquidFeeSplitter.setVanillaTo(feeCollector1.address)
-    await liquidFeeSplitter.setThirdPartyTo(feeCollector2.address)
-    await liquidFeeSplitter.setThirdPartyRatio(6000)    // 60%
 
 
     // ============================ Deposit ============================

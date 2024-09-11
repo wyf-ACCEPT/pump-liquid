@@ -1,6 +1,6 @@
 import "dotenv/config"
 import { deployContract, deployUpgradeableContract } from "./utils"
-import { LiquidCashier, LiquidFactory, LiquidOracle, LiquidVault } from "../typechain-types"
+import { LiquidCashier, LiquidFactory, LiquidFeeSplitter, LiquidOracle, LiquidVault } from "../typechain-types"
 import { ethers } from "hardhat"
 import { EventLog } from "ethers"
 
