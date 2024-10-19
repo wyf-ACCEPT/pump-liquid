@@ -4,12 +4,15 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 import { WeightedMath } from "./lib/WeightedMath.sol";
 
 import "./interface.sol";
 
 using Math for uint256;
+using SafeERC20 for IERC20;
 
 
 contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
@@ -142,6 +145,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
         // Deposit to the vault
         uint256 currentShares = oracle.assetToShare(asset, assetAmount);
+        IERC20(asset).safeTransferFrom(_msgSender(), address(this), assetAmount);
+        IERC20(asset).approve(address(vault), assetAmount);     // 2-step transfer for proper approval process
         vault.depositToVault(_msgSender(), asset, assetAmount, currentShares);
 
         // Retrieve deposit info

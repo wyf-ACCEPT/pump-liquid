@@ -48,7 +48,7 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         address from, address asset, uint256 assetAmount, uint256 shareAmount
     ) public onlyRole(CASHIER_ROLE) {
         if (assetAmount > 0) 
-            IERC20(asset).safeTransferFrom(from, address(this), assetAmount);
+            IERC20(asset).safeTransferFrom(_msgSender(), address(this), assetAmount);
         if (shareAmount > 0) 
             _mint(from, shareAmount);
     }

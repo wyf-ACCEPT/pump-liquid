@@ -77,14 +77,14 @@ describe("test cashier core", function () {
     // User 1 deposit 0.2 BTCB -> 12000 bSHARE
     let day = 0
     await tokens.mockBTCB.connect(user1)
-      .approve(await liquidVault.getAddress(), parseUnits("0.2", 18))
+      .approve(await liquidCashier.getAddress(), parseUnits("0.2", 18))
     await liquidCashier.connect(user1).deposit(tokenAddresses[0], parseUnits("0.2", 18))
     expect(await liquidVault.balanceOf(user1.address)).to.equal(parseUnits("12000", 18))
     console.log(`\t[Day ${day}] Deposit 0.2 $BTCB for 12000 $bSHARE`)
 
     // User 1 deposit 10000 USDC -> 12000 bSHARE
     await tokens.mockUSDC.connect(user1)
-      .approve(await liquidVault.getAddress(), parseUnits("10000", 6))
+      .approve(await liquidCashier.getAddress(), parseUnits("10000", 6))
     await liquidCashier.connect(user1).deposit(tokenAddresses[2], parseUnits("10000", 6))
     expect(await liquidVault.balanceOf(user1.address)).to.equal(parseUnits("24000", 18))
     console.log(`\t[Day ${day}] Deposit 10000 $USDC for 12000 $bSHARE`)
@@ -102,7 +102,7 @@ describe("test cashier core", function () {
 
     // User 1 deposit 1.8 WBTC -> 72000 bSHARE
     await tokens.mockWBTC.connect(user1)
-      .approve(await liquidVault.getAddress(), parseUnits("1.8", 8))
+      .approve(await liquidCashier.getAddress(), parseUnits("1.8", 8))
     await liquidCashier.connect(user1).deposit(tokenAddresses[1], parseUnits("1.8", 8))
     expect(await liquidVault.balanceOf(user1.address)).to.equal(parseUnits("96000", 18))
     console.log(`\t[Day ${day}] Deposit 1.8 $WBTC for 72000 $bSHARE`)
@@ -221,11 +221,11 @@ describe("test cashier core", function () {
     // User 1 deposit 0.2 BTCB -> 12000 bSHARE, deposit 10000 USDC -> 12000 bSHARE
     let day = 0
     await tokens.mockBTCB.connect(user1)
-      .approve(await liquidVault.getAddress(), parseUnits("0.2", 18))
+      .approve(await liquidCashier.getAddress(), parseUnits("0.2", 18))
     await liquidCashier.connect(user1).deposit(tokenAddresses[0], parseUnits("0.2", 18))
 
     await tokens.mockUSDC.connect(user1)
-      .approve(await liquidVault.getAddress(), parseUnits("10000", 6))
+      .approve(await liquidCashier.getAddress(), parseUnits("10000", 6))
     await liquidCashier.connect(user1).deposit(tokenAddresses[2], parseUnits("10000", 6))
 
     // Update prices 20 days later
@@ -241,7 +241,7 @@ describe("test cashier core", function () {
 
     // User 1 deposit 1.8 WBTC -> 72000 bSHARE
     await tokens.mockWBTC.connect(user1)
-      .approve(await liquidVault.getAddress(), parseUnits("1.8", 8))
+      .approve(await liquidCashier.getAddress(), parseUnits("1.8", 8))
     await liquidCashier.connect(user1).deposit(tokenAddresses[1], parseUnits("1.8", 8))
 
     // Show deposit info
@@ -341,7 +341,7 @@ describe("test cashier core", function () {
     // ========================= Pause & Unpause =========================
     await liquidCashier.pause()
     await tokens.mockBTCB.connect(user1)
-      .approve(await liquidVault.getAddress(), parseUnits("0.1", 18))
+      .approve(await liquidCashier.getAddress(), parseUnits("0.1", 18))
     await expect(liquidCashier.connect(user1).deposit(tokenAddresses[0], parseUnits("0.1", 18)))
       .to.be.revertedWithCustomError(liquidCashier, "EnforcedPause")
 
