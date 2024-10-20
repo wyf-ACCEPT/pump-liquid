@@ -4,19 +4,52 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
+import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+import "./lib/BytesBitwise.sol";
 import "./interface.sol";
 import "./constants.sol";
 
+using Address for address;
 using SafeERC20 for IERC20;
 
 
 contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault, Constants {
     
+    // =============================== Struct ==============================
+
+    /**
+     * @notice The `StrategyInfo` struct aims to record the strategy information that
+     *       the liquidity manager is allowed to use. A strategy is a restrict call on
+     *       a specific contract, and the `to` field records the target contract address.
+     *       The `restrict` field aims to restrict the fixed parts of the calldata, while
+     *       the `mask` field mask the dynamic parts of the calldata.
+     * 
+     *      For example, if the strategy bytes is `0x371805__2a__`, it means the calldata
+     *       can be `0x371805fd2a01` or `0x371805cb2a02` or any other calldata that has
+     *       the same fixed parts. In this case, the `restrict` field is `0x371805002a00`,
+     *       and the `mask` field is `0xffffff00ff00`. If the `calldata` satisfies the
+     *       equation: `calldata` & `mask` == `restrict`, the strategy is matched.
+     * 
+     *      The `restrictHash` field is the keccak256 hash of the `restrict` field. Since
+     *       there is no bitwise comparison for bytes in Solidity, we use the hash to 
+     *       compare `calldata` & `mask` with `restrict`, and the `keccak256(restrict)`
+     *       should only be calculated once.
+     */
+    struct StrategyInfo {
+        address to;
+        bytes mask;
+        bytes restrict;
+        bytes32 restrictHash;
+        string description;
+    }
+
+
     // ============================= Parameters ============================
 
     address public cashier;
+    StrategyInfo[] public strategies;
 
     address public feeReceiverDefault;            // Address of liquid-vault fee receiver
     address public feeReceiverThirdParty;         // Address of third-party fee receiver
@@ -24,6 +57,15 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     uint256 public feeRatioPerformance;           // Fee ratio of performance fee for third-party receiver
     uint256 public feeRatioExit;                  // Fee ratio of exit fee for third-party receiver
 
+
+    // =============================== Events ==============================
+
+    event FeeDistributedFixRatio(
+        address indexed asset, address vanillaTo, address thirdPartyTo,
+        uint256 feeAmount, uint256 vanillaFee, uint256 thirdPartyFee
+    );
+    event FeeRatioUpdate(string key, uint256 value);
+    event FeeReceiverUpdate(string key, address value);
 
     // =============================== Events ==============================
 
@@ -122,6 +164,21 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     ) public onlyRole(LIQUIDITY_MANAGER_ROLE) {
         IERC20(asset).safeTransfer(_msgSender(), amount);
     }
+    
+    /**
+     * @notice The liquidity manager should clearly know which strategy index to use,
+     *      and this function is used to check whether the calldata matches the strategy.
+     */
+    function executeStrategy(
+        uint256 strategyIdx, bytes memory data
+    ) public onlyRole(LIQUIDITY_MANAGER_ROLE) returns (bytes memory) {
+        StrategyInfo memory strategy = strategies[strategyIdx];
+        require(
+            keccak256(BytesBitwise.and(data, strategy.mask)) == strategy.restrictHash,
+            "LIQUID_VAULT: strategy not matched"
+        );
+        return strategy.to.functionCall(data);
+    }
 
 
     // ====================== Write functions - admin ======================
@@ -145,6 +202,30 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
             _revokeRole(LIQUIDITY_MANAGER_ROLE, account);
         }
     }
+
+    /**
+     * @notice When adding a new strategy, check the length of the `mask` and 
+     *      `restrict` field, and then save the strategy information.
+     */
+    function addStrategy(
+        address to, bytes memory mask, bytes memory restrict, string memory description
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(mask.length == restrict.length, "LIQUID_VAULT: length mismatch");
+        bytes32 restrictHash = keccak256(restrict);
+        strategies.push(StrategyInfo(to, mask, restrict, restrictHash, description));
+    }
+
+    /**
+     * @notice When removing a strategy, check the strategy index and then remove it.
+     */
+    function removeStrategy(
+        uint256 strategyIdx
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(strategyIdx < strategies.length, "LIQUID_VAULT: invalid index");
+        strategies[strategyIdx] = strategies[strategies.length - 1];
+        strategies.pop();
+    }
+
 
     function setFeeReceiverDefault(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
         feeReceiverDefault = account;
