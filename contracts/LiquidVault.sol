@@ -5,6 +5,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
 import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "./lib/BytesBitwise.sol";
@@ -12,6 +13,7 @@ import "./interface.sol";
 import "./constants.sol";
 
 using Address for address;
+using Strings for address;
 using SafeERC20 for IERC20;
 
 
@@ -65,8 +67,11 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         address indexed asset, address vanillaTo, address thirdPartyTo,
         uint256 feeAmount, uint256 vanillaFee, uint256 thirdPartyFee
     );
-    event FeeRatioUpdate(string key, uint256 value);
-    event FeeReceiverUpdate(string key, address value);
+    event FeeRatioUpdated(string key, uint256 value);
+    event FeeReceiverUpdated(string key, address value);
+    event StrategyAdded(uint256 strategyIdx, address to, uint256 length, string description);
+    event StrategyRemoved(uint256 strategyIdx);
+    event StrategyExecuted(uint256 strategyIdx, bytes data, bytes result);
 
 
     // ======================= Modifier & Initializer ======================
@@ -108,6 +113,13 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     }
 
 
+    // =========================== View functions ==========================
+
+    function strategiesLength() public view returns (uint256) {
+        return strategies.length;
+    }
+
+
     // ===================== Write functions - cashier =====================
 
     function depositToVault(
@@ -144,18 +156,6 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
 
 
     // ==================== Write functions - liquidity ====================
-
-    function depositLiquidityDirectly(
-        address asset, uint256 amount
-    ) public onlyRole(LIQUIDITY_MANAGER_ROLE) {
-        IERC20(asset).safeTransferFrom(_msgSender(), address(this), amount);
-    }
-
-    function withdrawLiquidityDirectly(
-        address asset, uint256 amount
-    ) public onlyRole(LIQUIDITY_MANAGER_ROLE) {
-        IERC20(asset).safeTransfer(_msgSender(), amount);
-    }
     
     /**
      * @notice The liquidity manager should clearly know which strategy index to use,
@@ -169,7 +169,9 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
             keccak256(BytesBitwise.and(data, strategy.mask)) == strategy.restrictHash,
             "LIQUID_VAULT: strategy not matched"
         );
-        return strategy.to.functionCall(data);
+        bytes memory result = strategy.to.functionCall(data);
+        emit StrategyExecuted(strategyIdx, data, result);
+        return result;
     }
 
     // ================== Write functions - admin strategy =================
@@ -184,6 +186,7 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         require(mask.length == restrict.length, "LIQUID_VAULT: length mismatch");
         bytes32 restrictHash = keccak256(restrict);
         strategies.push(StrategyInfo(to, mask, restrict, restrictHash, description));
+        emit StrategyAdded(strategies.length - 1, to, mask.length, description);
     }
 
     /**
@@ -195,6 +198,31 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         require(strategyIdx < strategies.length, "LIQUID_VAULT: invalid index");
         strategies[strategyIdx] = strategies[strategies.length - 1];
         strategies.pop();
+        emit StrategyRemoved(strategyIdx);
+    }
+
+    /**
+     * @notice Add a strategy to withdraw liquidity directly. This is just a helper
+     *      function, since that the functionality is covered by the `addStrategy`
+     *      function.
+     */
+    function addStrategyWithdrawLiquidityDirectly(
+        address asset
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        bytes memory restrict = bytes.concat(
+            hex"a9059cbb",          // Selector of `transfer(address,uint256)`
+            hex"0000000000000000000000000000000000000000000000000000000000000000",  // Can be any address
+            hex"0000000000000000000000000000000000000000000000000000000000000000"   // Can be any amount
+        );
+        bytes memory mask = bytes.concat(
+            hex"ffffffff",
+            hex"0000000000000000000000000000000000000000000000000000000000000000",
+            hex"0000000000000000000000000000000000000000000000000000000000000000"
+        );
+        addStrategy(
+            asset, mask, restrict, 
+            string.concat("Withdraw liquidity directly for token ", asset.toHexString())
+        );
     }
 
 
@@ -222,12 +250,12 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
 
     function setFeeReceiverDefault(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
         feeReceiverDefault = account;
-        emit FeeReceiverUpdate("feeReceiverDefault", account);
+        emit FeeReceiverUpdated("feeReceiverDefault", account);
     }
 
     function setFeeReceiverThirdParty(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
         feeReceiverThirdParty = account;
-        emit FeeReceiverUpdate("feeReceiverThirdParty", account);
+        emit FeeReceiverUpdated("feeReceiverThirdParty", account);
     }
 
     function setFeeRatio(string memory key, uint256 value) public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -242,6 +270,6 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         } else {
             revert("LIQUID_VAULT: invalid key");
         }
-        emit FeeRatioUpdate(key, value);
+        emit FeeRatioUpdated(key, value);
     }
 }

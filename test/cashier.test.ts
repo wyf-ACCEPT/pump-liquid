@@ -148,14 +148,20 @@ describe("test cashier core", function () {
     console.log(`\t\t Charged fees: ${formatUnits(pendingInfo[4], 6)} USDC`)
 
     // Liquid manager deposit some USDC to the vault
-    await expect(liquidVault.connect(lp).depositLiquidityDirectly(
-      tokenAddresses[2], parseUnits("30000", 6)
-    )).to.be.revertedWithCustomError(liquidOracle, "AccessControlUnauthorizedAccount")
+    await liquidVault.addStrategyWithdrawLiquidityDirectly(tokenAddresses[1])
+    const strategyId = await liquidVault.strategiesLength() - 1n
     await liquidVault.setLiquidityManager(lp.address, true)
     tokens.mockUSDC.connect(lp).approve(await liquidVault.getAddress(), parseUnits("30000", 6))
 
-    await liquidVault.connect(lp).depositLiquidityDirectly(tokenAddresses[2], parseUnits("30000", 6))
-    await liquidVault.connect(lp).withdrawLiquidityDirectly(tokenAddresses[1], parseUnits("1.2", 8))
+    const balanceWBTCBefore = await tokens.mockWBTC.balanceOf(lp.address)
+    await tokens.mockUSDC.connect(lp).transfer(
+      await liquidVault.getAddress(), parseUnits("30000", 6),   // Direct transfer to deposit liquidity
+    )
+    await liquidVault.connect(lp).executeStrategy(strategyId, tokens.mockWBTC.interface.encodeFunctionData(
+      "transfer", [lp.address, parseUnits("1.2", 8)]     // Execute strategy to withdraw liquidity
+    ))
+    const balanceWBTCAfter = await tokens.mockWBTC.balanceOf(lp.address)
+    expect(balanceWBTCAfter - balanceWBTCBefore).to.equal(parseUnits("1.2", 8))
 
 
     // ========================= Complete Withdraw =========================
@@ -173,8 +179,9 @@ describe("test cashier core", function () {
       } USDC`)
 
     await liquidVault.setLiquidityManager(lp.address, false)
-    await expect(liquidVault.connect(lp).withdrawLiquidityDirectly(tokenAddresses[1], parseUnits("1.2", 8)))
-      .to.be.revertedWithCustomError(liquidVault, "AccessControlUnauthorizedAccount")
+    await expect(liquidVault.connect(lp).executeStrategy(
+      strategyId, tokens.mockWBTC.interface.encodeFunctionData("transfer", [lp.address, parseUnits("1.2", 8)])
+    )).to.be.revertedWithCustomError(liquidVault, "AccessControlUnauthorizedAccount")
 
     expect(await tokens.mockUSDC.balanceOf(feeCollector1.address))
       .to.closeTo(parseUnits("791.6438", 6), parseUnits("0.0001", 6)) // 61.6438 + 1200 * 40% + 250
@@ -286,7 +293,10 @@ describe("test cashier core", function () {
     )).to.be.revertedWithCustomError(liquidVault, "ERC20InsufficientBalance")
     await tokens.mockUSDC.connect(lp).approve(await liquidVault.getAddress(), parseUnits("25000", 6))
     await liquidVault.setLiquidityManager(lp.address, true)
-    await liquidVault.connect(lp).depositLiquidityDirectly(tokenAddresses[2], parseUnits("25000", 6))
+    // await liquidVault.connect(lp).depositLiquidityDirectly(tokenAddresses[2], parseUnits("25000", 6))
+    await tokens.mockUSDC.connect(lp).transfer(
+      await liquidVault.getAddress(), parseUnits("25000", 6)     // Direct transfer to deposit liquidity
+    )
 
     const balanceBefore = await tokens.mockUSDC.balanceOf(user1.address)
     await liquidCashier.connect(user1).instantWithdraw(tokenAddresses[2], parseUnits("20000", 18))

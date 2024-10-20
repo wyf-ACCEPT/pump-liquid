@@ -75,7 +75,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         uint256 feeManagement, uint256 feePerformance, uint256 feeInstantExit, uint256 feeAll
     );
     event CancelWithdraw(address indexed to, uint256 requestTimestamp);
-    event ParameterUpdate(string key, uint256 value);
+    event ParameterUpdated(string key, uint256 value);
 
 
     // ======================= Modifier & Initializer ======================
@@ -306,7 +306,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
                 revert("LIQUID_CASHIER: invalid key");
             }
         }
-        emit ParameterUpdate(key, value);
+        emit ParameterUpdated(key, value);
     }
     
 }
