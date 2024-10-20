@@ -49,7 +49,6 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     // ============================= Parameters ============================
 
     address public cashier;
-    StrategyInfo[] public strategies;
 
     address public feeReceiverDefault;            // Address of liquid-vault fee receiver
     address public feeReceiverThirdParty;         // Address of third-party fee receiver
@@ -57,15 +56,8 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     uint256 public feeRatioPerformance;           // Fee ratio of performance fee for third-party receiver
     uint256 public feeRatioExit;                  // Fee ratio of exit fee for third-party receiver
 
+    StrategyInfo[] public strategies;             // Array of strategy information
 
-    // =============================== Events ==============================
-
-    event FeeDistributedFixRatio(
-        address indexed asset, address vanillaTo, address thirdPartyTo,
-        uint256 feeAmount, uint256 vanillaFee, uint256 thirdPartyFee
-    );
-    event FeeRatioUpdate(string key, uint256 value);
-    event FeeReceiverUpdate(string key, address value);
 
     // =============================== Events ==============================
 
@@ -116,7 +108,7 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     }
 
 
-    // ========================== Write functions ==========================
+    // ===================== Write functions - cashier =====================
 
     function depositToVault(
         address from, address asset, uint256 assetAmount, uint256 shareAmount
@@ -180,28 +172,7 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         return strategy.to.functionCall(data);
     }
 
-
-    // ====================== Write functions - admin ======================
-
-    /**
-     * @notice We use `reinitializer` to ensure that the `cashier` role is only set once.
-     */
-    function setCashier(
-        address _cashier
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(2) {
-        cashier = _cashier;
-        _grantRole(CASHIER_ROLE, cashier);
-    }
-
-    function setLiquidityManager(
-        address account, bool status
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        if (status) {
-            _grantRole(LIQUIDITY_MANAGER_ROLE, account);
-        } else {
-            _revokeRole(LIQUIDITY_MANAGER_ROLE, account);
-        }
-    }
+    // ================== Write functions - admin strategy =================
 
     /**
      * @notice When adding a new strategy, check the length of the `mask` and 
@@ -226,6 +197,28 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         strategies.pop();
     }
 
+
+    // =============== Write functions - admin set parameter ===============
+
+    /**
+     * @notice We use `reinitializer` to ensure that the `cashier` role is only set once.
+     */
+    function setCashier(
+        address _cashier
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(2) {
+        cashier = _cashier;
+        _grantRole(CASHIER_ROLE, cashier);
+    }
+
+    function setLiquidityManager(
+        address account, bool status
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        if (status) {
+            _grantRole(LIQUIDITY_MANAGER_ROLE, account);
+        } else {
+            _revokeRole(LIQUIDITY_MANAGER_ROLE, account);
+        }
+    }
 
     function setFeeReceiverDefault(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
         feeReceiverDefault = account;

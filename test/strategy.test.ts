@@ -217,7 +217,7 @@ describe("test the user journey of the DEX", function () {
     )
 
     // User deposit $BTCB to vault
-    await tokens.mockBTCB.connect(user1).approve(await liquidVault.getAddress(), parseEther("1"))
+    await tokens.mockBTCB.connect(user1).approve(await liquidCashier.getAddress(), parseEther("1"))
     await liquidCashier.connect(user1).deposit(await tokens.mockBTCB.getAddress(), parseEther("0.1"))
     const btcbVaultBefore = await tokens.mockBTCB.balanceOf(await liquidVault.getAddress())
     const usdcVaultBefore = await tokens.mockUSDC.balanceOf(await liquidVault.getAddress())
