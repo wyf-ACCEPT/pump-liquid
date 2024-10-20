@@ -17,7 +17,22 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     // ============================= Parameters ============================
 
     address public cashier;
-    address public feeSplitter;
+
+    address public feeReceiverDefault;            // Address of liquid-vault fee receiver
+    address public feeReceiverThirdParty;         // Address of third-party fee receiver
+    uint256 public feeRatioManagement;            // Fee ratio of management fee for third-party receiver
+    uint256 public feeRatioPerformance;           // Fee ratio of performance fee for third-party receiver
+    uint256 public feeRatioExit;                  // Fee ratio of exit fee for third-party receiver
+
+
+    // =============================== Events ==============================
+
+    event FeeDistributedFixRatio(
+        address indexed asset, address vanillaTo, address thirdPartyTo,
+        uint256 feeAmount, uint256 vanillaFee, uint256 thirdPartyFee
+    );
+    event FeeRatioUpdate(string key, uint256 value);
+    event FeeReceiverUpdate(string key, address value);
 
 
     // ======================= Modifier & Initializer ======================
@@ -28,6 +43,10 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
 
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setRoleAdmin(CASHIER_ROLE, DEFAULT_ADMIN_ROLE);
+
+        feeRatioManagement = 0;
+        feeRatioPerformance = 0;
+        feeRatioExit = 0;
     }
 
 
@@ -39,6 +58,19 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
             "LIQUID_VAULT: transfer not allowed"
         );
         super._update(from, to, value);
+    }
+
+    function _fixRatioDistributeFee(address asset, uint256 feeAmount, uint256 thirdPartyRatio) internal {
+        uint256 thirdPartyFee = feeAmount * thirdPartyRatio / 10000;
+        uint256 defaultFee = feeAmount - thirdPartyFee;
+
+        IERC20(asset).safeTransfer(feeReceiverThirdParty, thirdPartyFee);
+        IERC20(asset).safeTransfer(feeReceiverDefault, defaultFee);
+
+        emit FeeDistributedFixRatio(
+            asset, feeReceiverDefault, feeReceiverThirdParty, 
+            feeAmount, defaultFee, thirdPartyFee
+        );
     }
 
 
@@ -63,16 +95,17 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
     }
 
     function distributeFee(
-        address asset, uint256 feeManagement, uint256 feePerformance, 
-        uint256 feeExit, uint256 feeAll
+        address asset, uint256 feeManagement, uint256 feePerformance, uint256 feeExit
     ) public onlyRole(CASHIER_ROLE) {
-        IERC20(asset).approve(feeSplitter, feeAll);
+        require(feeReceiverDefault != address(0), "LIQUID_VAULT: default fee receiver not set");
+        require(feeReceiverThirdParty != address(0), "LIQUID_VAULT: third-party fee receiver not set");
+
         if (feeManagement > 0)
-            ILiquidFeeSplitter(feeSplitter).vanillaFeeDistribute(asset, feeManagement);
+            _fixRatioDistributeFee(asset, feeManagement, feeRatioManagement);
         if (feePerformance > 0)
-            ILiquidFeeSplitter(feeSplitter).fixRatioFeeDistribute(asset, feePerformance);
+            _fixRatioDistributeFee(asset, feePerformance, feeRatioPerformance);
         if (feeExit > 0)
-            ILiquidFeeSplitter(feeSplitter).vanillaFeeDistribute(asset, feeExit);
+            _fixRatioDistributeFee(asset, feeExit, feeRatioExit);
     }
 
 
@@ -103,15 +136,6 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         _grantRole(CASHIER_ROLE, cashier);
     }
 
-    /**
-     * @notice We use `reinitializer` to ensure that the `feeSplitter` role is only set once.
-     */
-    function setFeeSplitter(
-        address _feeSplitter
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) reinitializer(3) {
-        feeSplitter = _feeSplitter;
-    }
-
     function setLiquidityManager(
         address account, bool status
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -120,5 +144,30 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         } else {
             _revokeRole(LIQUIDITY_MANAGER_ROLE, account);
         }
+    }
+
+    function setFeeReceiverDefault(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        feeReceiverDefault = account;
+        emit FeeReceiverUpdate("feeReceiverDefault", account);
+    }
+
+    function setFeeReceiverThirdParty(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        feeReceiverThirdParty = account;
+        emit FeeReceiverUpdate("feeReceiverThirdParty", account);
+    }
+
+    function setFeeRatio(string memory key, uint256 value) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        bytes32 keyHash = keccak256(abi.encodePacked(key));
+        require(value <= 10000, "LIQUID_VAULT: invalid fee ratio, should be less than 10000");
+        if (keyHash == keccak256("feeRatioManagement")) {
+            feeRatioManagement = value;
+        } else if (keyHash == keccak256("feeRatioPerformance")) {
+            feeRatioPerformance = value;
+        } else if (keyHash == keccak256("feeRatioExit")) {
+            feeRatioExit = value;
+        } else {
+            revert("LIQUID_VAULT: invalid key");
+        }
+        emit FeeRatioUpdate(key, value);
     }
 }

@@ -4,14 +4,12 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 import "@openzeppelin/contracts-upgradeable/access/Ownable2StepUpgradeable.sol";
-// import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
 import "@openzeppelin/contracts/access/IAccessControl.sol";
 
 import "./LiquidVault.sol";
 import "./LiquidOracle.sol";
 import "./LiquidCashier.sol";
-import "./LiquidFeeSplitter.sol";
 
 
 contract LiquidFactory is Ownable2StepUpgradeable {
@@ -26,13 +24,11 @@ contract LiquidFactory is Ownable2StepUpgradeable {
         address vault;
         address oracle;
         address cashier;
-        address feeSplitter;
     }
 
     UpgradeableBeacon public beaconVault;
     UpgradeableBeacon public beaconOracle;
     UpgradeableBeacon public beaconCashier;
-    UpgradeableBeacon public beaconFeeSplitter;
 
     LiquidInfo[] public liquids;
 
@@ -41,9 +37,9 @@ contract LiquidFactory is Ownable2StepUpgradeable {
 
     event LiquidCreated(
         address indexed vault, address indexed oracle, address indexed cashier, 
-        address feeSplitter, string name, string symbol, address creator
+        string name, string symbol, address creator
     );
-    event UpgradeContract(
+    event ContractUpgraded(
         string indexed contractName, address oldImpl, address newImpl
     );
 
@@ -57,7 +53,7 @@ contract LiquidFactory is Ownable2StepUpgradeable {
      *      contract code size would be too large.
      */
     function initialize(
-        address _vaultImpl, address _oracleImpl, address _cashierImpl, address _feeSplitterImpl
+        address _vaultImpl, address _oracleImpl, address _cashierImpl
     ) public initializer {
         // Initialize parents
         __Ownable_init(_msgSender());
@@ -67,13 +63,11 @@ contract LiquidFactory is Ownable2StepUpgradeable {
         address vault = _vaultImpl;
         address oracle = _oracleImpl;
         address cashier = _cashierImpl;
-        address feeSplitter = _feeSplitterImpl;
 
         // Deploy beacons for implementation contracts
         beaconVault = new UpgradeableBeacon(vault, address(this));
         beaconOracle = new UpgradeableBeacon(oracle, address(this));
         beaconCashier = new UpgradeableBeacon(cashier, address(this));
-        beaconFeeSplitter = new UpgradeableBeacon(feeSplitter, address(this));
     }
 
 
@@ -95,10 +89,6 @@ contract LiquidFactory is Ownable2StepUpgradeable {
         return beaconCashier.implementation();
     }
 
-    function getImplementationFeeSplitter() public view returns (address) {
-        return beaconFeeSplitter.implementation();
-    }
-
     
     // ========================== Write functions ==========================
 
@@ -106,7 +96,7 @@ contract LiquidFactory is Ownable2StepUpgradeable {
      * @param name Name for the ERC20 token of `LiquidVault` (the share token)
      * @param symbol Symbol for the ERC20 token of `LiquidVault` (the share token)
      * @param liquidOwner The owner of the whole liquid group contracts, including
-     *      `LiquidVault`, `LiquidOracle`, `LiquidCashier` and `LiuqidFeeSplitter`. 
+     *      `LiquidVault`, `LiquidOracle`, `LiquidCashier`. 
      *      This owner can call the functions below:
      * 
      *      - In `LiquidCashier`:
@@ -115,16 +105,13 @@ contract LiquidFactory is Ownable2StepUpgradeable {
      *              instant withdrawal and performance, and the withdrawal period.
      * 
      *      - In `LiquidVault`:
-     *          - `setLiquidityManager`
+     *          - `setLiquidityManager`, `setFeeReceiver` and `setFeeRatio`
      * 
      *      - In `LiquidOracle`:
      *          - `addSupportedAsset` & `removeSupportedAsset`
      *          - `setPriceUpdater`
-     *      
-     *      - In `LiquidFeeSplitter`:
-     *          - `setFeeSplitManager`
      * 
-     *      So the `liquidOwner` has the power to control the whole liquid group, 
+     *      So the `liquidOwner` has the power to control the whole liquid group contract, 
      *          expect for the `LiquidFactory` itself.
      */
     function deployLiquid(
@@ -134,15 +121,12 @@ contract LiquidFactory is Ownable2StepUpgradeable {
         address vaultProxy = address(new BeaconProxy(address(beaconVault), ""));
         address oracleProxy = address(new BeaconProxy(address(beaconOracle), ""));
         address cashierProxy = address(new BeaconProxy(address(beaconCashier), ""));
-        address feeSplitterProxy = address(new BeaconProxy(address(beaconFeeSplitter), ""));
 
         // Initialize proxies
         LiquidVault(vaultProxy).initialize(name, symbol);
         LiquidOracle(oracleProxy).initialize();
         LiquidCashier(cashierProxy).initialize(vaultProxy, oracleProxy);
-        LiquidFeeSplitter(feeSplitterProxy).initialize();
         LiquidVault(vaultProxy).setCashier(cashierProxy);
-        LiquidVault(vaultProxy).setFeeSplitter(feeSplitterProxy);
 
         // Grant ownership
         IAccessControl(vaultProxy).grantRole(DEFAULT_ADMIN_ROLE, liquidOwner);
@@ -155,39 +139,31 @@ contract LiquidFactory is Ownable2StepUpgradeable {
             symbol: symbol,
             vault: vaultProxy,
             oracle: oracleProxy,
-            cashier: cashierProxy,
-            feeSplitter: feeSplitterProxy
+            cashier: cashierProxy
         }));
 
         // Event
         emit LiquidCreated(
-            vaultProxy, oracleProxy, cashierProxy, 
-            feeSplitterProxy, name, symbol, _msgSender()
+            vaultProxy, oracleProxy, cashierProxy, name, symbol, _msgSender()
         );
     }
 
     function upgradeCashier(address newImpl) public onlyOwner {
         address oldImpl = beaconCashier.implementation();
         beaconCashier.upgradeTo(newImpl);
-        emit UpgradeContract("LiquidCashier", oldImpl, newImpl);
+        emit ContractUpgraded("LiquidCashier", oldImpl, newImpl);
     }
 
     function upgradeVault(address newImpl) public onlyOwner {
         address oldImpl = beaconCashier.implementation();
         beaconVault.upgradeTo(newImpl);
-        emit UpgradeContract("LiquidVault", oldImpl, newImpl);
+        emit ContractUpgraded("LiquidVault", oldImpl, newImpl);
     }
 
     function upgradeOracle(address newImpl) public onlyOwner {
         address oldImpl = beaconCashier.implementation();
         beaconOracle.upgradeTo(newImpl);
-        emit UpgradeContract("LiquidOracle", oldImpl, newImpl);
-    }
-
-    function upgradeFeeSplitter(address newImpl) public onlyOwner {
-        address oldImpl = beaconCashier.implementation();
-        beaconFeeSplitter.upgradeTo(newImpl);
-        emit UpgradeContract("LiquidFeeSplitter", oldImpl, newImpl);
+        emit ContractUpgraded("LiquidOracle", oldImpl, newImpl);
     }
 
 }

@@ -229,7 +229,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
                 _msgSender(), info.asset, info.shares, info.assetAmount - info.feeAll
             );
             vault.distributeFee(
-                info.asset, info.feeManagement, info.feePerformance, info.feeExit, info.feeAll
+                info.asset, info.feeManagement, info.feePerformance, info.feeExit
             );
             emit CompleteWithdraw(_msgSender(), info.timestamp);
         } else {
@@ -265,7 +265,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
             _msgSender(), asset, sharesAmount, assetAmount - feeAll
         );
         vault.distributeFee(
-            asset, feeManagement, feePerformance, feeInstantExit, feeAll
+            asset, feeManagement, feePerformance, feeInstantExit
         );
         depositInfo[_msgSender()].shares -= sharesAmount;
 

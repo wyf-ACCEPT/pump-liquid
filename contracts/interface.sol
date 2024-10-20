@@ -18,12 +18,6 @@ interface ILiquidVault {
         address to, address asset, uint256 shareAmount, uint256 assetAmount
     ) external;
     function distributeFee(
-        address asset, uint256 feeManagement, uint256 feePerformance, 
-        uint256 feeExit, uint256 feeAll
+        address asset, uint256 feeManagement, uint256 feePerformance, uint256 feeExit
     ) external;
-}
-
-interface ILiquidFeeSplitter {
-    function vanillaFeeDistribute(address asset, uint256 feeAmount) external;
-    function fixRatioFeeDistribute(address asset, uint256 feeAmount) external;
 }

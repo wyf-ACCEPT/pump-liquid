@@ -13,11 +13,9 @@ describe("test factory", function () {
     const vaultImpl = await ethers.deployContract("LiquidVault")
     const oracleImpl = await ethers.deployContract("LiquidOracle")
     const cashierImpl = await ethers.deployContract("LiquidCashier")
-    const feeSplitterImpl = await ethers.deployContract("LiquidFeeSplitter")
     const liquidFactoryOfFactory = await ethers.getContractFactory("LiquidFactory")
     const liquidFactory = await upgrades.deployProxy(liquidFactoryOfFactory, [
-      await vaultImpl.getAddress(), await oracleImpl.getAddress(), 
-      await cashierImpl.getAddress(), await feeSplitterImpl.getAddress(),
+      await vaultImpl.getAddress(), await oracleImpl.getAddress(), await cashierImpl.getAddress(),
     ]) as unknown as LiquidFactory
 
     await liquidFactory.deployLiquid("BTC Vault Share", "lvBTC", btcVaultOwner.address)
@@ -57,16 +55,12 @@ describe("test factory", function () {
     // Upgrade other contracts
     const oracleImplNew = await ethers.deployContract("LiquidOracle")
     const cashierImplNew = await ethers.deployContract("LiquidCashier")
-    const feeSplitterImplNew = await ethers.deployContract("LiquidFeeSplitter")
     await liquidFactory.upgradeOracle(await oracleImplNew.getAddress())
     await liquidFactory.upgradeCashier(await cashierImplNew.getAddress())
-    await liquidFactory.upgradeFeeSplitter(await feeSplitterImplNew.getAddress())
     expect(await liquidFactory.getImplementationOracle())
       .to.equal(await oracleImplNew.getAddress())
     expect(await liquidFactory.getImplementationCashier())
       .to.equal(await cashierImplNew.getAddress())
-    expect(await liquidFactory.getImplementationFeeSplitter())
-      .to.equal(await feeSplitterImplNew.getAddress())
   })
 
   it("should pass factory journey", async function () {

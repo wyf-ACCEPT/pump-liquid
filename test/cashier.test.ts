@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { ethers, upgrades } from "hardhat"
 import { loadFixture, time } from "@nomicfoundation/hardhat-toolbox/network-helpers"
-import { LiquidCashier, LiquidFeeSplitter, LiquidOracle, LiquidVault } from "../typechain-types"
+import { LiquidCashier, LiquidOracle, LiquidVault } from "../typechain-types"
 import { deployTokens } from "../scripts/utils"
 import { formatEther, formatUnits, parseUnits } from "ethers"
 
@@ -24,22 +24,15 @@ describe("test cashier core", function () {
       liquidCashierFactory, [await liquidVault.getAddress(), await liquidOracle.getAddress()]
     )) as unknown as LiquidCashier
 
-    const liquidFeeSplitterFactory = await ethers.getContractFactory("LiquidFeeSplitter")
-    const liquidFeeSplitter = (await upgrades.deployProxy(
-      liquidFeeSplitterFactory,
-    )) as unknown as LiquidFeeSplitter
-
     await liquidVault.setCashier(await liquidCashier.getAddress())
-    await liquidVault.setFeeSplitter(await liquidFeeSplitter.getAddress())
     await expect(liquidVault.setCashier(await liquidCashier.getAddress()))
       .to.be.revertedWithCustomError(liquidVault, "InvalidInitialization")
 
-    await liquidFeeSplitter.setFeeSplitManager(owner.address, true)
-    await liquidFeeSplitter.setVanillaTo(feeCollector1.address)
-    await liquidFeeSplitter.setThirdPartyTo(feeCollector2.address)
-    await liquidFeeSplitter.setThirdPartyRatio(6000)    // 60%
+    await liquidVault.setFeeReceiverDefault(feeCollector1.address)
+    await liquidVault.setFeeReceiverThirdParty(feeCollector2.address)
+    await liquidVault.setFeeRatio("feeRatioPerformance", 6000)
 
-    return { tokens, liquidOracle, liquidVault, liquidCashier, liquidFeeSplitter }
+    return { tokens, liquidOracle, liquidVault, liquidCashier }
   }
 
   it("should deploy the contract correctly", async function () {
@@ -50,7 +43,7 @@ describe("test cashier core", function () {
   it("should finish test for cashier", async function () {
     // ============================ Initialize ============================
     const {
-      tokens, liquidOracle, liquidVault, liquidCashier, liquidFeeSplitter
+      tokens, liquidOracle, liquidVault, liquidCashier
     } = await loadFixture(deployContracts)
     const [owner, updater, user1, lp, feeCollector1, feeCollector2] = await ethers.getSigners()
 
@@ -187,8 +180,6 @@ describe("test cashier core", function () {
       .to.closeTo(parseUnits("791.6438", 6), parseUnits("0.0001", 6)) // 61.6438 + 1200 * 40% + 250
     expect(await tokens.mockUSDC.balanceOf(feeCollector2.address))
       .to.closeTo(parseUnits("720.0000", 6), parseUnits("0.0001", 6)) // 1200 * 60%
-
-    await liquidFeeSplitter.setFeeSplitManager(owner.address, false)
 
   })
 
