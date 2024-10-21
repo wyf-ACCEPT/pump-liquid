@@ -30,7 +30,11 @@ describe("test cashier core", function () {
 
     await liquidVault.setFeeReceiverDefault(feeCollector1.address)
     await liquidVault.setFeeReceiverThirdParty(feeCollector2.address)
+    await liquidVault.setFeeRatio("feeRatioManagement", 0)
     await liquidVault.setFeeRatio("feeRatioPerformance", 6000)
+    await liquidVault.setFeeRatio("feeRatioExit", 0)
+    await expect(liquidVault.setFeeRatio("feeRatio", 0))
+      .to.be.revertedWith("LIQUID_VAULT: invalid key")
 
     return { tokens, liquidOracle, liquidVault, liquidCashier }
   }
@@ -136,6 +140,8 @@ describe("test cashier core", function () {
     expect(fees[1]).to.closeTo(parseUnits("1200.0000", 6), parseUnits("0.0001", 6))
     expect(fees[2]).to.closeTo(parseUnits("250.0000", 6), parseUnits("0.0001", 6))
     expect(fees[3]).to.closeTo(parseUnits("1511.6438", 6), parseUnits("0.0001", 6))
+    const assetAmountNet = await liquidCashier.connect(user1).simulateRequestWithdraw(tokenAddresses[2], parseUnits("20000", 18))
+    console.log(`\t[Day ${day}] Simulate request withdraw, asset amount net: ${formatUnits(assetAmountNet, 6)} USDC`)
     await liquidCashier.connect(user1).requestWithdraw(tokenAddresses[2], parseUnits("20000", 18))
 
     // Show logs
@@ -173,6 +179,7 @@ describe("test cashier core", function () {
     await time.increase(11)
 
     const balanceBefore = await tokens.mockUSDC.balanceOf(user1.address)
+    expect(await liquidCashier.connect(user1).simulateCompleteWithdraw()).to.be.true
     await liquidCashier.connect(user1).completeWithdraw()
     const balanceAfter = await tokens.mockUSDC.balanceOf(user1.address)
     console.log(`\t[Day ${day}] User completed withdraw, received: ${formatUnits(balanceAfter - balanceBefore, 6)
@@ -298,6 +305,8 @@ describe("test cashier core", function () {
       await liquidVault.getAddress(), parseUnits("25000", 6)     // Direct transfer to deposit liquidity
     )
 
+    const assetAmountNet = await liquidCashier.connect(user1).simulateInstantWithdraw(tokenAddresses[2], parseUnits("20000", 18))
+    console.log(`\t[Day ${day}] Simulate instant withdraw, asset amount net: ${formatUnits(assetAmountNet, 6)} USDC`)
     const balanceBefore = await tokens.mockUSDC.balanceOf(user1.address)
     await liquidCashier.connect(user1).instantWithdraw(tokenAddresses[2], parseUnits("20000", 18))
     const balanceAfter = await tokens.mockUSDC.balanceOf(user1.address)
@@ -334,6 +343,7 @@ describe("test cashier core", function () {
     await time.increase(5 * 86400)
 
     const depositInfo2 = await liquidCashier.depositInfo(user1.address)
+    expect(await liquidCashier.connect(user1).simulateCompleteWithdraw()).to.be.false
     await liquidCashier.connect(user1).completeWithdraw()
     expect((await liquidCashier.depositInfo(user1.address))[0] - depositInfo2[0])
       .to.be.equal(pendingInfo[0])
@@ -343,10 +353,13 @@ describe("test cashier core", function () {
     await liquidCashier.pause()
     await tokens.mockBTCB.connect(user1)
       .approve(await liquidCashier.getAddress(), parseUnits("0.1", 18))
+    await expect(liquidCashier.connect(user1).simulateDeposit(tokenAddresses[0], parseUnits("0.1", 18)))
+      .to.be.revertedWithCustomError(liquidCashier, "EnforcedPause")
     await expect(liquidCashier.connect(user1).deposit(tokenAddresses[0], parseUnits("0.1", 18)))
       .to.be.revertedWithCustomError(liquidCashier, "EnforcedPause")
 
     await liquidCashier.unpause()
+    await liquidCashier.connect(user1).simulateDeposit(tokenAddresses[0], parseUnits("0.1", 18))
     await liquidCashier.connect(user1).deposit(tokenAddresses[0], parseUnits("0.1", 18))
 
   })
