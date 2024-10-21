@@ -95,7 +95,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     }
 
 
-    // ============================== Internal =============================
+    // =========================== View functions ==========================
 
     /**
      * @notice Calculate the fee for the user's withdraw request. The fee has three parts:
@@ -106,8 +106,9 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
      *      All of these fees should be calculated with Math library, to both avoid overflow
      *       and truncation errors.
      */
-    function calculateFees(uint256 baseAmount, address user, bool isInstant) 
-        public view returns (uint256 , uint256, uint256, uint256) {
+    function calculateFees(
+        uint256 baseAmount, address user, bool isInstant
+    ) public view returns (uint256 , uint256, uint256, uint256) {
         // Management fee
         uint256 timeElapsed = block.timestamp - depositInfo[user].equivalentTimestamp;
         uint256 feeManagement = baseAmount
@@ -128,6 +129,94 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         // All fees
         uint256 feeAll = feeManagement + feePerformance + feeExit;
         return (feeManagement, feePerformance, feeExit, feeAll);
+    }
+
+    /**
+     * @notice Check if the share amount is valid.
+     */
+    function _shareAmountIsValid(uint256 sharesAmount) internal view {
+        require(sharesAmount > 0, "LIQUID_CASHIER: invalid amount");
+        require(
+            sharesAmount <= depositInfo[_msgSender()].shares, 
+            "LIQUID_CASHIER: insufficient shares"
+        );
+    }
+
+    /**
+     * @notice This is an simulation function for `deposit`. Should be used in
+     *      the front-end for better user experience.
+     * @return sharesAmount The estimated share amount obtained.
+     */
+    function simulateDeposit(
+        address asset, uint256 assetAmount
+    ) public view whenNotPaused returns (uint256) {
+        require(assetAmount > 0, "LIQUID_CASHIER: invalid amount");
+        require(
+            IERC20(asset).allowance(_msgSender(), address(this)) >= assetAmount, 
+            "LIQUID_CASHIER: insufficient allowance"
+        );
+        return oracle.assetToShare(asset, assetAmount);
+    }
+
+    /**
+     * @notice This is an simulation function for `requestWithdraw`. Should be used in
+     *      the front-end for better user experience.
+     * @return assetAmountNet The estimated asset amount, after deducting all fees.
+     */
+    function simulateRequestWithdraw(
+        address asset, uint256 sharesAmount
+    ) public view whenNotPaused returns (uint256) {
+        _shareAmountIsValid(sharesAmount);
+        require(pendingInfo[_msgSender()].shares == 0, "LIQUID_CASHIER: request exists");
+        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
+        (uint256 feeManagement, uint256 feePerformance, uint256 feeExit, uint256 feeAll)
+            = calculateFees(assetAmount, _msgSender(), false);
+        require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
+        return assetAmount - feeAll;
+    }
+
+    /**
+     * @notice This is an simulation function for `completeWithdraw`. Should be used in
+     *      the front-end for better user experience.
+     * @return isSuccess `true` if the withdraw will be successful, `false` if the 
+     *      withdraw will be cancelled due to the asset is no longer supported.
+     */
+    function simulateCompleteWithdraw() public view whenNotPaused returns (bool) {
+        require(pendingInfo[_msgSender()].shares > 0, "LIQUID_CASHIER: request not exists");
+        require(
+            block.timestamp - pendingInfo[_msgSender()].timestamp >= withdrawPeriod, 
+            "LIQUID_CASHIER: still pending"
+        );
+        PendingInfo memory info = pendingInfo[_msgSender()];
+        if (oracle.isSupportedAssetExternal(info.asset)) {
+            require(
+                IERC20(info.asset).balanceOf(address(vault)) >= info.assetAmount,
+                "LIQUID_CASHIER: insufficient balance in vault"
+            );
+            return true;        // The withdraw will be successful
+        } else {
+            return false;       // The withdraw will be cancelled due to the asset is not supported
+        }
+    }
+    
+    /**
+     * @notice This is an simulation function for `instantWithdraw`. Should be used in
+     *      the front-end for better user experience.
+     * @return assetAmountNet The estimated asset amount, after deducting all fees.
+     */
+    function simulateInstantWithdraw(
+        address asset, uint256 sharesAmount
+    ) public view whenNotPaused returns (uint256) {
+        _shareAmountIsValid(sharesAmount);
+        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
+        (uint256 feeManagement, uint256 feePerformance, uint256 feeInstantExit, uint256 feeAll)
+            = calculateFees(assetAmount, _msgSender(), true);
+        require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
+        require(
+            IERC20(asset).balanceOf(address(vault)) >= assetAmount,
+            "LIQUID_CASHIER: insufficient balance in vault"
+        );
+        return assetAmount - feeAll;
     }
 
 
@@ -174,12 +263,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
      */
     function requestWithdraw(address asset, uint256 sharesAmount) public whenNotPaused {
         // Check conditions
-        require(sharesAmount > 0, "LIQUID_CASHIER: invalid amount");
+        _shareAmountIsValid(sharesAmount);
         require(pendingInfo[_msgSender()].shares == 0, "LIQUID_CASHIER: request exists");
-        require(
-            sharesAmount <= depositInfo[_msgSender()].shares, 
-            "LIQUID_CASHIER: insufficient shares"
-        );
 
         // Calculate fees
         uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
@@ -248,11 +333,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
      */
     function instantWithdraw(address asset, uint256 sharesAmount) public whenNotPaused {
         // Check conditions
-        require(sharesAmount > 0, "LIQUID_CASHIER: invalid amount");
-        require(
-            sharesAmount <= depositInfo[_msgSender()].shares, 
-            "LIQUID_CASHIER: insufficient shares"
-        );
+        _shareAmountIsValid(sharesAmount);
 
         // Calculate fees
         uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
