@@ -58,7 +58,6 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
     function initialize() public initializer {
         __AccessControl_init();
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setRoleAdmin(PRICE_UPDATER_ROLE, DEFAULT_ADMIN_ROLE);
 
         minimumUpdateInterval = 5 minutes;
     }

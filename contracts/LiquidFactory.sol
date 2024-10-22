@@ -101,11 +101,14 @@ contract LiquidFactory is Ownable2StepUpgradeable {
      * 
      *      - In `LiquidCashier`:
      *          - `pause` & `unpause`
+     *          - `setFeeReceiverDefault` & `setFeeReceiverThirdParty`
      *          - `setParameter`, including setting the fee rate for management, exit, 
-     *              instant withdrawal and performance, and the withdrawal period.
+     *              instant withdrawal and performance, and the fee ratio for third-party,
+     *              and the withdraw period.
      * 
      *      - In `LiquidVault`:
-     *          - `setLiquidityManager`, `setFeeReceiver` and `setFeeRatio`
+     *          - `setLiquidityManager`
+     *          - `addStrategy` & `removeStrategy`
      * 
      *      - In `LiquidOracle`:
      *          - `addSupportedAsset` & `removeSupportedAsset`
