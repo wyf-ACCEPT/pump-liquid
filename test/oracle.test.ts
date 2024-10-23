@@ -14,6 +14,7 @@ describe("test oracle core", function () {
     return { liquidOracle, tokens }
   }
 
+  
   it("should deploy the contract correctly", async function () {
     await loadFixture(deployContracts)
   })

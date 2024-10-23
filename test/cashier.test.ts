@@ -3,12 +3,15 @@ import { ethers, upgrades } from "hardhat"
 import { loadFixture, time } from "@nomicfoundation/hardhat-toolbox/network-helpers"
 import { LiquidCashier, LiquidOracle, LiquidVault } from "../typechain-types"
 import { deployTokens } from "../scripts/utils"
-import { formatEther, formatUnits, parseUnits } from "ethers"
+import { formatEther, formatUnits, parseEther, parseUnits } from "ethers"
 
 describe("test cashier core", function () {
 
   async function deployContracts() {
-    const [owner, updater, user1, lp, feeCollector1, feeCollector2] = await ethers.getSigners()
+    const [
+      _owner, _updater, _user1, _lp, feeCollector1, feeCollector2, feeManager
+    ] = await ethers.getSigners()
+
     const tokens = await deployTokens()
 
     const liquidOracleFactory = await ethers.getContractFactory("LiquidOracle")
@@ -28,17 +31,20 @@ describe("test cashier core", function () {
     await expect(liquidVault.setCashier(await liquidCashier.getAddress()))
       .to.be.revertedWithCustomError(liquidVault, "InvalidInitialization")
 
-    await liquidVault.setFeeReceiverDefault(feeCollector1.address)
-    await liquidVault.setFeeReceiverThirdParty(feeCollector2.address)
-    await liquidVault.setFeeRatio("feeRatioManagement", 0)
-    await liquidVault.setFeeRatio("feeRatioPerformance", 6000)
-    await liquidVault.setFeeRatio("feeRatioExit", 0)
-    await expect(liquidVault.setFeeRatio("feeRatio", 0))
-      .to.be.revertedWith("LIQUID_VAULT: invalid key")
+    await liquidCashier.setFeeReceiverDefault(feeCollector1.address)
+    await liquidCashier.setFeeReceiverThirdParty(feeCollector2.address)
+    await liquidCashier.setFeeManager(feeManager.address, true)
+
+    await liquidCashier.setParameter("thirdPartyRatioManagement", 0)
+    await liquidCashier.setParameter("thirdPartyRatioPerformance", 4000)
+    await liquidCashier.setParameter("thirdPartyRatioExit", 0)
+    await expect(liquidCashier.setParameter("feeRate", 0))
+      .to.be.revertedWith("LIQUID_CASHIER: invalid key")
 
     return { tokens, liquidOracle, liquidVault, liquidCashier }
   }
 
+  
   it("should deploy the contract correctly", async function () {
     await loadFixture(deployContracts)
   })
@@ -49,7 +55,9 @@ describe("test cashier core", function () {
     const {
       tokens, liquidOracle, liquidVault, liquidCashier
     } = await loadFixture(deployContracts)
-    const [owner, updater, user1, lp, feeCollector1, feeCollector2] = await ethers.getSigners()
+    const [
+      _owner, updater, user1, lp, feeCollector1, feeCollector2, feeManager
+    ] = await ethers.getSigners()
 
     // Update tokens and prices
     const tokenAddresses = []
@@ -68,6 +76,7 @@ describe("test cashier core", function () {
       parseUnits("1.2", 36 + 18 - 6),
       parseUnits("1.25", 36 + 18 - 18),
     ])
+    await liquidCashier.connect(feeManager).collectFees() // First time to record the highest share price
 
 
     // ============================ Deposit ============================
@@ -97,21 +106,26 @@ describe("test cashier core", function () {
       parseUnits("1.0", 36 + 18 - 18),
     ])
 
+    // Collect fees
+    /**
+     * Management fee: { 20 days, 2%/year, 24000 bSHARE } -> 26.3014 bSHARE
+     * Performance fee: { price: 0.8 -> 1.0, 20%, 24000 bSHARE } -> 1200 bSHARE: {60%, 40%}
+     */
+    await liquidCashier.connect(feeManager).collectFees()
+    expect(await liquidVault.balanceOf(feeCollector1.address))
+      .to.closeTo(parseEther("746.3014"), parseEther("0.0001"))   // 720 + 26.3014
+    expect(await liquidVault.balanceOf(feeCollector2.address))
+      .to.closeTo(parseEther("480"), parseEther("0.0001"))
+    expect(await liquidVault.totalSupply())
+      .to.closeTo(parseEther("25226.3014"), parseEther("0.0001"))  // 24000 + 1200 + 26.3014
+
     // User 1 deposit 1.8 WBTC -> 72000 bSHARE
     await tokens.mockWBTC.connect(user1)
       .approve(await liquidCashier.getAddress(), parseUnits("1.8", 8))
     await liquidCashier.connect(user1).deposit(tokenAddresses[1], parseUnits("1.8", 8))
     expect(await liquidVault.balanceOf(user1.address)).to.equal(parseUnits("96000", 18))
     console.log(`\t[Day ${day}] Deposit 1.8 $WBTC for 72000 $bSHARE`)
-
-    // Show deposit info
-    const depositInfo = await liquidCashier.depositInfo(user1.address)
-    let passedDays = ((await time.latest() - parseInt(depositInfo[1].toString())) / 86400).toFixed(2)
-    console.log(`\t[Day ${day}] User deposit info:`)
-    console.log(`\t\t Share balance: ${formatEther(depositInfo[0])}`)
-    console.log(`\t\t Equivalent deposit day: ${passedDays} days ago`)
-    console.log(`\t\t Equivalent standard price: ${formatUnits(depositInfo[2], 36)}`)
-
+    
 
     // ========================= Request Withdraw =========================
     // Update prices 40 days later (60 days in total)
@@ -127,33 +141,26 @@ describe("test cashier core", function () {
 
     // User 1 withdraw 20000 bSHARE to USDC
     /**
-     * 20000 bSHARE / [0.8 bSHARE/USDC] = 25000 USDC
-     * Management fee: { 45 days, 2%/year, 20000 bSHARE, 0.8 bSHARE/USDC } -> 61.6438 USDC
-     * Performance fee: { price: 0.95 -> 1.25, 20%, 20000 bSHARE, 0.8 bSHARE/USDC } -> 1200 USDC
-     * Exit fee: { 1%, 20000 bSHARE, 0.8 bSHARE/USDC } -> 250 USDC
-     * Total: 61.6438 + 1200 + 250 = 1511.6438 USDC
+     * Exit fee: { 1%, 20000 bSHARE } -> 200 bSHARE
+     * Amount net: (20000 - 200) / 0.8 = 24750 USDC
      */
     expect(await liquidOracle.shareToAsset(tokenAddresses[2], parseUnits("20000", 18)))
       .to.equal(parseUnits("25000", 6))
-    const fees = await liquidCashier.calculateFees(parseUnits("25000", 6), user1.address, false)
-    expect(fees[0]).to.closeTo(parseUnits("61.6438", 6), parseUnits("0.0001", 6))
-    expect(fees[1]).to.closeTo(parseUnits("1200.0000", 6), parseUnits("0.0001", 6))
-    expect(fees[2]).to.closeTo(parseUnits("250.0000", 6), parseUnits("0.0001", 6))
-    expect(fees[3]).to.closeTo(parseUnits("1511.6438", 6), parseUnits("0.0001", 6))
-    const assetAmountNet = await liquidCashier.connect(user1).simulateRequestWithdraw(tokenAddresses[2], parseUnits("20000", 18))
+    const assetAmountNet = await liquidCashier.connect(user1)
+      .simulateRequestWithdraw(tokenAddresses[2], parseUnits("20000", 18))
     console.log(`\t[Day ${day}] Simulate request withdraw, asset amount net: ${formatUnits(assetAmountNet, 6)} USDC`)
     await liquidCashier.connect(user1).requestWithdraw(tokenAddresses[2], parseUnits("20000", 18))
 
     // Show logs
     const pendingInfo = await liquidCashier.pendingInfo(user1.address)
-    passedDays = ((await time.latest() - parseInt(pendingInfo[1].toString())) / 86400).toFixed(2)
+    const passedDays = ((await time.latest() - parseInt(pendingInfo[1].toString())) / 86400).toFixed(2)
     console.log(`\t[Day ${day}] User pending info:`)
     console.log(`\t\t Pending Share: ${formatEther(pendingInfo[0])}`)
     console.log(`\t\t Pending timestamp: ${passedDays} days ago`)
     console.log(`\t\t Pending assets: ${formatUnits(pendingInfo[3], 6)} USDC`)
-    console.log(`\t\t Charged fees: ${formatUnits(pendingInfo[4], 6)} USDC`)
+    console.log(`\t\t Charged fees: ${formatUnits(pendingInfo[4], 6)} bSHARE`)
 
-    // Liquid manager deposit some USDC to the vault
+    // Liquidity manager deposit some USDC to the vault
     await liquidVault.addStrategyWithdrawLiquidityDirectly(tokenAddresses[1])
     const strategyId = await liquidVault.strategiesLength() - 1n
     await liquidVault.setLiquidityManager(lp.address, true)
@@ -178,30 +185,57 @@ describe("test cashier core", function () {
       .to.be.revertedWith("LIQUID_CASHIER: still pending")
     await time.increase(11)
 
+    // Collect fees
+    /**
+     * Total supply: 24000 + 1200 + 26.3014 + 72000 - 20000 = 77226.3014
+     * Management fee: { 20 -> 67 days, 2%/year, 77226.3014 bSHARE } -> 198.8842 bSHARE
+     * Performance fee: { price: 1.0 -> 1.25, 20%, 77226.3014 bSHARE } -> 3861.3151 bSHARE: {60%, 40%}
+     */
+    await liquidCashier.connect(feeManager).collectFees()
+    expect(await liquidVault.balanceOf(feeCollector1.address))
+      .to.closeTo(parseEther("3261.9747"), parseEther("0.001"))   // {746.3014} + 198.8842 + 3861.3151 * 0.6
+    expect(await liquidVault.balanceOf(feeCollector2.address))
+      .to.closeTo(parseEther("2024.5260"), parseEther("0.001"))   // {480} + 3861.3151 * 0.4
+    expect(await liquidVault.totalSupply())
+      .to.closeTo(parseEther("81286.5007"), parseEther("0.001"))  // {77226.3014} + 198.8842 + 3861.3151
+
+    // User 1 complete withdraw
     const balanceBefore = await tokens.mockUSDC.balanceOf(user1.address)
     expect(await liquidCashier.connect(user1).simulateCompleteWithdraw()).to.be.true
     await liquidCashier.connect(user1).completeWithdraw()
     const balanceAfter = await tokens.mockUSDC.balanceOf(user1.address)
-    console.log(`\t[Day ${day}] User completed withdraw, received: ${formatUnits(balanceAfter - balanceBefore, 6)
-      } USDC`)
+    console.log(`\t[Day ${day}] User completed withdraw, received: ${
+      formatUnits(balanceAfter - balanceBefore, 6)
+    } USDC`)
 
+    // Check exit fee
+    expect(await liquidVault.balanceOf(feeCollector1.address))
+      .to.closeTo(parseEther("3461.9747"), parseEther("0.001"))   // {3261.9747} + 200 * 100%
+    expect(await liquidVault.balanceOf(feeCollector2.address))
+      .to.closeTo(parseEther("2024.5260"), parseEther("0.001"))   // {2024.5260}
+    expect(await liquidVault.totalSupply())
+      .to.closeTo(parseEther("81486.5007"), parseEther("0.001"))  // {81286.5007} + 200
+
+    // Remove liquidity manager
     await liquidVault.setLiquidityManager(lp.address, false)
     await expect(liquidVault.connect(lp).executeStrategy(
       strategyId, tokens.mockWBTC.interface.encodeFunctionData("transfer", [lp.address, parseUnits("1.2", 8)])
     )).to.be.revertedWithCustomError(liquidVault, "AccessControlUnauthorizedAccount")
 
-    expect(await tokens.mockUSDC.balanceOf(feeCollector1.address))
-      .to.closeTo(parseUnits("791.6438", 6), parseUnits("0.0001", 6)) // 61.6438 + 1200 * 40% + 250
-    expect(await tokens.mockUSDC.balanceOf(feeCollector2.address))
-      .to.closeTo(parseUnits("720.0000", 6), parseUnits("0.0001", 6)) // 1200 * 60%
-
+    // Remove fee manager
+    await liquidCashier.setFeeManager(feeManager.address, false)
+    await expect(liquidCashier.connect(feeManager).collectFees())
+      .to.be.revertedWithCustomError(liquidCashier, "AccessControlUnauthorizedAccount")
+  
   })
 
 
   it("should finish test for cashier in other branches", async function () {
     // ============================ Initialize ============================
     const { tokens, liquidOracle, liquidVault, liquidCashier } = await loadFixture(deployContracts)
-    const [_owner, updater, user1, lp] = await ethers.getSigners()
+    const [
+      _owner, updater, user1, lp, feeCollector1, feeCollector2, feeManager
+    ] = await ethers.getSigners()
 
     // Update tokens and prices
     const tokenAddresses = []
@@ -220,6 +254,7 @@ describe("test cashier core", function () {
       parseUnits("1.2", 36 + 18 - 6),
       parseUnits("1.25", 36 + 18 - 18),
     ])
+    await liquidCashier.connect(feeManager).collectFees() // First time to record the highest share price
 
 
     // ============================ Deposit ============================
@@ -228,7 +263,6 @@ describe("test cashier core", function () {
     await tokens.mockBTCB.connect(user1)
       .approve(await liquidCashier.getAddress(), parseUnits("0.2", 18))
     await liquidCashier.connect(user1).deposit(tokenAddresses[0], parseUnits("0.2", 18))
-
     await tokens.mockUSDC.connect(user1)
       .approve(await liquidCashier.getAddress(), parseUnits("10000", 6))
     await liquidCashier.connect(user1).deposit(tokenAddresses[2], parseUnits("10000", 6))
@@ -244,18 +278,19 @@ describe("test cashier core", function () {
       parseUnits("1.0", 36 + 18 - 18),
     ])
 
+    // Collect fees (Same as above)
+    await liquidCashier.connect(feeManager).collectFees()
+    expect(await liquidVault.balanceOf(feeCollector1.address))
+      .to.closeTo(parseEther("746.3014"), parseEther("0.0001"))   // 720 + 26.3014
+    expect(await liquidVault.balanceOf(feeCollector2.address))
+      .to.closeTo(parseEther("480"), parseEther("0.0001"))
+    expect(await liquidVault.totalSupply())
+      .to.closeTo(parseEther("25226.3014"), parseEther("0.0001"))  // 24000 + 1200 + 26.3014
+
     // User 1 deposit 1.8 WBTC -> 72000 bSHARE
     await tokens.mockWBTC.connect(user1)
       .approve(await liquidCashier.getAddress(), parseUnits("1.8", 8))
     await liquidCashier.connect(user1).deposit(tokenAddresses[1], parseUnits("1.8", 8))
-
-    // Show deposit info
-    const depositInfo = await liquidCashier.depositInfo(user1.address)
-    let passedDays = ((await time.latest() - parseInt(depositInfo[1].toString())) / 86400).toFixed(2)
-    console.log(`\t[Day ${day}] User deposit info:`)
-    console.log(`\t\t Share balance: ${formatEther(depositInfo[0])}`)
-    console.log(`\t\t Equivalent deposit day: ${passedDays} days ago`)
-    console.log(`\t\t Equivalent standard price: ${formatUnits(depositInfo[2], 36)}`)
 
 
     // =========================== Set fee rates ===========================
@@ -263,6 +298,9 @@ describe("test cashier core", function () {
     await liquidCashier.setParameter("feeRatePerformance", 3000)
     await liquidCashier.setParameter("feeRateExit", 150)
     await liquidCashier.setParameter("feeRateInstant", 700)
+    await liquidCashier.setParameter("thirdPartyRatioManagement", 2000)
+    await liquidCashier.setParameter("thirdPartyRatioPerformance", 5000)
+    await liquidCashier.setParameter("thirdPartyRatioExit", 2000)
     await expect(liquidCashier.setParameter("feeRate", 1000))
       .to.be.revertedWith("LIQUID_CASHIER: invalid key")
 
@@ -279,39 +317,52 @@ describe("test cashier core", function () {
       parseUnits("0.8", 36 + 18 - 18),
     ])
 
-    // User 1 withdraw 20000 bSHARE to USDC
+    // Collect fees
     /**
-     * 20000 bSHARE / [0.8 bSHARE/USDC] = 25000 USDC
-     * Management fee: { 45 days, 4%/year, 20000 bSHARE, 0.8 bSHARE/USDC } -> 123.2877 USDC
-     * Performance fee: { price: 0.95 -> 1.25, 30%, 20000 bSHARE, 0.8 bSHARE/USDC } -> 1800 USDC
-     * Instant Exit fee: { 7%, 20000 bSHARE, 0.8 bSHARE/USDC } -> 1750 USDC
-     * Total: 123.2876 + 1800 + 1750 = 3673.2876 USDC
+     * Total supply: 24000 + 1200 + 26.3014 + 72000 = 97226.3014
+     * Management fee: { 20 -> 60 days, 4%/year, 97226.3014 bSHARE } -> 426.1975 bSHARE: {80%, 20%}
+     * Performance fee: { price: 1.0 -> 1.25, 30%, 97226.3014 bSHARE } -> 7291.9726 bSHARE: {50%, 50%}
      */
-    expect(await liquidOracle.shareToAsset(tokenAddresses[2], parseUnits("20000", 18)))
-      .to.equal(parseUnits("25000", 6))
-    const fees = await liquidCashier.calculateFees(parseUnits("25000", 6), user1.address, true)
-    expect(fees[0]).to.closeTo(parseUnits("123.2877", 6), parseUnits("0.0003", 6))
-    expect(fees[1]).to.closeTo(parseUnits("1800.0000", 6), parseUnits("0.0001", 6))
-    expect(fees[2]).to.closeTo(parseUnits("1750.0000", 6), parseUnits("0.0001", 6))
-    expect(fees[3]).to.closeTo(parseUnits("3673.2877", 6), parseUnits("0.0003", 6))
+    await liquidCashier.connect(feeManager).collectFees()
+    expect(await liquidVault.balanceOf(feeCollector1.address))
+      .to.closeTo(parseEther("4733.2457"), parseEther("0.002"))   // {746.3014} + 426.1975 * 0.8 + 7291.9726 * 0.5
+    expect(await liquidVault.balanceOf(feeCollector2.address))
+      .to.closeTo(parseEther("4211.2258"), parseEther("0.002"))   // {480} + 426.1975 * 0.2 + 7291.9726 * 0.5
+    expect(await liquidVault.totalSupply())
+      .to.closeTo(parseEther("104944.4715"), parseEther("0.002"))  // {97226.3014} + 426.1975 + 7291.9726
 
+    // LP deposit some USDC to the vault
     await expect(liquidCashier.connect(user1).instantWithdraw(
       tokenAddresses[2], parseUnits("20000", 18)
     )).to.be.revertedWithCustomError(liquidVault, "ERC20InsufficientBalance")
     await tokens.mockUSDC.connect(lp).approve(await liquidVault.getAddress(), parseUnits("25000", 6))
     await liquidVault.setLiquidityManager(lp.address, true)
-    // await liquidVault.connect(lp).depositLiquidityDirectly(tokenAddresses[2], parseUnits("25000", 6))
     await tokens.mockUSDC.connect(lp).transfer(
       await liquidVault.getAddress(), parseUnits("25000", 6)     // Direct transfer to deposit liquidity
     )
 
-    const assetAmountNet = await liquidCashier.connect(user1).simulateInstantWithdraw(tokenAddresses[2], parseUnits("20000", 18))
+    // User 1 instant withdraw
+    /**
+     * Exit fee: { 7%, 20000 bSHARE } -> 1400 bSHARE
+     * Amount net: (20000 - 1400) / 0.8 = 23250 USDC
+     */
+    const assetAmountNet = await liquidCashier.connect(user1)
+      .simulateInstantWithdraw(tokenAddresses[2], parseUnits("20000", 18))
     console.log(`\t[Day ${day}] Simulate instant withdraw, asset amount net: ${formatUnits(assetAmountNet, 6)} USDC`)
     const balanceBefore = await tokens.mockUSDC.balanceOf(user1.address)
     await liquidCashier.connect(user1).instantWithdraw(tokenAddresses[2], parseUnits("20000", 18))
     const balanceAfter = await tokens.mockUSDC.balanceOf(user1.address)
-    console.log(`\t[Day ${day}] User instant withdraw, received: ${formatUnits(balanceAfter - balanceBefore, 6)
-      } USDC`)
+    console.log(`\t[Day ${day}] User instant withdraw, received: ${
+      formatUnits(balanceAfter - balanceBefore, 6)
+    } USDC`)
+
+    // Check exit fee
+    expect(await liquidVault.balanceOf(feeCollector1.address))
+      .to.closeTo(parseEther("5853.2457"), parseEther("0.002"))   // {4733.2457} + 1400 * 0.8
+    expect(await liquidVault.balanceOf(feeCollector2.address))
+      .to.closeTo(parseEther("4491.2258"), parseEther("0.002"))   // {4211.2258} + 1400 * 0.2
+    expect(await liquidVault.totalSupply())
+      .to.closeTo(parseEther("86344.4715"), parseEther("0.002"))  // {104944.4715} - 20000 + 1400
 
     await liquidCashier.setParameter("feeRateManagement", 200)
     await liquidCashier.setParameter("feeRatePerformance", 2000)
@@ -325,7 +376,7 @@ describe("test cashier core", function () {
 
     // Show logs
     const pendingInfo = await liquidCashier.pendingInfo(user1.address)
-    passedDays = ((await time.latest() - parseInt(pendingInfo[1].toString())) / 86400).toFixed(2)
+    const passedDays = ((await time.latest() - parseInt(pendingInfo[1].toString())) / 86400).toFixed(2)
     console.log(`\t[Day ${day}] User pending info:`)
     console.log(`\t\t Pending Share: ${formatEther(pendingInfo[0])}`)
     console.log(`\t\t Pending timestamp: ${passedDays} days ago`)
@@ -342,10 +393,10 @@ describe("test cashier core", function () {
     day += 5
     await time.increase(5 * 86400)
 
-    const depositInfo2 = await liquidCashier.depositInfo(user1.address)
+    const holdingShares = await liquidVault.balanceOf(user1.address)
     expect(await liquidCashier.connect(user1).simulateCompleteWithdraw()).to.be.false
     await liquidCashier.connect(user1).completeWithdraw()
-    expect((await liquidCashier.depositInfo(user1.address))[0] - depositInfo2[0])
+    expect(await liquidVault.balanceOf(user1.address) - holdingShares)
       .to.be.equal(pendingInfo[0])
 
 

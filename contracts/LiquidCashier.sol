@@ -45,6 +45,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
     uint256 public thirdPartyRatioPerformance;  // Fee ratio of performance fee for third-party receiver
     uint256 public thirdPartyRatioExit;         // Fee ratio of exit fee for third-party receiver
 
+
     // ============================== Storage ==============================
 
     uint256 lastMintShareTimestamp;
@@ -73,7 +74,6 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
         address receiver1, uint256 amount1, 
         address receiver2, uint256 amount2, string feeType
     );
-
     event ParameterUpdated(string key, uint256 value);
     event FeeReceiverUpdated(string key, address value);
 
