@@ -4,41 +4,27 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
+import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
-import { WeightedMath } from "./lib/WeightedMath.sol";
-
 import "./interface.sol";
+import "./constants.sol";
 
 using Math for uint256;
 using SafeERC20 for IERC20;
+using SafeERC20 for ILiquidVault;
 
 
-contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
+contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constants {
 
     // =============================== Struct ==============================
-    /**
-     * @notice The `DepositInfo` struct aims to record the user's deposit information.
-     *      If the user has deposited for multiple times, the `shares` should be the 
-     *      sum of all the shares, and the `equivalentTimestamp` and `equivalentPrice` 
-     *      should be the weighted average of all the deposits.
-     */
-    struct DepositInfo {
-        uint256 shares;
-        uint256 equivalentTimestamp;
-        uint256 equivalentPrice;
-    }
 
     struct PendingInfo {
         uint256 shares;
         uint256 timestamp;
         address asset;
         uint256 assetAmount;
-        uint256 feeManagement;
-        uint256 feePerformance;
         uint256 feeExit;
-        uint256 feeAll;
     }
 
 
@@ -53,29 +39,43 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     uint256 public feeRateExit;         // Default to 1%
     uint256 public feeRateInstant;      // Default to 5%
 
+    address public feeReceiverDefault;          // Address of liquid-vault fee receiver
+    address public feeReceiverThirdParty;       // Address of third-party fee receiver
+    uint256 public thirdPartyRatioManagement;   // Fee ratio of management fee for third-party receiver
+    uint256 public thirdPartyRatioPerformance;  // Fee ratio of performance fee for third-party receiver
+    uint256 public thirdPartyRatioExit;         // Fee ratio of exit fee for third-party receiver
+
 
     // ============================== Storage ==============================
 
-    mapping(address => DepositInfo) public depositInfo;
+    uint256 lastMintShareTimestamp;
+    uint256 highestSharePrice;
+
     mapping(address => PendingInfo) public pendingInfo;
 
 
     // =============================== Events ==============================
 
     event Deposit(
-        address indexed from, address indexed asset, uint256 assetAmount, uint256 shareAmount
+        address indexed from, address indexed asset, 
+        uint256 assetAmount, uint256 shareAmount
     );
     event RequestWithdraw(
-        address indexed from, address indexed asset, uint256 shareAmount, uint256 assetAmount,
-        uint256 feeManagement, uint256 feePerformance, uint256 feeExit, uint256 feeAll
+        address indexed from, address indexed asset, 
+        uint256 assetAmount, uint256 shareAmount, uint256 feeExit
     );
     event CompleteWithdraw(address indexed to, uint256 requestTimestamp);
     event InstantWithdraw(
-        address indexed from, address indexed asset, uint256 shareAmount, uint256 assetAmount,
-        uint256 feeManagement, uint256 feePerformance, uint256 feeInstantExit, uint256 feeAll
+        address indexed from, address indexed asset, 
+        uint256 assetAmount, uint256 shareAmount, uint256 feeInstant
     );
     event CancelWithdraw(address indexed to, uint256 requestTimestamp);
+    event FeeDistributedFixRatio(
+        address receiver1, uint256 amount1, 
+        address receiver2, uint256 amount2, string feeType
+    );
     event ParameterUpdated(string key, uint256 value);
+    event FeeReceiverUpdated(string key, address value);
 
 
     // ======================= Modifier & Initializer ======================
@@ -92,55 +92,56 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         feeRatePerformance = 2000;
         feeRateExit = 100;
         feeRateInstant = 500;
+
+        feeReceiverDefault = address(0);
+        feeReceiverThirdParty = address(0);
+        thirdPartyRatioManagement = 0;
+        thirdPartyRatioPerformance = 0;
+        thirdPartyRatioExit = 0;
+
+        lastMintShareTimestamp = block.timestamp;
+        highestSharePrice = 0;
     }
 
 
-    // =========================== View functions ==========================
+    // ============================== Internal =============================
 
     /**
-     * @notice Calculate the fee for the user's withdraw request. The fee has three parts:
-     *       1. Management fee (%): (`timeElapsed` / 365 days) * (`feeRatemanagement` / 10000)
-     *       2. Performance fee (%): `currentPrice` <= `cost` ? 0 :
-     *          (`currentPrice` - `cost`) / `currentPrice` * (`feeRatePerformance` / 10000)
-     *       3. Exit fee (%): `feeRateExit` / 10000
-     *      All of these fees should be calculated with Math library, to both avoid overflow
-     *       and truncation errors.
-     */
-    function calculateFees(
-        uint256 baseAmount, address user, bool isInstant
-    ) public view returns (uint256 , uint256, uint256, uint256) {
-        // Management fee
-        uint256 timeElapsed = block.timestamp - depositInfo[user].equivalentTimestamp;
-        uint256 feeManagement = baseAmount
-            .mulDiv(timeElapsed, 365 days)
-            .mulDiv(feeRateManagement, 10000);
-        
-        // Performance fee
-        uint256 currentPrice = oracle.fetchShareStandardPrice();
-        uint256 cost = depositInfo[user].equivalentPrice;
-        uint256 feePerformance = currentPrice <= cost ? 0 : baseAmount
-            .mulDiv(currentPrice - cost, currentPrice)
-            .mulDiv(feeRatePerformance, 10000);
-
-        // Exit fee
-        uint256 feeExit = baseAmount
-            .mulDiv(isInstant ? feeRateInstant : feeRateExit, 10000);
-
-        // All fees
-        uint256 feeAll = feeManagement + feePerformance + feeExit;
-        return (feeManagement, feePerformance, feeExit, feeAll);
-    }
-
-    /**
-     * @notice Check if the share amount is valid.
+     * @notice Check if the share amount is valid when calling `withdraw`.
      */
     function _shareAmountIsValid(uint256 sharesAmount) internal view {
         require(sharesAmount > 0, "LIQUID_CASHIER: invalid amount");
         require(
-            sharesAmount <= depositInfo[_msgSender()].shares, 
+            sharesAmount <= vault.balanceOf(_msgSender()), 
             "LIQUID_CASHIER: insufficient shares"
         );
     }
+
+    /**
+     * @notice Distributes fees between the default fee receiver and 
+     *      the third-party fee receiver.
+     */
+    function _fixRatioDistributeFee(
+        uint256 feeAmount, uint256 thirdPartyRatio, string memory feeType
+    ) internal {
+        uint256 feeThirdParty = feeAmount.mulDiv(thirdPartyRatio, 10000);
+        uint256 feeDefault = feeAmount - feeThirdParty;
+
+        if (feeDefault > 0) {
+            vault.safeTransfer(feeReceiverDefault, feeDefault);
+        }
+        if (feeThirdParty > 0) {
+            vault.safeTransfer(feeReceiverThirdParty, feeThirdParty);
+        }
+
+        emit FeeDistributedFixRatio(
+            feeReceiverDefault, feeDefault, 
+            feeReceiverThirdParty, feeThirdParty, feeType
+        );
+    }
+
+
+    // =========================== View functions ==========================
 
     /**
      * @notice This is an simulation function for `deposit`. Should be used in
@@ -168,11 +169,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
     ) public view whenNotPaused returns (uint256) {
         _shareAmountIsValid(sharesAmount);
         require(pendingInfo[_msgSender()].shares == 0, "LIQUID_CASHIER: request exists");
-        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
-        (uint256 feeManagement, uint256 feePerformance, uint256 feeExit, uint256 feeAll)
-            = calculateFees(assetAmount, _msgSender(), false);
-        require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
-        return assetAmount - feeAll;
+        uint256 feeExit = sharesAmount.mulDiv(feeRateExit, 10000);
+        return oracle.shareToAsset(asset, sharesAmount - feeExit);
     }
 
     /**
@@ -208,15 +206,13 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         address asset, uint256 sharesAmount
     ) public view whenNotPaused returns (uint256) {
         _shareAmountIsValid(sharesAmount);
-        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
-        (uint256 feeManagement, uint256 feePerformance, uint256 feeInstantExit, uint256 feeAll)
-            = calculateFees(assetAmount, _msgSender(), true);
-        require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
+        uint256 feeInstant = sharesAmount.mulDiv(feeRateInstant, 10000);
+        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount - feeInstant);
         require(
             IERC20(asset).balanceOf(address(vault)) >= assetAmount,
             "LIQUID_CASHIER: insufficient balance in vault"
         );
-        return assetAmount - feeAll;
+        return assetAmount;
     }
 
 
@@ -236,21 +232,8 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         uint256 currentShares = oracle.assetToShare(asset, assetAmount);
         IERC20(asset).safeTransferFrom(_msgSender(), address(this), assetAmount);
         IERC20(asset).approve(address(vault), assetAmount);     // 2-step transfer for proper approval process
-        vault.depositToVault(_msgSender(), asset, assetAmount, currentShares);
-
-        // Retrieve deposit info
-        DepositInfo memory oldInfo = depositInfo[_msgSender()];
-
-        // Update deposit info
-        depositInfo[_msgSender()].shares += currentShares;
-        depositInfo[_msgSender()].equivalentTimestamp = WeightedMath.weightedAverage(
-            oldInfo.equivalentTimestamp, block.timestamp, 
-            oldInfo.shares, currentShares
-        );
-        depositInfo[_msgSender()].equivalentPrice = WeightedMath.weightedAverage(
-            oldInfo.equivalentPrice, oracle.fetchShareStandardPrice(), 
-            oldInfo.shares, currentShares
-        );
+        vault.depositAsset(asset, assetAmount);
+        vault.mintShares(_msgSender(), currentShares);
 
         // Event
         emit Deposit(_msgSender(), asset, assetAmount, currentShares);
@@ -266,36 +249,28 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         _shareAmountIsValid(sharesAmount);
         require(pendingInfo[_msgSender()].shares == 0, "LIQUID_CASHIER: request exists");
 
-        // Calculate fees
-        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
-        (uint256 feeManagement, uint256 feePerformance, uint256 feeExit, uint256 feeAll)
-            = calculateFees(assetAmount, _msgSender(), false);
-        require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
-
+        // Burn user shares
+        vault.burnShares(_msgSender(), sharesAmount);
+        
         // Update pending info
+        uint256 feeExit = sharesAmount.mulDiv(feeRateExit, 10000);
+        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount - feeExit);
         pendingInfo[_msgSender()] = PendingInfo({
             shares: sharesAmount,
             timestamp: block.timestamp,
             asset: asset,
             assetAmount: assetAmount,
-            feeManagement: feeManagement,
-            feePerformance: feePerformance,
-            feeExit: feeExit,
-            feeAll: feeAll
+            feeExit: feeExit
         });
-        depositInfo[_msgSender()].shares -= sharesAmount;
 
         // Event
-        emit RequestWithdraw(
-            _msgSender(), asset, sharesAmount, assetAmount,
-            feeManagement, feePerformance, feeExit, feeAll
-        );
+        emit RequestWithdraw(_msgSender(), asset, assetAmount, sharesAmount, feeExit);
     }
 
     /**
      * @notice Complete the withdraw request and get the asset from the vault.
      *      If the asset is removed from the vault during the withdraw period,
-     *      the user won't be able to get the asset, and will still hold the shares.
+     *      the user won't be able to get the asset, and will get the shares refunded.
      */
     function completeWithdraw() public whenNotPaused {
         // Check conditions
@@ -310,15 +285,19 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
 
         // Withdraw from the vault
         if (oracle.isSupportedAssetExternal(info.asset)) {
-            vault.withdrawFromVault(
-                _msgSender(), info.asset, info.shares, info.assetAmount - info.feeAll
-            );
-            vault.distributeFee(
-                info.asset, info.feeManagement, info.feePerformance, info.feeExit
-            );
+            // User get the asset
+            vault.withdrawAsset(info.asset, info.assetAmount);
+            IERC20(info.asset).safeTransfer(_msgSender(), info.assetAmount);
+
+            // Distribute exit fee
+            vault.mintShares(address(this), info.feeExit);
+            _fixRatioDistributeFee(info.feeExit, thirdPartyRatioExit, "exit fee");
+
             emit CompleteWithdraw(_msgSender(), info.timestamp);
         } else {
-            depositInfo[_msgSender()].shares += info.shares;
+            // The asset is no longer supported, refund shares
+            vault.mintShares(_msgSender(), info.shares);
+            
             emit CancelWithdraw(_msgSender(), info.timestamp);
         }
 
@@ -335,26 +314,21 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         // Check conditions
         _shareAmountIsValid(sharesAmount);
 
-        // Calculate fees
-        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount);
-        (uint256 feeManagement, uint256 feePerformance, uint256 feeInstantExit, uint256 feeAll)
-            = calculateFees(assetAmount, _msgSender(), true);
-        require(assetAmount > feeAll, "LIQUID_CASHIER: asset value too low");
+        // Burn user shares
+        vault.burnShares(_msgSender(), sharesAmount);
 
         // Withdraw instantly
-        vault.withdrawFromVault(
-            _msgSender(), asset, sharesAmount, assetAmount - feeAll
-        );
-        vault.distributeFee(
-            asset, feeManagement, feePerformance, feeInstantExit
-        );
-        depositInfo[_msgSender()].shares -= sharesAmount;
+        uint256 feeInstant = sharesAmount.mulDiv(feeRateInstant, 10000);
+        uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount - feeInstant);
+
+        // Distribute instant exit fee
+        vault.withdrawAsset(asset, assetAmount);
+        IERC20(asset).safeTransfer(_msgSender(), assetAmount);
+        vault.mintShares(address(this), feeInstant);
+        _fixRatioDistributeFee(feeInstant, thirdPartyRatioExit, "instant exit fee");
 
         // Event
-        emit InstantWithdraw(
-            _msgSender(), asset, sharesAmount, assetAmount,
-            feeManagement, feePerformance, feeInstantExit, feeAll
-        );
+        emit InstantWithdraw(_msgSender(), asset, assetAmount, sharesAmount, feeInstant);
     }
 
 
@@ -373,7 +347,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
         if (keyHash == keccak256("withdrawPeriod")) {
             withdrawPeriod = value;
         } else {
-            require(value <= 10000, "LIQUID_CASHIER: invalid fee rate");
+            require(value <= 10000, "LIQUID_CASHIER: invalid fee rate or third-party ratio");
             if (keyHash == keccak256("feeRateManagement")) {
                 feeRateManagement = value;
             } else if (keyHash == keccak256("feeRatePerformance")) {
@@ -383,11 +357,83 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable {
             } else if (keyHash == keccak256("feeRateInstant")) {
                 require(value >= feeRateExit, "LIQUID_CASHIER: instant fee rate too low");
                 feeRateInstant = value;
+            } else if (keyHash == keccak256("thirdPartyRatioManagement")) {
+                thirdPartyRatioManagement = value;
+            } else if (keyHash == keccak256("thirdPartyRatioPerformance")) {
+                thirdPartyRatioPerformance = value;
+            } else if (keyHash == keccak256("thirdPartyRatioExit")) {
+                thirdPartyRatioExit = value;
             } else {
                 revert("LIQUID_CASHIER: invalid key");
             }
         }
         emit ParameterUpdated(key, value);
     }
+
+    function setFeeReceiverDefault(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        feeReceiverDefault = account;
+        emit FeeReceiverUpdated("feeReceiverDefault", account);
+    }
+
+    function setFeeReceiverThirdParty(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        feeReceiverThirdParty = account;
+        emit FeeReceiverUpdated("feeReceiverThirdParty", account);
+    }
     
+    function setFeeManager(address account, bool status) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        if (status) {
+            _grantRole(FEE_MANAGER_ROLE, account);
+        } else {
+            _revokeRole(FEE_MANAGER_ROLE, account);
+        }
+    }
+
+
+    // =================== Write functions - fee manager ===================
+
+    /**
+     * @notice Indirectly collect fees by issuing extra share tokens.
+     *      This function should be executed as frequently as possible, ideally
+     *      executed once per day, otherwise the bias of the management fee and 
+     *      performance fee will accumulate. Fee calculation rules:
+     *       1. Management fee (%): (`timeElapsed` / 365 days) * (`feeRatemanagement` / 10000)
+     *       2. Performance fee (%): (`priceIncreased` / `highestSharePrice`) 
+     *              * (`feeRatePerformance` / 10000)
+     *      Both of them should be calculated with Math library, to both avoid overflow
+     *       and truncation errors.
+     */
+    function collectFees() public onlyRole(FEE_MANAGER_ROLE) {
+        // Check conditions
+        require(feeReceiverDefault != address(0), "LIQUID_CASHIER: default fee receiver not set");
+        require(feeReceiverThirdParty != address(0), "LIQUID_CASHIER: third-party fee receiver not set");
+
+        // Dilution shares for management fee
+        uint256 sharesTotalSupply = vault.totalSupply();
+        uint256 timeElapsed = block.timestamp - lastMintShareTimestamp;
+        uint256 feeManagement = sharesTotalSupply
+            .mulDiv(feeRateManagement, 10000)
+            .mulDiv(timeElapsed, 365 days);
+        lastMintShareTimestamp = block.timestamp;
+
+        // Dilution shares for performance fee
+        uint256 currentPrice = oracle.fetchShareStandardPrice();
+        uint256 feePerformance = 0;
+        if (highestSharePrice == 0) {
+            highestSharePrice = currentPrice;   // Skip the first time
+        } else if (currentPrice > highestSharePrice) {
+            uint256 priceIncreased = currentPrice - highestSharePrice;
+            feePerformance = sharesTotalSupply
+                .mulDiv(feeRatePerformance, 10000)
+                .mulDiv(priceIncreased, highestSharePrice);
+            highestSharePrice = currentPrice;
+        }
+
+        // Mint the dilution shares
+        vault.mintShares(address(this), feeManagement + feePerformance);
+        _fixRatioDistributeFee(feeManagement, thirdPartyRatioManagement, "management fee");
+        if (feePerformance > 0) {
+            _fixRatioDistributeFee(feePerformance, thirdPartyRatioPerformance, "performance fee");
+        }
+    }
+
 }

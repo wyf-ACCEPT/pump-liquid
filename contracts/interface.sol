@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import "@openzeppelin/contracts/interfaces/IERC20.sol";
+
 interface ILiquidOracle {
     function isSupportedAssetExternal(address) external view returns (bool);
     function assetPriceToShareExternal(address) external view returns (uint256);
@@ -10,14 +12,9 @@ interface ILiquidOracle {
     function fetchShareStandardPrice() external view returns (uint256);
 }
 
-interface ILiquidVault {
-    function depositToVault(
-        address from, address asset, uint256 assetAmount, uint256 shareAmount
-    ) external;
-    function withdrawFromVault(
-        address to, address asset, uint256 shareAmount, uint256 assetAmount
-    ) external;
-    function distributeFee(
-        address asset, uint256 feeManagement, uint256 feePerformance, uint256 feeExit
-    ) external;
+interface ILiquidVault is IERC20 {
+    function depositAsset(address asset, uint256 amount) external;
+    function withdrawAsset(address asset, uint256 amount) external;
+    function mintShares(address to, uint256 amount) external;
+    function burnShares(address from, uint256 amount) external;
 }

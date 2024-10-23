@@ -28,11 +28,13 @@ describe("test factory", function () {
     return { liquidFactory, tokens }
   }
 
+
   it("should deploy the contract correctly", async function () {
     const { liquidFactory, tokens } = await loadFixture(deployContracts)
     expect(await liquidFactory.getLiquidsNum()).to.equal(2)
     expect(Object.keys(tokens).length).to.equal(5)
   })
+
 
   it("should upgrade the contract correctly", async function () {
     const { liquidFactory } = await loadFixture(deployContracts)
@@ -63,6 +65,7 @@ describe("test factory", function () {
       .to.equal(await cashierImplNew.getAddress())
   })
 
+  
   it("should pass factory journey", async function () {
     const { liquidFactory, tokens } = await loadFixture(deployContracts)
     const [
