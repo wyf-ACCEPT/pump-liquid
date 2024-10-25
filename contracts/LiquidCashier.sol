@@ -357,15 +357,23 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
             } else if (keyHash == keccak256("feeRateInstant")) {
                 require(value >= feeRateExit, "LIQUID_CASHIER: instant fee rate too low");
                 feeRateInstant = value;
-            } else if (keyHash == keccak256("thirdPartyRatioManagement")) {
-                thirdPartyRatioManagement = value;
-            } else if (keyHash == keccak256("thirdPartyRatioPerformance")) {
-                thirdPartyRatioPerformance = value;
-            } else if (keyHash == keccak256("thirdPartyRatioExit")) {
-                thirdPartyRatioExit = value;
             } else {
                 revert("LIQUID_CASHIER: invalid key");
             }
+        }
+        emit ParameterUpdated(key, value);
+    }
+
+    function setParameterCoSign(string memory key, uint256 value) public onlyRole(CO_SIGNER) {
+        bytes32 keyHash = keccak256(abi.encodePacked(key));
+        if (keyHash == keccak256("thirdPartyRatioManagement")) {
+            thirdPartyRatioManagement = value;
+        } else if (keyHash == keccak256("thirdPartyRatioPerformance")) {
+            thirdPartyRatioPerformance = value;
+        } else if (keyHash == keccak256("thirdPartyRatioExit")) {
+            thirdPartyRatioExit = value;
+        } else {
+            revert("LIQUID_CASHIER: invalid key");
         }
         emit ParameterUpdated(key, value);
     }
@@ -375,7 +383,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
         emit FeeReceiverUpdated("feeReceiverDefault", account);
     }
 
-    function setFeeReceiverThirdParty(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setFeeReceiverThirdParty(address account) public onlyRole(CO_SIGNER) {
         feeReceiverThirdParty = account;
         emit FeeReceiverUpdated("feeReceiverThirdParty", account);
     }
@@ -385,6 +393,14 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
             _grantRole(FEE_MANAGER_ROLE, account);
         } else {
             _revokeRole(FEE_MANAGER_ROLE, account);
+        }
+    }
+
+    function setCoSigner(address account, bool status) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        if (status) {
+            _grantRole(CO_SIGNER, account);
+        } else {
+            _revokeRole(CO_SIGNER, account);
         }
     }
 

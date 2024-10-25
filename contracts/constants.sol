@@ -55,4 +55,12 @@ abstract contract Constants {
     bytes32 public constant FEE_MANAGER_ROLE = 
         0x2ec1c584502299ef57b8a0ce6a03483f64261f98122f091aac241f340cc62e6a;
 
+    /**
+     * @notice The `CO_SIGNER` is used to co-sign the transaction about changing the fee ratio 
+     *      for third-party address, and changing the third-party address itself.
+     *      Value: keccak256("LiquidFeeSplitter: CO_SIGNER")
+     */
+    bytes32 public constant CO_SIGNER = 
+        0x158d29a78b8952a25b417162f01d9bda9b9a05a1d75904fc45e949106ca8377e;
+
 }

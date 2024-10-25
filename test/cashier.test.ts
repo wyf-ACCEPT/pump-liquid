@@ -9,7 +9,7 @@ describe("test cashier core", function () {
 
   async function deployContracts() {
     const [
-      _owner, _updater, _user1, _lp, feeCollector1, feeCollector2, feeManager
+      _owner, _updater, _user1, _lp, feeCollector1, feeCollector2, feeManager, coSigner
     ] = await ethers.getSigners()
 
     const tokens = await deployTokens()
@@ -31,14 +31,16 @@ describe("test cashier core", function () {
     await expect(liquidVault.setCashier(await liquidCashier.getAddress()))
       .to.be.revertedWithCustomError(liquidVault, "InvalidInitialization")
 
-    await liquidCashier.setFeeReceiverDefault(feeCollector1.address)
-    await liquidCashier.setFeeReceiverThirdParty(feeCollector2.address)
     await liquidCashier.setFeeManager(feeManager.address, true)
+    await liquidCashier.setCoSigner(coSigner.address, true)
 
-    await liquidCashier.setParameter("thirdPartyRatioManagement", 0)
-    await liquidCashier.setParameter("thirdPartyRatioPerformance", 4000)
-    await liquidCashier.setParameter("thirdPartyRatioExit", 0)
-    await expect(liquidCashier.setParameter("feeRate", 0))
+    await liquidCashier.setFeeReceiverDefault(feeCollector1.address)
+    await liquidCashier.connect(coSigner).setFeeReceiverThirdParty(feeCollector2.address)
+
+    await liquidCashier.connect(coSigner).setParameterCoSign("thirdPartyRatioManagement", 0)
+    await liquidCashier.connect(coSigner).setParameterCoSign("thirdPartyRatioPerformance", 4000)
+    await liquidCashier.connect(coSigner).setParameterCoSign("thirdPartyRatioExit", 0)
+    await expect(liquidCashier.connect(coSigner).setParameterCoSign("feeRate", 0))
       .to.be.revertedWith("LIQUID_CASHIER: invalid key")
 
     return { tokens, liquidOracle, liquidVault, liquidCashier }
@@ -56,7 +58,7 @@ describe("test cashier core", function () {
       tokens, liquidOracle, liquidVault, liquidCashier
     } = await loadFixture(deployContracts)
     const [
-      _owner, updater, user1, lp, feeCollector1, feeCollector2, feeManager
+      _owner, updater, user1, lp, feeCollector1, feeCollector2, feeManager, coSigner
     ] = await ethers.getSigners()
 
     // Update tokens and prices
@@ -234,7 +236,7 @@ describe("test cashier core", function () {
     // ============================ Initialize ============================
     const { tokens, liquidOracle, liquidVault, liquidCashier } = await loadFixture(deployContracts)
     const [
-      _owner, updater, user1, lp, feeCollector1, feeCollector2, feeManager
+      _owner, updater, user1, lp, feeCollector1, feeCollector2, feeManager, coSigner
     ] = await ethers.getSigners()
 
     // Update tokens and prices
@@ -298,10 +300,10 @@ describe("test cashier core", function () {
     await liquidCashier.setParameter("feeRatePerformance", 3000)
     await liquidCashier.setParameter("feeRateExit", 150)
     await liquidCashier.setParameter("feeRateInstant", 700)
-    await liquidCashier.setParameter("thirdPartyRatioManagement", 2000)
-    await liquidCashier.setParameter("thirdPartyRatioPerformance", 5000)
-    await liquidCashier.setParameter("thirdPartyRatioExit", 2000)
-    await expect(liquidCashier.setParameter("feeRate", 1000))
+    await liquidCashier.connect(coSigner).setParameterCoSign("thirdPartyRatioManagement", 2000)
+    await liquidCashier.connect(coSigner).setParameterCoSign("thirdPartyRatioPerformance", 5000)
+    await liquidCashier.connect(coSigner).setParameterCoSign("thirdPartyRatioExit", 2000)
+    await expect(liquidCashier.connect(coSigner).setParameterCoSign("feeRate", 1000))
       .to.be.revertedWith("LIQUID_CASHIER: invalid key")
 
 
