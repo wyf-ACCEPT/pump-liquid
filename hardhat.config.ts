@@ -22,7 +22,13 @@ const config: HardhatUserConfig = {
         process.env.PRIVATE_KEY_PUMPBTC!,
         process.env.PRIVATE_KEY_TESTONLY2!,
       ]
-    }
+    },
+    hardhat: {
+      forking: {
+        url: process.env.RPC_MAINNET!,
+        blockNumber: 21054403,
+      }
+    },
   },
   etherscan: {
     apiKey: {
