@@ -99,7 +99,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
         thirdPartyRatioPerformance = 0;
         thirdPartyRatioExit = 0;
 
-        lastMintShareTimestamp = block.timestamp;
+        lastMintShareTimestamp = 0;
         highestSharePrice = 0;
     }
 
@@ -253,7 +253,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
         vault.burnShares(_msgSender(), sharesAmount);
         
         // Update pending info
-        uint256 feeExit = sharesAmount.mulDiv(feeRateExit, 10000);
+        uint256 feeExit = sharesAmount.mulDiv(feeRateExit, 10000, Math.Rounding.Ceil);
         uint256 assetAmount = oracle.shareToAsset(asset, sharesAmount - feeExit);
         pendingInfo[_msgSender()] = PendingInfo({
             shares: sharesAmount,
@@ -343,6 +343,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
     }
 
     function setParameter(string memory key, uint256 value) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        collectFees();
         bytes32 keyHash = keccak256(abi.encodePacked(key));
         if (keyHash == keccak256("withdrawPeriod")) {
             withdrawPeriod = value;
@@ -365,6 +366,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
     }
 
     function setParameterCoSign(string memory key, uint256 value) public onlyRole(CO_SIGNER) {
+        collectFees();
         bytes32 keyHash = keccak256(abi.encodePacked(key));
         if (keyHash == keccak256("thirdPartyRatioManagement")) {
             thirdPartyRatioManagement = value;
@@ -386,14 +388,6 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
     function setFeeReceiverThirdParty(address account) public onlyRole(CO_SIGNER) {
         feeReceiverThirdParty = account;
         emit FeeReceiverUpdated("feeReceiverThirdParty", account);
-    }
-    
-    function setFeeManager(address account, bool status) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        if (status) {
-            _grantRole(FEE_MANAGER_ROLE, account);
-        } else {
-            _revokeRole(FEE_MANAGER_ROLE, account);
-        }
     }
 
     function setCoSigner(address account, bool status) public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -418,18 +412,23 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
      *      Both of them should be calculated with Math library, to both avoid overflow
      *       and truncation errors.
      */
-    function collectFees() public onlyRole(FEE_MANAGER_ROLE) {
+    function collectFees() public {
         // Check conditions
         require(feeReceiverDefault != address(0), "LIQUID_CASHIER: default fee receiver not set");
         require(feeReceiverThirdParty != address(0), "LIQUID_CASHIER: third-party fee receiver not set");
 
         // Dilution shares for management fee
         uint256 sharesTotalSupply = vault.totalSupply();
-        uint256 timeElapsed = block.timestamp - lastMintShareTimestamp;
-        uint256 feeManagement = sharesTotalSupply
-            .mulDiv(feeRateManagement, 10000)
-            .mulDiv(timeElapsed, 365 days);
-        lastMintShareTimestamp = block.timestamp;
+        uint256 feeManagement = 0;
+        if (lastMintShareTimestamp == 0 && sharesTotalSupply != 0) {
+            lastMintShareTimestamp = block.timestamp; // Skip the first time
+        } else {
+            uint256 timeElapsed = block.timestamp - lastMintShareTimestamp;
+            feeManagement = sharesTotalSupply
+                .mulDiv(feeRateManagement, 10000)
+                .mulDiv(timeElapsed, 365 days);
+            lastMintShareTimestamp = block.timestamp;
+        }
 
         // Dilution shares for performance fee
         uint256 currentPrice = oracle.fetchShareStandardPrice();

@@ -25,7 +25,7 @@ abstract contract Constants {
      *      recording SHARE's price in USD. Value:
      *      address(uint160(uint256(keccak256("LiquidOracle: STANDARD_ASSET"))))
      */
-    address public constant STANDARD_ASSET = 0xFA0FFaA48dfB36b79A84C4d591cC91bC304fA13f;
+    address public constant STANDARD_ASSET = 0x00f57FF25aD6A37f742bF4eC977A54C1ff5b3822;
 
     /**
      * @notice The `PRICE_UPDATER_ROLE` is used to update the prices of the supported assets.
@@ -48,13 +48,6 @@ abstract contract Constants {
     bytes32 public constant CASHIER_ROLE = 
         0x221521cde999556f90cf8fca8f8f7fed9d3f3b1780d7cbeb187478038f4213ac;
     
-    /**
-     * @notice The `FEE_MANAGER_ROLE` is used to manage the fee distribution.
-     *      Value: keccak256("LiquidFeeSplitter: FEE_MANAGER_ROLE")
-     */
-    bytes32 public constant FEE_MANAGER_ROLE = 
-        0x2ec1c584502299ef57b8a0ce6a03483f64261f98122f091aac241f340cc62e6a;
-
     /**
      * @notice The `CO_SIGNER` is used to co-sign the transaction about changing the fee ratio 
      *      for third-party address, and changing the third-party address itself.

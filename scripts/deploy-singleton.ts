@@ -16,7 +16,7 @@ async function main() {
   ) as unknown as LiquidCashier
   await liquidVault.setCashier(await liquidCashier.getAddress())
 
-  // [Oracle] setPriceUpdater -> [Vault] setLiquidityManager -> [Cashier] setFeeManager, setCoSigner
+  // [Oracle] setPriceUpdater -> [Vault] setLiquidityManager -> [Cashier] setCoSigner
   // -> [Cashier] (owner) setFeeReceiverDefault, (co-signer) setFeeReceiverThirdParty, 
   //              (co-signer) setParameterCoSign
   // -> [Oracle] addSupportedAsset, updatePrices -> [Vault] addStrategy -> [Cashier] collectFees

@@ -62,14 +62,6 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
         minimumUpdateInterval = 5 minutes;
     }
 
-    modifier isSupported(address asset) {
-        require(
-            isSupportedAsset[asset] || asset == STANDARD_ASSET, 
-            "LIQUID_ORACLE: asset not found"
-        );
-        _;
-    }
-
 
     // =========================== View functions ==========================
 
@@ -113,14 +105,14 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
 
     function assetToShare(
         address asset, uint256 assetAmount
-    ) public view isSupported(asset) returns (uint256) {
+    ) public view returns (uint256) {
         require(isSupportedAsset[asset], "LIQUID_ORACLE: asset not found");
         return assetAmount.mulDiv(assetPriceToShare[asset], PRICE_PRECISION);
     }
 
     function shareToAsset(
         address asset, uint256 shareAmount
-    ) public view isSupported(asset) returns (uint256) {
+    ) public view returns (uint256) {
         require(isSupportedAsset[asset], "LIQUID_ORACLE: asset not found");
         return shareAmount.mulDiv(sharePriceToAsset[asset], PRICE_PRECISION);
     }

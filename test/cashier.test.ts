@@ -9,7 +9,7 @@ describe("test cashier core", function () {
 
   async function deployContracts() {
     const [
-      _owner, _updater, _user1, _lp, feeCollector1, feeCollector2, feeManager, coSigner
+      _owner, _updater, _user1, _lp, feeCollector1, feeCollector2, coSigner
     ] = await ethers.getSigners()
 
     const tokens = await deployTokens()
@@ -31,7 +31,6 @@ describe("test cashier core", function () {
     await expect(liquidVault.setCashier(await liquidCashier.getAddress()))
       .to.be.revertedWithCustomError(liquidVault, "InvalidInitialization")
 
-    await liquidCashier.setFeeManager(feeManager.address, true)
     await liquidCashier.setCoSigner(coSigner.address, true)
 
     await liquidCashier.setFeeReceiverDefault(feeCollector1.address)
@@ -58,7 +57,7 @@ describe("test cashier core", function () {
       tokens, liquidOracle, liquidVault, liquidCashier
     } = await loadFixture(deployContracts)
     const [
-      _owner, updater, user1, lp, feeCollector1, feeCollector2, feeManager, coSigner
+      _owner, updater, user1, lp, feeCollector1, feeCollector2, coSigner
     ] = await ethers.getSigners()
 
     // Update tokens and prices
@@ -78,7 +77,7 @@ describe("test cashier core", function () {
       parseUnits("1.2", 36 + 18 - 6),
       parseUnits("1.25", 36 + 18 - 18),
     ])
-    await liquidCashier.connect(feeManager).collectFees() // First time to record the highest share price
+    await liquidCashier.collectFees() // First time to record the highest share price
 
 
     // ============================ Deposit ============================
@@ -113,7 +112,7 @@ describe("test cashier core", function () {
      * Management fee: { 20 days, 2%/year, 24000 bSHARE } -> 26.3014 bSHARE
      * Performance fee: { price: 0.8 -> 1.0, 20%, 24000 bSHARE } -> 1200 bSHARE: {60%, 40%}
      */
-    await liquidCashier.connect(feeManager).collectFees()
+    await liquidCashier.collectFees()
     expect(await liquidVault.balanceOf(feeCollector1.address))
       .to.closeTo(parseEther("746.3014"), parseEther("0.0001"))   // 720 + 26.3014
     expect(await liquidVault.balanceOf(feeCollector2.address))
@@ -193,7 +192,7 @@ describe("test cashier core", function () {
      * Management fee: { 20 -> 67 days, 2%/year, 77226.3014 bSHARE } -> 198.8842 bSHARE
      * Performance fee: { price: 1.0 -> 1.25, 20%, 77226.3014 bSHARE } -> 3861.3151 bSHARE: {60%, 40%}
      */
-    await liquidCashier.connect(feeManager).collectFees()
+    await liquidCashier.collectFees()
     expect(await liquidVault.balanceOf(feeCollector1.address))
       .to.closeTo(parseEther("3261.9747"), parseEther("0.001"))   // {746.3014} + 198.8842 + 3861.3151 * 0.6
     expect(await liquidVault.balanceOf(feeCollector2.address))
@@ -223,11 +222,6 @@ describe("test cashier core", function () {
     await expect(liquidVault.connect(lp).executeStrategy(
       strategyId, tokens.mockWBTC.interface.encodeFunctionData("transfer", [lp.address, parseUnits("1.2", 8)])
     )).to.be.revertedWithCustomError(liquidVault, "AccessControlUnauthorizedAccount")
-
-    // Remove fee manager
-    await liquidCashier.setFeeManager(feeManager.address, false)
-    await expect(liquidCashier.connect(feeManager).collectFees())
-      .to.be.revertedWithCustomError(liquidCashier, "AccessControlUnauthorizedAccount")
   
   })
 
@@ -236,7 +230,7 @@ describe("test cashier core", function () {
     // ============================ Initialize ============================
     const { tokens, liquidOracle, liquidVault, liquidCashier } = await loadFixture(deployContracts)
     const [
-      _owner, updater, user1, lp, feeCollector1, feeCollector2, feeManager, coSigner
+      _owner, updater, user1, lp, feeCollector1, feeCollector2, coSigner
     ] = await ethers.getSigners()
 
     // Update tokens and prices
@@ -256,7 +250,7 @@ describe("test cashier core", function () {
       parseUnits("1.2", 36 + 18 - 6),
       parseUnits("1.25", 36 + 18 - 18),
     ])
-    await liquidCashier.connect(feeManager).collectFees() // First time to record the highest share price
+    await liquidCashier.collectFees() // First time to record the highest share price
 
 
     // ============================ Deposit ============================
@@ -281,7 +275,7 @@ describe("test cashier core", function () {
     ])
 
     // Collect fees (Same as above)
-    await liquidCashier.connect(feeManager).collectFees()
+    await liquidCashier.collectFees()
     expect(await liquidVault.balanceOf(feeCollector1.address))
       .to.closeTo(parseEther("746.3014"), parseEther("0.0001"))   // 720 + 26.3014
     expect(await liquidVault.balanceOf(feeCollector2.address))
@@ -325,7 +319,7 @@ describe("test cashier core", function () {
      * Management fee: { 20 -> 60 days, 4%/year, 97226.3014 bSHARE } -> 426.1975 bSHARE: {80%, 20%}
      * Performance fee: { price: 1.0 -> 1.25, 30%, 97226.3014 bSHARE } -> 7291.9726 bSHARE: {50%, 50%}
      */
-    await liquidCashier.connect(feeManager).collectFees()
+    await liquidCashier.collectFees()
     expect(await liquidVault.balanceOf(feeCollector1.address))
       .to.closeTo(parseEther("4733.2457"), parseEther("0.002"))   // {746.3014} + 426.1975 * 0.8 + 7291.9726 * 0.5
     expect(await liquidVault.balanceOf(feeCollector2.address))
