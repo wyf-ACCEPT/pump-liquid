@@ -4,7 +4,7 @@ import { LiquidCashier, LiquidOracle, LiquidVault } from "../typechain-types"
 
 async function main() {
 
-  const [name, symbol] = ["Liquid BTC Vault Share", "lbSHARE"]
+  const [name, symbol] = ["BTC-Fi L2 Vault LP", "BTC-Fi L2"]
 
   // ================== Deploy singletone contracts ==================
   const liquidOracle = await deployUpgradeableContract("LiquidOracle") as unknown as LiquidOracle

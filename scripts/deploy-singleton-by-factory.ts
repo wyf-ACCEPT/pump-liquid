@@ -1,6 +1,4 @@
 import "dotenv/config"
-import { deployContract, deployUpgradeableContract } from "./utils"
-import { LiquidCashier, LiquidFactory, LiquidOracle, LiquidVault } from "../typechain-types"
 import { ethers } from "hardhat"
 
 const GREEN = "\x1b[32m"
@@ -10,18 +8,9 @@ async function main() {
 
   const [name, symbol] = ["BTC-Fi L2 Vault LP", "BTC-Fi L2"]
 
-  // ================== Deploy factory contract ==================
-  const liquidVaultImpl = await deployContract("LiquidVault") as unknown as LiquidVault
-  const liquidOracleImpl = await deployContract("LiquidOracle") as unknown as LiquidOracle
-  const liquidCashierImpl = await deployContract("LiquidCashier") as unknown as LiquidCashier
-  const liquidFactory = await deployUpgradeableContract("LiquidFactory", [
-    await liquidVaultImpl.getAddress(), 
-    await liquidOracleImpl.getAddress(), 
-    await liquidCashierImpl.getAddress(),
-  ]) as unknown as LiquidFactory
-
-  // ================== Deploy a liquid vault instance ==================
+  // ================== Deploy singleton contracts by factory ==================
   const [_factoryOwner, vaultOwner] = await ethers.getSigners()
+  const liquidFactory = await ethers.getContractAt("LiquidFactory", process.env.SEPOLIA_LFACTORY!)
   await (await liquidFactory.deployLiquid(name, symbol, vaultOwner.address)).wait()
   const liquidsNum = await liquidFactory.getLiquidsNum()
 
@@ -33,7 +22,12 @@ async function main() {
   console.log(`[${name}] Oracle proxy deployed to: ${GREEN}${oracleProxyAddress}${RESET}`)
   console.log(`[${name}] Cashier proxy deployed to: ${GREEN}${cashierProxyAddress}${RESET}`)
   console.log(`[${name}] Owner is: ${GREEN}${vaultOwner.address}${RESET}`)
-  
+
+  // [Oracle] setPriceUpdater -> [Vault] setLiquidityManager -> [Cashier] setCoSigner
+  // -> [Cashier] (owner) setFeeReceiverDefault, (co-signer) setFeeReceiverThirdParty, 
+  //              (co-signer) setParameterCoSign
+  // -> [Oracle] addSupportedAsset, updatePrices -> [Vault] addStrategy -> [Cashier] collectFees
+
 }
 
 
