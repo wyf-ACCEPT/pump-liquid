@@ -16,6 +16,13 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    mainnet: {
+      url: process.env.RPC_MAINNET,
+      accounts: [
+        process.env.PK_FACTORY_OWNER!,
+        process.env.PK_VAULT_OWNER!,
+      ]
+    },
     sepolia: {
       url: process.env.RPC_SEPOLIA,
       accounts: [
