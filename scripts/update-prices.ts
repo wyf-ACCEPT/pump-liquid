@@ -5,10 +5,10 @@ import { parseUnits } from "ethers";
 async function main() {
 
   const prices = [
-    parseUnits("1.00", 36),    // Asset-1 price to share
-    parseUnits("1.00", 36),    // Asset-2 price to share
-                            // ......
-    parseUnits("1.00", 36),    // Standard asset price to share
+    parseUnits("1.00", 36 + 18 - 8),      // Asset-1 (WBTC) price to share
+    parseUnits("1.00", 36 + 18 - 18),     // Asset-2 (BTCB) price to share
+                                          // ......
+    parseUnits("1.00", 36 + 18 - 18),     // Standard asset price to share
   ]
 
   const [_, owner] = await ethers.getSigners()

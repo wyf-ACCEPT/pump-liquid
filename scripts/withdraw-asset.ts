@@ -4,13 +4,6 @@ import { parseUnits } from "ethers";
 
 async function main() {
 
-  // const prices = [
-  //   parseUnits("1.00", 36),    // Asset-1 price to share
-  //   parseUnits("1.00", 36),    // Asset-2 price to share
-  //                           // ......
-  //   parseUnits("1.00", 36),    // Standard asset price to share
-  // ]
-
   const strategyIdx = 1   // 0: Withdraw WBTC, 1: Withdraw BTCB
   const withdrawAsset = process.env.SEPOLIA_BTCB!
   const amount = parseUnits("0.1", 18)
