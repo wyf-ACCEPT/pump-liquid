@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
@@ -193,6 +193,16 @@ contract LiquidVault is AccessControlUpgradeable, ERC20Upgradeable, ILiquidVault
         } else {
             _revokeRole(LIQUIDITY_MANAGER_ROLE, account);
         }
+    }
+
+    function grantRole(bytes32 role, address account) public override {
+        require(role == DEFAULT_ADMIN_ROLE, "LIQUID_VAULT: only DEFAULT_ADMIN_ROLE can be granted");
+        super.grantRole(role, account);
+    }
+
+    function revokeRole(bytes32 role, address account) public override {
+        require(role == DEFAULT_ADMIN_ROLE, "LIQUID_VAULT: only DEFAULT_ADMIN_ROLE can be revoked");
+        super.revokeRole(role, account);
     }
 
 }

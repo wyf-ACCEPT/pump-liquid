@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
@@ -74,15 +74,21 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
         address receiver1, uint256 amount1, 
         address receiver2, uint256 amount2, string feeType
     );
+    event FeesCollected(
+        uint256 feeManagement, uint256 feePerformance, 
+        uint256 thirdPartyRatioManagement, uint256 thirdPartyRatioPerformance
+    );
     event ParameterUpdated(string key, uint256 value);
     event FeeReceiverUpdated(string key, address value);
-
 
     // ======================= Modifier & Initializer ======================
 
     function initialize(address _vault, address _oracle) public initializer {
         __AccessControl_init();
+        __Pausable_init();
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+
+        require(_vault != address(0) && _oracle != address(0), "LIQUID_CASHIER: invalid address");
 
         vault = ILiquidVault(_vault);
         oracle = ILiquidOracle(_oracle);
@@ -280,8 +286,9 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
             "LIQUID_CASHIER: still pending"
         );
 
-        // Retrieve pending info
+        // Retrieve & Clear pending info
         PendingInfo memory info = pendingInfo[_msgSender()];
+        delete pendingInfo[_msgSender()];
 
         // Withdraw from the vault
         if (oracle.isSupportedAssetExternal(info.asset)) {
@@ -300,9 +307,6 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
             
             emit CancelWithdraw(_msgSender(), info.timestamp);
         }
-
-        // Clear pending info
-        delete pendingInfo[_msgSender()];
     }
 
     /**
@@ -354,6 +358,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
             } else if (keyHash == keccak256("feeRatePerformance")) {
                 feeRatePerformance = value;
             } else if (keyHash == keccak256("feeRateExit")) {
+                require(value <= feeRateInstant, "LIQUID_CASHIER: exit fee rate too high");
                 feeRateExit = value;
             } else if (keyHash == keccak256("feeRateInstant")) {
                 require(value >= feeRateExit, "LIQUID_CASHIER: instant fee rate too low");
@@ -368,6 +373,7 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
     function setParameterCoSign(string memory key, uint256 value) public onlyRole(CO_SIGNER) {
         collectFees();
         bytes32 keyHash = keccak256(abi.encodePacked(key));
+        require(value <= 10000, "LIQUID_CASHIER: invalid third-party ratio");
         if (keyHash == keccak256("thirdPartyRatioManagement")) {
             thirdPartyRatioManagement = value;
         } else if (keyHash == keccak256("thirdPartyRatioPerformance")) {
@@ -381,11 +387,13 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
     }
 
     function setFeeReceiverDefault(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(account != address(0), "LIQUID_CASHIER: invalid address");
         feeReceiverDefault = account;
         emit FeeReceiverUpdated("feeReceiverDefault", account);
     }
 
     function setFeeReceiverThirdParty(address account) public onlyRole(CO_SIGNER) {
+        require(account != address(0), "LIQUID_CASHIER: invalid address");
         feeReceiverThirdParty = account;
         emit FeeReceiverUpdated("feeReceiverThirdParty", account);
     }
@@ -449,6 +457,10 @@ contract LiquidCashier is AccessControlUpgradeable, PausableUpgradeable, Constan
         if (feePerformance > 0) {
             _fixRatioDistributeFee(feePerformance, thirdPartyRatioPerformance, "performance fee");
         }
+        emit FeesCollected(
+            feeManagement, feePerformance, 
+            thirdPartyRatioManagement, thirdPartyRatioPerformance
+        );
     }
 
 }

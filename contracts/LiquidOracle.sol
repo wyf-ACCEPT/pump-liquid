@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
@@ -59,7 +59,7 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
         __AccessControl_init();
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
-        minimumUpdateInterval = 5 minutes;
+        minimumUpdateInterval = 1 minutes;
     }
 
 
@@ -127,6 +127,8 @@ contract LiquidOracle is AccessControlUpgradeable, ILiquidOracle, Constants {
             IERC20(asset).totalSupply() != 0, 
             "LIQUID_ORACLE: invalid asset" // Ensure the asset is a valid ERC20 token
         );
+        assetPriceToShare[asset] = 0;
+        sharePriceToAsset[asset] = 0;
         isSupportedAsset[asset] = true;
         supportedAssetList.push(asset);
         emit AssetAdded(asset);
