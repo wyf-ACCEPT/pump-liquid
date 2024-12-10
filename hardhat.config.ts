@@ -30,6 +30,12 @@ const config: HardhatUserConfig = {
         process.env.PK_VAULT_OWNER!,
       ]
     },
+    hardhat: {
+      forking: {
+        url: process.env.RPC_MAINNET!,
+        blockNumber: 21350000,
+      }
+    },
   },
   etherscan: {
     apiKey: {
