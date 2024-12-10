@@ -21,6 +21,7 @@ const config: HardhatUserConfig = {
       accounts: [
         process.env.PK_FACTORY_OWNER!,
         process.env.PK_VAULT_OWNER!,
+        process.env.PK_LIQUIDITY_MANAGER!,
       ]
     },
     sepolia: {
@@ -28,6 +29,7 @@ const config: HardhatUserConfig = {
       accounts: [
         process.env.PK_FACTORY_OWNER!,
         process.env.PK_VAULT_OWNER!,
+        process.env.PK_LIQUIDITY_MANAGER!,
       ]
     },
     hardhat: {

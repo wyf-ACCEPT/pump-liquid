@@ -1,6 +1,6 @@
 import "dotenv/config"
 import { ethers, hardhatArguments } from "hardhat"
-import { formatEther, parseEther, Interface, ZeroAddress, parseUnits, formatUnits, Signer } from "ethers"
+import { Interface, ZeroAddress, parseUnits, formatUnits } from "ethers"
 import { LiquidVault } from "../typechain-types"
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers"
 
@@ -30,7 +30,6 @@ async function main() {
   const BTCFI_CIAN_VAULT_ADDRESS = "0xe790C9D5C68EfAfCdc4f9c3E5BA153F89d837660".toLowerCase()
 
 
-
   // ====================== Prepare mock tokens ======================
 
   const cianBtcVaultInterface = new Interface(CIAN_VAULT_ABI)
@@ -55,8 +54,8 @@ async function main() {
   else if (hardhatArguments.network === "mainnet") {
     console.log("\nSetting up ethereum mainnet environment...")
     const signers = await ethers.getSigners()
-    realAdmin = signers[0]
-    realLiquidityManager = signers[1]
+    realAdmin = signers[1]      // Vault owner (0 is factory owner)
+    realLiquidityManager = signers[2]  // Liquidity manager
     console.log(`Check admin: ${GREEN}${realAdmin.address}${RESET}`)
     console.log(`Check liquidity manager: ${GREEN}${realLiquidityManager.address}${RESET}`)
   }
