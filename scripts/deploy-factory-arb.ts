@@ -21,7 +21,7 @@ async function main() {
   ]) as unknown as LiquidFactory
 
   // ================== Deploy a liquid vault instance ==================
-  const pumpOwner = process.env.PUMPBTC_DEPLOYER!
+  const pumpOwner = process.env.ADDRESS_FACTORY_OWNER!
   await (await liquidFactory.deployLiquid(name, symbol, pumpOwner)).wait()
   const liquidsNum = await liquidFactory.getLiquidsNum()
 

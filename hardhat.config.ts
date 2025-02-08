@@ -35,7 +35,7 @@ const config: HardhatUserConfig = {
     arbitrum: {
       url: process.env.RPC_ARB,
       accounts: [
-        process.env.PK_ARB_OWNER!,
+        process.env.PK_FACTORY_OWNER!,
       ]
     },
     hardhat: {
