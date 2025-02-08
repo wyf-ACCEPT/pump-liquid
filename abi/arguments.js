@@ -1,35 +1,35 @@
-// // UpgradeableBeacon: LiquidVault (0x58A7B03718a9C2d496D508cE9195A476f4ce1771)
+// // UpgradeableBeacon: LiquidVault (0xfe509744a9114D92E3A3062e567c53cC9856361C)
 // module.exports = [
-//     "0xD1693B20932c798a63375dB0252be7cA449Ffa3B",
-//     "0xF30C701E4915b6B3855798252Ce9F46A918da565"
+//     "0x7C5F3aaaaA3b8D9b82dCaeB48C1865dC66Db3951",
+//     "0xB428A3b0B539A6b023b2DfA174f35901E25655F8"
 // ];
 
-// // UpgradeableBeacon: LiquidOracle (0x2803e0795EC64b029BC066EEDd08A1f0410a79cC)
+// // UpgradeableBeacon: LiquidOracle (0x6313A1562483b14975BF51Fc86e683E0b2aedBf0)
 // module.exports = [
-//     "0x6f26B0f570c2CFb4050B424eF6EA5903818404Ac",
-//     "0xF30C701E4915b6B3855798252Ce9F46A918da565"
+//     "0x383194C5749335bfD849913Ff6A0B44E1DF3bc1a",
+//     "0xB428A3b0B539A6b023b2DfA174f35901E25655F8"
 // ];
 
-// // UpgradeableBeacon: LiquidCashier (0xb12D5109c2290EBA72e39EeAb5bb68f97B30635F)
+// // UpgradeableBeacon: LiquidCashier (0xE4576D6E96683Ac9cfB6758B5B6610087351d460)
 // module.exports = [
-//     "0x7462bc483C21fE316776eff1a6645F6af8a4F5D6",
-//     "0xF30C701E4915b6B3855798252Ce9F46A918da565"
+//     "0xFd2D70F908A06B3bEF69b75006cDf2a641a7829E",
+//     "0xB428A3b0B539A6b023b2DfA174f35901E25655F8"
 // ];
 
-// // BeaconProxy: LiquidVault (0xB3Bd87F1d2F5e9fB465A2595A4408E11aEdC7E0a)
+// // BeaconProxy: LiquidVault (0xe09b609332CC9E8f76D323839336B31Fef2D5017)
 // module.exports = [
-//     "0x58A7B03718a9C2d496D508cE9195A476f4ce1771",
+//     "0xfe509744a9114D92E3A3062e567c53cC9856361C",
 //     "0x"
 // ];
 
-// // BeaconProxy: LiquidOracle (0xeB1936f51EA8D39195F5496eAeFa8c6301FC4eee)
+// // BeaconProxy: LiquidOracle (0x59ECc5D7706544982bE3e11E8BE3ABDf13A7bc6C)
 // module.exports = [
-//     "0x2803e0795EC64b029BC066EEDd08A1f0410a79cC",
+//     "0x6313A1562483b14975BF51Fc86e683E0b2aedBf0",
 //     "0x"
 // ];
 
-// // BeaconProxy: LiquidCashier (0xdd57A0B9a543b9017B27c1cFa1c24f95c97a04DC)
-// module.exports = [
-//     "0xb12D5109c2290EBA72e39EeAb5bb68f97B30635F",
-//     "0x"
-// ];
+// BeaconProxy: LiquidCashier (0xe283d37A4F865D0eA4e37fA8420098195a993160)
+module.exports = [
+    "0xE4576D6E96683Ac9cfB6758B5B6610087351d460",
+    "0x"
+];

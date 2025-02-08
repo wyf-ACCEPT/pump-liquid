@@ -32,6 +32,12 @@ const config: HardhatUserConfig = {
         process.env.PK_LIQUIDITY_MANAGER!,
       ]
     },
+    arbitrum: {
+      url: process.env.RPC_ARB,
+      accounts: [
+        process.env.PK_ARB_OWNER!,
+      ]
+    },
     hardhat: {
       forking: {
         url: process.env.RPC_MAINNET!,
@@ -43,6 +49,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       mainnet: process.env.API_ETHERSCAN!,
       sepolia: process.env.API_ETHERSCAN!,
+      arbitrumOne: process.env.API_ARBSCAN!,
     }
   }
 };
